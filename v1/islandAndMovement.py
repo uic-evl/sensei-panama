@@ -11,7 +11,7 @@ imgResRatioX = 0.18/(float(10260)/32064)
 imgResRatioY = 0.18/(float(9850)/30780)
 plane = PlaneShape.create(imgResRatioX*10260, imgResRatioY*9850)
 plane.setPosition(Vector3(imgResRatioX*10260/2, imgResRatioY*9850/2, 0))
-plane.setEffect("textured -v emissive -d ../data/50Island.png")
+plane.setEffect("textured -v emissive -d 50Island.png")
 
 
 #-----------------------------------------------------------------------------
