@@ -37,7 +37,7 @@ main(void)
 
   //figure out if this point will be drawn
   //day = 1, startDay =1 endDay =2 -> draw
-   //day =2 or 0, startDay = 1 end day = 2 not draw
+  //day = 2 or 0, startDay = 1 end day = 2 not draw
   //if( individualID - 4693 == 0)//selectedIndividual1 || individualID == selectedIndividual2 )
   //    drawPoint = true; 
   if( drawPoint && (day >= startDay && day < endDay) )
@@ -47,7 +47,7 @@ main(void)
 	    
 	if( drawPoint ) {
 
-    gl_FrontColor = vec4( 255.0/255.0 , 0.0, 0.0 , 1.0); 
+    gl_FrontColor = vec4( 255.0/255.0, 0.0, 0.0, 1.0); 
 
     if( colorBy == 0 ){ //one color palette
       if( hr < 4 )

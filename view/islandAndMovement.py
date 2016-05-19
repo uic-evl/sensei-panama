@@ -208,30 +208,43 @@ ss6 = mm.getMainMenu().addButton("Show Fruit Trees", "markTrees(1)")
 #btnAll.setRadio(True)
 
 #--------------------------------------------------------------------------------------
-#Cylinder Code
-toggleTrees = False
+#Find Trees Code
 
-thickness = 13
-treeNode = SceneNode.create('treeNode')
-getScene().addChild(treeNode)
+toggleTrees = False                                 #Turns tree markers on and off
 
-trees = open("treesFloat.txt", "r")
-content = trees.readlines()
-c1 = LineSet.create()
-for line in content:
-    tokens = line.split(" ")
-    l = c1.addLine()
+thickness = 13                                      #thickness of markers
+treeNode = SceneNode.create('treeNode')             #create a new sceneNode to hold markers
+getScene().addChild(treeNode)                       #add it as a child to parent scene
+
+trees = open("treesFloat.txt", "r")                 #open the file
+content = trees.readlines()                         #load the file
+c1 = LineSet.create()                               #create a LineSet object
+
+treeList = []                                       #multidimensional array holds x, y, z of trees
+treeIndex = 0                                       #used to index trees
+for line in content:                                #loop through file
+
+    tokens = line.split(" ")                        #split the line into tokens
+
+    treeList.append([])                             #append another list to the current list
+    treeList[treeIndex].append(float(tokens[0]))    #append x, y, z info
+    treeList[treeIndex].append(float(tokens[1]))
+    treeList[treeIndex].append(int(tokens[2]))
+    treeIndex += 1                                  #increment the treeIndex counter by 1 for next
+                                                    #line
+
+    l = c1.addLine()                                #add a line to the marker object
     l.setStart(Vector3(float(tokens[0]), float(tokens[1]), 0))
     l.setEnd(Vector3(float(tokens[0]), float(tokens[1]), int(tokens[2])*0.18))
     l.setThickness(thickness)
-    s = SphereShape.create(thickness/2, 2)
-    c1.addChild(s)
-    s.setEffect('colored -e black')
+    s = SphereShape.create(thickness/2, 2)           #create a cap for the marker
+    c1.addChild(s)                                   #add the cap as a child to the current line
+    s.setEffect('colored -e black')                  #color of the cap
     s.setPosition(Vector3(float(tokens[0]), float(tokens[1]), int(tokens[2])*0.18))
-    c1.setEffect('colored -e black')
-trees.close()
-treeNode.addChild(c1)
-treeNode.setChildrenVisible(False)
+    c1.setEffect('colored -e black')                 #color of the stem
+trees.close()                                        #close the file
+treeNode.addChild(c1)                                #add the object as a child to the scene
+treeNode.setChildrenVisible(False)                   #set it as invisible
 
 def markTrees(value):
     global toggleTrees
@@ -240,6 +253,12 @@ def markTrees(value):
     if (value == 1):
         toggleTrees = not toggleTrees
         treeNode.setChildrenVisible(toggleTrees)
+
+def findClosestTree(value):
+    global treeList
+    if (value == 1):
+
+    print "Should find closest tree to camera"
         
 
 #--------------------------------------------------------------------------------------
