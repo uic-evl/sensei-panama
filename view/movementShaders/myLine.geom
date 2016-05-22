@@ -27,13 +27,13 @@ main(void)
   gl_FrontColor = gl_FrontColorIn[0];
   gl_FrontColor.a = globalAlpha;
 
-	int day = int(gl_FrontColor.r);
-	int hr = int(gl_FrontColor.g);
-	int min = int(gl_FrontColor.b);
+    int day = int(gl_FrontColor.r);
+    int hr = int(gl_FrontColor.g);
+    int min = int(gl_FrontColor.b);
   int individualID = int(gl_FrontColor.a);
-	  
-	//Example using the gl_FrontColor values for filtering!!
-	bool drawPoint = true;
+      
+    //Example using the gl_FrontColor values for filtering!!
+    bool drawPoint = true;
 
   //figure out if this point will be drawn
   //day = 1, startDay =1 endDay =2 -> draw
@@ -41,11 +41,11 @@ main(void)
   //if( individualID - 4693 == 0)//selectedIndividual1 || individualID == selectedIndividual2 )
   //    drawPoint = true; 
   if( drawPoint && (day >= startDay && day < endDay) )
-	    drawPoint = true;
+        drawPoint = true;
   else
       drawPoint = false;
-	    
-	if( drawPoint ) {
+        
+    if( drawPoint ) {
 
     gl_FrontColor = vec4( 255.0/255.0, 0.0, 0.0, 1.0); 
 
@@ -148,29 +148,41 @@ main(void)
     vertex_light_position = normalize(gl_LightSource[0].position.xyz - eye_position.xyz);
 
     gl_TexCoord[0].st = vec2(1.0,-1.0);
-    gl_Position = gl_PositionIn[0];
-    gl_Position.xy += vec2(halfsize, -halfsize);
-    gl_Position = gl_ProjectionMatrix * gl_Position;
+    //gl_Position = gl_PositionIn[0];
+    vec4 p1 = gl_PositionIn[0];
+    vec4 p2 = gl_PositionIn[1];
+    p1.xy += vec2(0, -halfsize);
+
+    gl_Position = gl_ProjectionMatrix * p1;
     EmitVertex();
       
     gl_TexCoord[0].st = vec2(1.0,1.0);
-    gl_Position = gl_PositionIn[0];
-    gl_Position.xy += vec2(halfsize, halfsize);
-    gl_Position = gl_ProjectionMatrix * gl_Position;
+    //gl_Position = gl_PositionIn[0];
+    p1 = gl_PositionIn[0];
+    p2 = gl_PositionIn[1];
+    p1.xy += vec2(0, halfsize);
+
+    gl_Position = gl_ProjectionMatrix * p1;
     EmitVertex();
 
     gl_TexCoord[0].st = vec2(-1.0,-1.0);
-    gl_Position = gl_PositionIn[0];
-    gl_Position.xy += vec2(-halfsize, -halfsize);
-    gl_Position = gl_ProjectionMatrix * gl_Position;
+    //gl_Position = gl_PositionIn[0];
+    p1 = gl_PositionIn[0];
+    p2 = gl_PositionIn[1];
+    p2.xy += vec2(0, -halfsize);
+
+    gl_Position = gl_ProjectionMatrix * p2;
     EmitVertex();
 
     gl_TexCoord[0].st = vec2(-1.0,1.0);
-    gl_Position = gl_PositionIn[0];
-    gl_Position.xy += vec2(-halfsize, halfsize);
-    gl_Position = gl_ProjectionMatrix * gl_Position;
+    //gl_Position = gl_PositionIn[0];
+    p1 = gl_PositionIn[0];
+    p2 = gl_PositionIn[1];
+    p2.xy += vec2(0, halfsize);
+
+    gl_Position = gl_ProjectionMatrix * p2;
     EmitVertex();
       
     EndPrimitive();
-	}
+  }
 }

@@ -86,16 +86,16 @@ movePointScale.setFloat(8.0)
 movePointProgram = ProgramAsset()
 movePointProgram.name = "movePoints"
 movePointProgram.vertexShaderName = "movementShaders/Sphere.vert" #here are our shaders
-movePointProgram.fragmentShaderName = "movementShaders/Sphere.frag"
-movePointProgram.geometryShaderName = "movementShaders/mySphere.geom"
+movePointProgram.fragmentShaderName = "movementShaders/Line.frag"
+movePointProgram.geometryShaderName = "movementShaders/myLine.geom"
 movePointProgram.geometryOutVertices = 4
-movePointProgram.geometryInput = PrimitiveType.Points
+movePointProgram.geometryInput = PrimitiveType.Point
 movePointProgram.geometryOutput = PrimitiveType.TriangleStrip
 scene.addProgram(movePointProgram)
 
 movePointCloudModel = ModelInfo()
 movePointCloudModel.name = 'movePointCloud'
-movePointCloudModel.path = 'all.xyzb'#'XY_Chibi_Christmas_Parsed.xyzb'#'Chibi_Christmas_Parsed.xyzb' #'newpng.xyzb'
+movePointCloudModel.path = 'allChibi.xyzb'#'XY_Chibi_Christmas_Parsed.xyzb'#'Chibi_Christmas_Parsed.xyzb' #'newpng.xyzb'
 #movePointCloudModel.options = "10000 100:1000000:5 20:100:4 6:20:2 0:5:1"
 movePointCloudModel.options = "10000 100:1000000:20 20:100:10 6:20:5 0:5:5"
 #movePointCloudModel.options = "10000 0:1000000:1"
@@ -234,7 +234,7 @@ for line in content:                                #loop through file
                                                     #line
 
     l = c1.addLine()                                #add a line to the marker object
-    l.setStart(Vector3(float(tokens[0]), float(tokens[1]), 0))
+    l.setStart(Vector3(float(tokens[0]), float(tokens[1]), 1))
     l.setEnd(Vector3(float(tokens[0]), float(tokens[1]), int(tokens[2])*0.18))
     l.setThickness(thickness)
     s = SphereShape.create(thickness/2, 2)           #create a cap for the marker
@@ -254,11 +254,24 @@ def markTrees(value):
         toggleTrees = not toggleTrees
         treeNode.setChildrenVisible(toggleTrees)
 
-def findClosestTree(value):
+def onUpdate(frame, time, dt):
     global treeList
-    if (value == 1):
-
-    print "Should find closest tree to camera"
+    global thickness
+    c2 = LineSet.create()
+    for node in treeList:
+        v = Vector3(node[0], node[1], node[2])
+        cameraPos = getDefaultCamera().getPosition()
+        if ((v - cameraPos) <= 10):
+            l2 = c2.addLine()
+            l2.setStart(Vector3(node[0],node[1],node[2]))
+            l2.setEnd(cameraPos)
+            l2.setThickness(thickness)
+            s2 = SphereShape.create(thickness/2, 2)
+            c2.addChild(s)
+            s2.setEffect('colored -e black')
+            s2.setPosition(Vector3(cameraPos))
+            c2.setEffect('colored -e black')
+setUpdateFunction(onUpdate)
         
 
 #--------------------------------------------------------------------------------------
@@ -327,13 +340,19 @@ def allDay(value):
     # print( "one day step " + myStartDay)
 
 def setColorBy(value):
+    global colorBy
     colorBy.setInt(value)
 
     # print( "set color by " + value)
 
-def setSelIn1(value):
-    colorBy.setInt(value)
+def setSelInd1(value):
+    global selectedIndividual1
+    selectedIndividual1.setInt(value)
 
+
+def setSelInd2(value):
+    global selectedIndividual2
+    selectedIndividual2.setInt(value)
     # print( "set color by " + value)
 
 def onPointSizeSliderValueChanged(value):
@@ -351,8 +370,6 @@ def onAlphaSliderValueChanged(value):
     #globalAlpha.setFloat(a)
     pointCloud.getMaterial().setAlpha(a)
 
-
-
 def viewVertical(value):
     global currentPitch
     global currentYaw
@@ -369,7 +386,6 @@ def viewHorizontal(value):
         currentPitch = 45
         getDefaultCamera().setPitchYawRoll(Vector3(currentPitch, currentYaw,0))
         getDefaultCamera().setPosition(Vector3(imgResRatioX*10260/2, 0, 500))
-
 
 
 # --Event handler
