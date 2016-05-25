@@ -87,9 +87,9 @@ movePointProgram = ProgramAsset()
 movePointProgram.name = "movePoints"
 movePointProgram.vertexShaderName = "movementShaders/Sphere.vert" #here are our shaders
 movePointProgram.fragmentShaderName = "movementShaders/Line.frag"
-movePointProgram.geometryShaderName = "movementShaders/myLine.geom"
+movePointProgram.geometryShaderName = "movementShaders/mySphere.geom"
 movePointProgram.geometryOutVertices = 4
-movePointProgram.geometryInput = PrimitiveType.Point
+movePointProgram.geometryInput = PrimitiveType.Points
 movePointProgram.geometryOutput = PrimitiveType.TriangleStrip
 scene.addProgram(movePointProgram)
 
@@ -246,6 +246,9 @@ trees.close()                                        #close the file
 treeNode.addChild(c1)                                #add the object as a child to the scene
 treeNode.setChildrenVisible(False)                   #set it as invisible
 
+thickness2 = 5
+c2 = LineSet.create()
+
 def markTrees(value):
     global toggleTrees
     global treeNode
@@ -256,21 +259,24 @@ def markTrees(value):
 
 def onUpdate(frame, time, dt):
     global treeList
-    global thickness
-    c2 = LineSet.create()
+    global thickness2
+    global c2
     for node in treeList:
-        v = Vector3(node[0], node[1], node[2])
+        v = Vector3(float(node[0]), float(node[1]), float(node[2])*.18)
         cameraPos = getDefaultCamera().getPosition()
-        if ((v - cameraPos) <= 10):
+        if (abs(v - cameraPos) <= 250):
+            print "Close to a tree\n"
             l2 = c2.addLine()
-            l2.setStart(Vector3(node[0],node[1],node[2]))
-            l2.setEnd(cameraPos)
-            l2.setThickness(thickness)
-            s2 = SphereShape.create(thickness/2, 2)
+            l2.setStart(v)
+            v2 = cameraPos-v
+            normal = v2.normalize()
+            l2.setEnd((cameraPos-2*normal))
+            l2.setThickness(thickness2)
+            s2 = SphereShape.create(thickness2/2, 2)
             c2.addChild(s)
-            s2.setEffect('colored -e black')
-            s2.setPosition(Vector3(cameraPos))
-            c2.setEffect('colored -e black')
+            s2.setEffect('colored -e red')
+            s2.setPosition((cameraPos-2*normal))
+            c2.setEffect('colored -e red')
 setUpdateFunction(onUpdate)
         
 
