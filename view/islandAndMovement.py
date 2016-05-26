@@ -204,6 +204,7 @@ btn22 = ss5.addButton("Judy 4656", "setSelInd2(4656)")
 btn23 = ss5.addButton("Merk 4665", "setSelInd2(4665)")
 
 ss6 = mm.getMainMenu().addButton("Show Fruit Trees", "markTrees(1)")
+ss7 = mm.getMainMenu().addButton("Draw Lines to Trees", "drawLinesToTrees(1)")
 
 #btnAll.setRadio(True)
 
@@ -214,12 +215,20 @@ toggleTrees = False
 thickness = 13
 treeNode = SceneNode.create('treeNode')
 getScene().addChild(treeNode)
-
+treeList = []
+treeIndex = 0
 trees = open("treesFloat.txt", "r")
 content = trees.readlines()
 c1 = LineSet.create()
 for line in content:
     tokens = line.split(" ")
+
+    treeList.append([])
+    treeList[treeIndex].append(float(tokens[0]))
+    treeList[treeIndex].append(float(tokens[1]))
+    treeList[treeIndex].append(float(tokens[2]))
+    treeIndex += 1
+
     l = c1.addLine()
     l.setStart(Vector3(float(tokens[0]), float(tokens[1]), 0))
     l.setEnd(Vector3(float(tokens[0]), float(tokens[1]), int(tokens[2])*0.18))
@@ -240,6 +249,46 @@ def markTrees(value):
     if (value == 1):
         toggleTrees = not toggleTrees
         treeNode.setChildrenVisible(toggleTrees)
+
+showOtherTrees = SceneNode.create('showOtherTrees')
+getScene().addChild(showOtherTrees)
+
+
+toggleLineToTrees = False
+
+def drawLinesToTrees(value):
+    global toggleLineToTrees
+    if (value == 1):
+        toggleLineToTrees = not toggleLineToTrees
+
+
+def onUpdate(frame, time, dt):
+    global treeList
+    global toggleLineToTrees
+    global showOtherTrees
+    
+    if (toggleLineToTrees):
+        c2 = LineSet.create()
+        #showOtherTrees.removeChildByRef(c2)
+        
+        thickness2 = 3
+        for node in treeList:
+            vec = Vector3(node[0], node[1], node[2]*0.18)
+            camVec = getDefaultCamera().getPosition()
+            if (abs(vec - camVec) <= 100):
+                l2 = c2.addLine()
+                l2.setStart(vec)
+                vec2 = vec - camVec
+                normal = vec2.normalize()
+                l2.setEnd(camVec - 10*normal)
+                l2.setThickness(thickness2)
+                s2 = SphereShape.create(thickness2/2, 2)
+                c2.addChild(s2)
+                s2.setEffect('colored -e red')
+                s2.setPosition(camVec - 10*normal)
+                c2.setEffect('colored -e red')
+        #showOtherTrees.addChild(c2)
+setUpdateFunction(onUpdate)
         
 
 #--------------------------------------------------------------------------------------
