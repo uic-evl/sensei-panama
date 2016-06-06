@@ -42,8 +42,8 @@ main(void)
   //    drawPoint = true; 
   if( drawPoint && (day >= startDay && day < endDay) )
 	    drawPoint = true;
-  else
-      drawPoint = false;
+  //else
+  //    drawPoint = false;
 	    
 	if( drawPoint ) {
 

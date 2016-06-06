@@ -42,8 +42,8 @@ main(void)
   //    drawPoint = true; 
   if( drawPoint && (day >= startDay && day < endDay) )
         drawPoint = true;
-  else
-      drawPoint = false;
+  //else
+  //    drawPoint = false;
         
     if( drawPoint ) {
 
@@ -144,43 +144,47 @@ main(void)
 
 
 
-    eye_position = gl_PositionIn[0];
+    eye_position = (gl_PositionIn[0] + gl_PositionIn[1])/2;
     vertex_light_position = normalize(gl_LightSource[0].position.xyz - eye_position.xyz);
 
     gl_TexCoord[0].st = vec2(1.0,-1.0);
     //gl_Position = gl_PositionIn[0];
     vec4 p1 = gl_PositionIn[0];
     vec4 p2 = gl_PositionIn[1];
-    p1.xy += vec2(0, -halfsize);
+    //p2.xy += vec2(0, -halfsize);
+    p2.xy = vec2(p2.x, p1.y);
 
-    gl_Position = gl_ProjectionMatrix * p1;
+    gl_Position = gl_ProjectionMatrix * p2;
     EmitVertex();
       
     gl_TexCoord[0].st = vec2(1.0,1.0);
     //gl_Position = gl_PositionIn[0];
     p1 = gl_PositionIn[0];
     p2 = gl_PositionIn[1];
-    p1.xy += vec2(0, halfsize);
+    //p2.xy += vec2(0, halfsize);
+    p2.xy = vec2(p2.x, p2.y);
 
-    gl_Position = gl_ProjectionMatrix * p1;
+    gl_Position = gl_ProjectionMatrix * p2;
     EmitVertex();
 
     gl_TexCoord[0].st = vec2(-1.0,-1.0);
     //gl_Position = gl_PositionIn[0];
     p1 = gl_PositionIn[0];
     p2 = gl_PositionIn[1];
-    p2.xy += vec2(0, -halfsize);
+    //p1.xy += vec2(0, -halfsize);
+    p1.xy = vec2(p1.x, p1.y);
 
-    gl_Position = gl_ProjectionMatrix * p2;
+    gl_Position = gl_ProjectionMatrix * p1;
     EmitVertex();
 
     gl_TexCoord[0].st = vec2(-1.0,1.0);
     //gl_Position = gl_PositionIn[0];
     p1 = gl_PositionIn[0];
     p2 = gl_PositionIn[1];
-    p2.xy += vec2(0, halfsize);
+    //p1.xy += vec2(0, halfsize);
+    p1.xy = vec2(p1.x, p2.y);
 
-    gl_Position = gl_ProjectionMatrix * p2;
+    gl_Position = gl_ProjectionMatrix * p1;
     EmitVertex();
       
     EndPrimitive();

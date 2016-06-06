@@ -15,6 +15,18 @@ plane.setEffect("textured -v emissive -d 50Island.png")
 
 
 #-----------------------------------------------------------------------------
+#Terrain code
+def loadModelAsync(name, path):
+    model = ModelInfo()
+    model.name = name
+    model.path = path
+    model.optimize = True
+    model.usePowerOfTwoTextures = False
+    scene.loadModelAsync(model, "onModelLoaded('" + model.name + "')")
+    
+loadModelAsync("Terrain", "5terrainMap.fbx")
+
+#-----------------------------------------------------------------------------
 #PointCloud code
 scene = getSceneManager()
 scene.addLoader(BinaryPointsLoader())
@@ -86,16 +98,16 @@ movePointScale.setFloat(8.0)
 movePointProgram = ProgramAsset()
 movePointProgram.name = "movePoints"
 movePointProgram.vertexShaderName = "movementShaders/Sphere.vert" #here are our shaders
-movePointProgram.fragmentShaderName = "movementShaders/Sphere.frag"
-movePointProgram.geometryShaderName = "movementShaders/mySphere.geom"
+movePointProgram.fragmentShaderName = "movementShaders/Line.frag"
+movePointProgram.geometryShaderName = "movementShaders/myLine.geom"
 movePointProgram.geometryOutVertices = 4
-movePointProgram.geometryInput = PrimitiveType.Points
+movePointProgram.geometryInput = PrimitiveType.LineStrip
 movePointProgram.geometryOutput = PrimitiveType.TriangleStrip
 scene.addProgram(movePointProgram)
 
 movePointCloudModel = ModelInfo()
 movePointCloudModel.name = 'movePointCloud'
-movePointCloudModel.path = 'all.xyzb'#'XY_Chibi_Christmas_Parsed.xyzb'#'Chibi_Christmas_Parsed.xyzb' #'newpng.xyzb'
+movePointCloudModel.path = 'allChibi.xyzb'#'XY_Chibi_Christmas_Parsed.xyzb'#'Chibi_Christmas_Parsed.xyzb' #'newpng.xyzb'
 #movePointCloudModel.options = "10000 100:1000000:5 20:100:4 6:20:2 0:5:1"
 movePointCloudModel.options = "10000 100:1000000:20 20:100:10 6:20:5 0:5:5"
 #movePointCloudModel.options = "10000 0:1000000:1"
@@ -231,12 +243,12 @@ for line in content:
 
     l = c1.addLine()
     l.setStart(Vector3(float(tokens[0]), float(tokens[1]), 0))
-    l.setEnd(Vector3(float(tokens[0]), float(tokens[1]), int(tokens[2])*0.18))
+    l.setEnd(Vector3(float(tokens[0]), float(tokens[1]), int(tokens[2])))
     l.setThickness(thickness)
     s = SphereShape.create(thickness/2, 2)
     c1.addChild(s)
     s.setEffect('colored -e black')
-    s.setPosition(Vector3(float(tokens[0]), float(tokens[1]), int(tokens[2])*0.18))
+    s.setPosition(Vector3(float(tokens[0]), float(tokens[1]), int(tokens[2])))
     c1.setEffect('colored -e black')
 trees.close()
 treeNode.addChild(c1)
@@ -253,8 +265,10 @@ def markTrees(value):
 showOtherTrees = SceneNode.create('showOtherTrees')
 getScene().addChild(showOtherTrees)
 
-
+c2 = LineSet.create()
 toggleLineToTrees = False
+lineList = []
+numLines = 0
 
 def drawLinesToTrees(value):
     global toggleLineToTrees
@@ -266,11 +280,14 @@ def onUpdate(frame, time, dt):
     global treeList
     global toggleLineToTrees
     global showOtherTrees
-    
+    global c2
+    global lineList
+
+    while lineList:
+        line = lineList.pop()
+        c2.removeLine(line)
+
     if (toggleLineToTrees):
-        c2 = LineSet.create()
-        #showOtherTrees.removeChildByRef(c2)
-        
         thickness2 = 3
         for node in treeList:
             vec = Vector3(node[0], node[1], node[2]*0.18)
@@ -287,6 +304,7 @@ def onUpdate(frame, time, dt):
                 s2.setEffect('colored -e red')
                 s2.setPosition(camVec - 10*normal)
                 c2.setEffect('colored -e red')
+                lineList.append(l2)
         #showOtherTrees.addChild(c2)
 setUpdateFunction(onUpdate)
         
