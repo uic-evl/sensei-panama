@@ -65,7 +65,7 @@ mat.attachUniform(globalAlpha)
 getDefaultCamera().setPosition(imgResRatioX*10260/2, imgResRatioY*9850/2, 2500)
 
 #---------------------------------------------------------------------------
-# Movement point cloud code
+# Movement point cloud code GPU Version
 
 #filters
 startDay = Uniform.create('startDay', UniformType.Int, 1)
@@ -101,7 +101,7 @@ movePointProgram.vertexShaderName = "movementShaders/Sphere.vert" #here are our 
 movePointProgram.fragmentShaderName = "movementShaders/Line.frag"
 movePointProgram.geometryShaderName = "movementShaders/myLine.geom"
 movePointProgram.geometryOutVertices = 4
-movePointProgram.geometryInput = PrimitiveType.LineStrip
+movePointProgram.geometryInput = PrimitiveType.Points
 movePointProgram.geometryOutput = PrimitiveType.TriangleStrip
 scene.addProgram(movePointProgram)
 
@@ -124,6 +124,33 @@ moveMat.attachUniform(endDay)
 moveMat.attachUniform(selectedIndividual1)
 moveMat.attachUniform(selectedIndividual2)
 moveMat.attachUniform(colorBy)
+
+
+#CPU Version
+movement = open("parsedAllChibi.txt", "r")
+moveContent = movement.readlines()
+thickness3 = 13
+c3 = LineSet.create()
+moveList = []
+moveIndex = 0
+
+for line in moveContent:
+    tokens = line.split(" ")
+    moveList.append([])
+    moveList[moveIndex].append(tokens[0])
+    moveList[moveIndex].append(tokens[1])
+    moveList[moveIndex].append(tokens[2])
+    moveIndex += 1
+
+for i in range(0,moveIndex):
+    if (i+1 < moveIndex):
+        l3 = c3.addLine()
+        l3.setStart(Vector3(float(moveList[i][0]), float(moveList[i][1]), moveList[i][2]))
+        l3.setEnd(Vector3(float(moveList[i+1][0]), float(moveList[i+1][1]), int(moveList[i+1][2])))
+        l3.setThickness(thickness)
+        c1.setEffect('colored -e blue')
+movement.close()
+
 
 #---------------------------------------------------------------------------
 #Menu items
@@ -230,9 +257,9 @@ getScene().addChild(treeNode)
 treeList = []
 treeIndex = 0
 trees = open("treesFloat.txt", "r")
-content = trees.readlines()
+treeContent = trees.readlines()
 c1 = LineSet.create()
-for line in content:
+for line in treeContent:
     tokens = line.split(" ")
 
     treeList.append([])
