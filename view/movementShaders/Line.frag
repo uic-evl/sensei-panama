@@ -11,6 +11,7 @@ void main (void)
     float x = gl_TexCoord[0].x;
     float y = gl_TexCoord[0].y;
 
+    //Now we are shading the entire rectangle given by .geom
     //if (y <= -0.7 || y >= 0.7)
     //    discard;
 

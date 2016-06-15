@@ -44,6 +44,9 @@ main(void)
 	    drawPoint = true;
   //else
   //    drawPoint = false;
+
+  //***********************************************************************************************
+  //Don't worry about this. It's computing a color by time
 	    
 	if( drawPoint ) {
 
@@ -143,6 +146,8 @@ main(void)
     }
 
 
+    //**********************************************************************************************
+    //Here is our changes to the .geom
 
     eye_position = gl_PositionIn[0];
     vertex_light_position = normalize(gl_LightSource[0].position.xyz - eye_position.xyz);

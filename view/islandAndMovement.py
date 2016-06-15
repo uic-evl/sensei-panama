@@ -7,9 +7,9 @@ from pointCloud import *
 #Planeview code
 imgResRatioX = 0.18/(float(10260)/32064)
 imgResRatioY = 0.18/(float(9850)/30780)
-# plane = PlaneShape.create(imgResRatioX*10260, imgResRatioY*9850)
-# plane.setPosition(Vector3(imgResRatioX*10260/2, imgResRatioY*9850/2, 0))
-# plane.setEffect("textured -v emissive -d 50Island.png")
+plane = PlaneShape.create(imgResRatioX*10260, imgResRatioY*9850)
+plane.setPosition(Vector3(imgResRatioX*10260/2, imgResRatioY*9850/2, 0))
+plane.setEffect("textured -v emissive -d 50Island.png")
 
 #-----------------------------------------------------------------------------
 #PointCloud code
@@ -53,112 +53,122 @@ getDefaultCamera().setPosition(imgResRatioX*10260/2, imgResRatioY*9850/2, 2500)
 # Movement point cloud code GPU Version
 
 #filters
-# startDay = Uniform.create('startDay', UniformType.Int, 1)
-# endDay = Uniform.create('endDay', UniformType.Int, 1)
+startDay = Uniform.create('startDay', UniformType.Int, 1)
+endDay = Uniform.create('endDay', UniformType.Int, 1)
 
-# myStartDay = 0
-# myEndDay = 1
-# dayIncrement = 1
-# numberOfDays = 84
-# currentPitch = 0
-# currentYaw = 0
-# currentRoll = 0
+myStartDay = 0
+myEndDay = 1
+dayIncrement = 1
+numberOfDays = 84
+currentPitch = 0
+currentYaw = 0
+currentRoll = 0
 
-# startDay.setInt(myStartDay)
-# endDay.setInt(myEndDay)
+startDay.setInt(myStartDay)
+endDay.setInt(myEndDay)
 
-# colorBy = Uniform.create('colorBy', UniformType.Int, 1) #if 1, shaders turn on.  If 0, shaders turn off
-# colorBy.setInt(0)
+colorBy = Uniform.create('colorBy', UniformType.Int, 1) #if 1, shaders turn on.  If 0, shaders turn off
+colorBy.setInt(0)
 
-# selectedIndividual1 = Uniform.create('selectedIndividual1', UniformType.Int, 1) #if 1, shaders turn on.  If 0, shaders turn off
-# selectedIndividual1.setInt(4693)
+selectedIndividual1 = Uniform.create('selectedIndividual1', UniformType.Int, 1) #if 1, shaders turn on.  If 0, shaders turn off
+selectedIndividual1.setInt(4693)
 
-# selectedIndividual2 = Uniform.create('selectedIndividual2', UniformType.Int, 1) #if 1, shaders turn on.  If 0, shaders turn off
-# selectedIndividual2.setInt(4693)
+selectedIndividual2 = Uniform.create('selectedIndividual2', UniformType.Int, 1) #if 1, shaders turn on.  If 0, shaders turn off
+selectedIndividual2.setInt(4693)
 
-# movePointScale = Uniform.create('movePointScale', UniformType.Float, 1)
-# movePointScale.setFloat(8.0)
+movePointScale = Uniform.create('movePointScale', UniformType.Float, 1)
+movePointScale.setFloat(8.0)
 
-# #Point cloud created here- makes sure it is different name from James point cloud
-# movePointProgram = ProgramAsset()
-# movePointProgram.name = "movePoints"
-# movePointProgram.vertexShaderName = "movementShaders/Sphere.vert" #here are our shaders
-# movePointProgram.fragmentShaderName = "movementShaders/Line.frag"
-# movePointProgram.geometryShaderName = "movementShaders/myLine.geom"
-# movePointProgram.geometryOutVertices = 4
-# movePointProgram.geometryInput = PrimitiveType.Points
-# movePointProgram.geometryOutput = PrimitiveType.TriangleStrip
-# scene.addProgram(movePointProgram)
+#Point cloud created here- makes sure it is different name from James point cloud
+movePointProgram = ProgramAsset()
+movePointProgram.name = "movePoints"
+movePointProgram.vertexShaderName = "movementShaders/Sphere.vert" #here are our shaders
+movePointProgram.fragmentShaderName = "movementShaders/Line.frag"
+movePointProgram.geometryShaderName = "movementShaders/myLine.geom"
+movePointProgram.geometryOutVertices = 4
+movePointProgram.geometryInput = PrimitiveType.LineStrip
+movePointProgram.geometryOutput = PrimitiveType.TriangleStrip
+scene.addProgram(movePointProgram)
 
-# movePointCloudModel = ModelInfo()
-# movePointCloudModel.name = 'movePointCloud'
-# movePointCloudModel.path = 'allChibi.xyzb'#'XY_Chibi_Christmas_Parsed.xyzb'#'Chibi_Christmas_Parsed.xyzb' #'newpng.xyzb'
-# #movePointCloudModel.options = "10000 100:1000000:5 20:100:4 6:20:2 0:5:1"
-# movePointCloudModel.options = "10000 100:1000000:20 20:100:10 6:20:5 0:5:5"
-# #movePointCloudModel.options = "10000 0:1000000:1"
-# scene.loadModel(movePointCloudModel)
+movePointCloudModel = ModelInfo()
+movePointCloudModel.name = 'movePointCloud'
+movePointCloudModel.path = 'allChibi.xyzb'#'XY_Chibi_Christmas_Parsed.xyzb'#'Chibi_Christmas_Parsed.xyzb' #'newpng.xyzb'
+#movePointCloudModel.options = "10000 100:1000000:5 20:100:4 6:20:2 0:5:1"
+movePointCloudModel.options = "10000 100:1000000:20 20:100:10 6:20:5 0:5:5"
+#movePointCloudModel.options = "10000 0:1000000:1"
+scene.loadModel(movePointCloudModel)
 
-# movePointCloud = StaticObject.create(movePointCloudModel.name)
-# # attach shader uniforms
-# moveMat = movePointCloud.getMaterial()
-# moveMat.setProgram(movePointProgram.name)
+movePointCloud = StaticObject.create(movePointCloudModel.name)
+# attach shader uniforms
+moveMat = movePointCloud.getMaterial()
+moveMat.setProgram(movePointProgram.name)
 
-# moveMat.attachUniform(movePointScale)
-# moveMat.attachUniform(startDay)
-# moveMat.attachUniform(endDay)
-# moveMat.attachUniform(selectedIndividual1)
-# moveMat.attachUniform(selectedIndividual2)
-# moveMat.attachUniform(colorBy)
+moveMat.attachUniform(movePointScale)
+moveMat.attachUniform(startDay)
+moveMat.attachUniform(endDay)
+moveMat.attachUniform(selectedIndividual1)
+moveMat.attachUniform(selectedIndividual2)
+moveMat.attachUniform(colorBy)
 
 
 #CPU Version
-movement = open("parsedAllChibi.txt", "r")
-moveContent = movement.readlines()
-thickness3 = 10
-c3 = LineSet.create()
-moveList = []
-moveIndex = 0
+# movement = open("parsedAllChibi.txt", "r")
+# moveContent = movement.readlines()
+# thickness3 = 8
+# c3 = LineSet.create()
+# moveList = []
+# moveIndex = 0
 
-for line in moveContent:
-    tokens = line.split(" ")
-    moveList.append([])
-    moveList[moveIndex].append(tokens[0])
-    moveList[moveIndex].append(tokens[1])
-    moveList[moveIndex].append(tokens[2])
-    moveIndex += 1
+# for line in moveContent:
+#     tokens = line.split(" ")
+#     moveList.append([])
+#     moveList[moveIndex].append(tokens[0])
+#     moveList[moveIndex].append(tokens[1])
+#     moveList[moveIndex].append(tokens[2])
+#     moveIndex += 1
 
-for i in range(0,moveIndex):
-    if (i+1 < moveIndex):
-        l3 = c3.addLine()
-        l3.setStart(Vector3(float(moveList[i][0]), float(moveList[i][1]), float(moveList[i][2])))
-        l3.setEnd(Vector3(float(moveList[i+1][0]), float(moveList[i+1][1]), float(moveList[i+1][2])))
-        l3.setThickness(thickness3)
-        c3.setEffect('colored -e blue')
-movement.close()
+# for i in range(0,moveIndex):
+#     if (i+1 < moveIndex):
+#         l3 = c3.addLine()
+#         l3.setStart(Vector3(float(moveList[i][0]), float(moveList[i][1]), float(moveList[i][2])))
+#         l3.setEnd(Vector3(float(moveList[i+1][0]), float(moveList[i+1][1]), float(moveList[i+1][2])))
+#         l3.setThickness(thickness3)
+#         c3.setEffect('colored -e blue')
+# movement.close()
 
 #-----------------------------------------------------------------------------
 #Terrain code
-def loadModelAsync(name, path):
-    model = ModelInfo()
-    model.name = name
-    model.path = path
-    model.optimize = True
-    model.usePowerOfTwoTextures = False
-    scene.loadModelAsync(model, "onModelLoaded('" + model.name + "')")
+# def loadModelAsync(name, path):
+#     model = ModelInfo()
+#     model.name = name
+#     model.path = path
+#     model.optimize = True
+#     model.usePowerOfTwoTextures = False
+#     scene.loadModelAsync(model, "onModelLoaded('" + model.name + "')")
 
-def onModelLoaded(name):
-    model = StaticObject.create(name)
-    model.setEffect("textured")  
+# def onModelLoaded(name):
+#     model = StaticObject.create(name)
+#     model.setEffect('colored -d #404040')
 
-loadModelAsync("Terrain", "5terrainMap.fbx")
+# loadModelAsync("Terrain", "5terrainMap.fbx")
 
 #---------------------------------------------------------------------------
 #Set up Lights
-light = Light.create()
-light.setColor(Color("#ABABAB"))
-light.setAmbient(Color("#000000"))
-light.setPosition(Vector3(0, 0, 200))
-light.setEnabled(True)
+# light = Light.create()
+# light.setColor(Color("white"))
+# light.setAmbient(Color("black"))
+# light.setPosition(Vector3(imgResRatioX*10260/2, imgResRatioY*9850/2, 2000))
+# light.setEnabled(True)
+
+# headlight = Light.create()
+# headlight.setColor(Color("white"))
+# headlight.setEnabled(True)
+
+# light2 = Light.create()
+# light2.setAmbient(Color("black"))
+# light2.setEnabled(True)
+
+# getDefaultCamera().addChild(headlight)
 
 
 #---------------------------------------------------------------------------

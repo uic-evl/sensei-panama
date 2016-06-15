@@ -44,6 +44,9 @@ main(void)
         drawPoint = true;
   //else
   //    drawPoint = false;
+
+  //************************************************************************************************
+  //Don't worry about this. It's computing a color by time
         
     if( drawPoint ) {
 
@@ -142,47 +145,41 @@ main(void)
         gl_FrontColor = vec4( 85.0/255.0,136.0/255.0,244.0/255.0, 1.0 );
     }
 
+    //************************************************************************************************
+    //Our changes start here
 
-
-    eye_position = (gl_PositionIn[0] + gl_PositionIn[1])/2;
+    eye_position = (gl_PositionIn[0] + gl_PositionIn[1])/2;         //Computing the midpoint
     vertex_light_position = normalize(gl_LightSource[0].position.xyz - eye_position.xyz);
 
+    //Drawing a rectangle between two points p1 and p2
     gl_TexCoord[0].st = vec2(1.0,-1.0);
-    //gl_Position = gl_PositionIn[0];
     vec4 p1 = gl_PositionIn[0];
     vec4 p2 = gl_PositionIn[1];
-    //p2.xy += vec2(0, -halfsize);
-    p2.xy = vec2(p2.x, p1.y);
+    p2.xy += vec2(0, -halfsize);
 
     gl_Position = gl_ProjectionMatrix * p2;
     EmitVertex();
       
     gl_TexCoord[0].st = vec2(1.0,1.0);
-    //gl_Position = gl_PositionIn[0];
     p1 = gl_PositionIn[0];
     p2 = gl_PositionIn[1];
-    //p2.xy += vec2(0, halfsize);
-    p2.xy = vec2(p2.x, p2.y);
+    p2.xy += vec2(0, halfsize);
 
     gl_Position = gl_ProjectionMatrix * p2;
     EmitVertex();
 
     gl_TexCoord[0].st = vec2(-1.0,-1.0);
-    //gl_Position = gl_PositionIn[0];
     p1 = gl_PositionIn[0];
     p2 = gl_PositionIn[1];
-    //p1.xy += vec2(0, -halfsize);
-    p1.xy = vec2(p1.x, p1.y);
+    p1.xy += vec2(0, -halfsize);
 
     gl_Position = gl_ProjectionMatrix * p1;
     EmitVertex();
 
     gl_TexCoord[0].st = vec2(-1.0,1.0);
-    //gl_Position = gl_PositionIn[0];
     p1 = gl_PositionIn[0];
     p2 = gl_PositionIn[1];
-    //p1.xy += vec2(0, halfsize);
-    p1.xy = vec2(p1.x, p2.y);
+    p1.xy += vec2(0, halfsize);
 
     gl_Position = gl_ProjectionMatrix * p1;
     EmitVertex();
