@@ -148,7 +148,7 @@ main(void)
     //************************************************************************************************
     //Our changes start here
 
-    eye_position = (gl_PositionIn[0] + gl_PositionIn[1])/2;         //Computing the midpoint
+    eye_position.xyz = (gl_PositionIn[0].xyz + gl_PositionIn[1].xyz)/2;         //Computing the midpoint
     vertex_light_position = normalize(gl_LightSource[0].position.xyz - eye_position.xyz);
 
     //Drawing a rectangle between two points p1 and p2

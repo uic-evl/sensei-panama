@@ -31,6 +31,7 @@ main(void)
 	int hr = int(gl_FrontColor.g);
 	int min = int(gl_FrontColor.b);
   int individualID = int(gl_FrontColor.a);
+  float dayModSeven = mod(day, 7);
 	  
 	//Example using the gl_FrontColor values for filtering!!
 	bool drawPoint = true;
@@ -42,8 +43,8 @@ main(void)
   //    drawPoint = true; 
   if( drawPoint && (day >= startDay && day < endDay) )
 	    drawPoint = true;
-  //else
-  //    drawPoint = false;
+  else
+      drawPoint = false;
 
   //***********************************************************************************************
   //Don't worry about this. It's computing a color by time
@@ -103,22 +104,22 @@ main(void)
         gl_FrontColor = vec4( 78.0/255.0,181.0/255.0,226.0/255.0, 1.0 );
     }
     if( colorBy == 3){
-      if( day < 10 )
+      if( dayModSeven == 0 )
         gl_FrontColor = vec4( 247.0/255.0,251.0/255.0,255.0/255.0, 1.0 );
-      if( day >= 10 && day < 20 )
+      if( dayModSeven == 1 )
         gl_FrontColor = vec4( 222.0/255.0,235.0/255.0,247.0/255.0, 1.0 );
-      if( day >= 20 && day < 30 )
+      if( dayModSeven == 2 )
         gl_FrontColor = vec4( 198.0/255.0,219.0/255.0,239.0/255.0, 1.0 );
-      if( day >= 30 && day < 40 )
+      if( dayModSeven == 3 )
         gl_FrontColor = vec4( 158.0/255.0,202.0/255.0,225.0/255.0, 1.0 );
-      if( day >= 40 && day < 50 )
+      if( dayModSeven == 4 )
         gl_FrontColor = vec4( 107.0/255.0,174.0/255.0,214.0/255.0, 1.0 );
-      if( day >= 50 && day < 60 )
+      if( dayModSeven == 5 )
         gl_FrontColor = vec4( 66.0/255.0,146.0/255.0,198.0/255.0, 1.0 );
-      if( day >= 60 && day < 70 )
+      if( dayModSeven == 6 )
         gl_FrontColor = vec4( 33.0/255.0,113.0/255.0,181.0/255.0, 1.0 );
-      if( day >= 70 && day < 84 )
-        gl_FrontColor = vec4( 8.0/255.0,81.0/255.0,156.0/255.0, 1.0 );
+      //if( day >= 70 && day < 84 )
+      //  gl_FrontColor = vec4( 8.0/255.0,81.0/255.0,156.0/255.0, 1.0 );
     }
     if( colorBy == 4){
       if( day < 10 )

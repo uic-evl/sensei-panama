@@ -1,7 +1,19 @@
 from omega import *
 from cyclops import *
 from pointCloud import *
+from math import *
 
+
+#----------------------------------------------------------------------------
+#UI Module code
+
+# uim = UiModule.createAndInitialize()
+
+# mainLayout = Container.create( ContainerLayout.LayoutFree, uim.getUi())
+# mainLayout.setStyle( 'fill: #00000080' ) #'fill: #655E8280' ) #c0beff80 ' ) # #80808080' )##00000080' )
+# mainLayout.setSize( Vector2( float(2000), float(2000) ) ) #Vector2( xPixelsPerScreen, yPixelsPerScreen) )#xPixelsPerScreen*2.0, yPixelsPerScreen/2.0 ))
+# mainLayout.setAutosize(False)
+# mainLayout.setPosition( Vector2(19224, 100) )
 
 #----------------------------------------------------------------------------
 #Planeview code
@@ -14,6 +26,7 @@ plane.setEffect("textured -v emissive -d 50Island.png")
 #-----------------------------------------------------------------------------
 #PointCloud code
 scene = getSceneManager()
+getDefaultCamera().setBackgroundColor(Color('black'))
 scene.addLoader(BinaryPointsLoader())
 
 setNearFarZ(0.1, 1000000)
@@ -53,73 +66,72 @@ getDefaultCamera().setPosition(imgResRatioX*10260/2, imgResRatioY*9850/2, 2500)
 # Movement point cloud code GPU Version
 
 #filters
-startDay = Uniform.create('startDay', UniformType.Int, 1)
-endDay = Uniform.create('endDay', UniformType.Int, 1)
+# startDay = Uniform.create('startDay', UniformType.Int, 1)
+# endDay = Uniform.create('endDay', UniformType.Int, 1)
 
-myStartDay = 0
-myEndDay = 1
-dayIncrement = 1
-numberOfDays = 84
-currentPitch = 0
-currentYaw = 0
-currentRoll = 0
+# myStartDay = 0
+# myEndDay = 1
+# dayIncrement = 1
+# numberOfDays = 84
+# currentPitch = 0
+# currentYaw = 0
+# currentRoll = 0
 
-startDay.setInt(myStartDay)
-endDay.setInt(myEndDay)
+# startDay.setInt(myStartDay)
+# endDay.setInt(myEndDay)
 
-colorBy = Uniform.create('colorBy', UniformType.Int, 1) #if 1, shaders turn on.  If 0, shaders turn off
-colorBy.setInt(0)
+# colorBy = Uniform.create('colorBy', UniformType.Int, 1) #if 1, shaders turn on.  If 0, shaders turn off
+# colorBy.setInt(0)
 
-selectedIndividual1 = Uniform.create('selectedIndividual1', UniformType.Int, 1) #if 1, shaders turn on.  If 0, shaders turn off
-selectedIndividual1.setInt(4693)
+# selectedIndividual1 = Uniform.create('selectedIndividual1', UniformType.Int, 1) #if 1, shaders turn on.  If 0, shaders turn off
+# selectedIndividual1.setInt(4693)
 
-selectedIndividual2 = Uniform.create('selectedIndividual2', UniformType.Int, 1) #if 1, shaders turn on.  If 0, shaders turn off
-selectedIndividual2.setInt(4693)
+# selectedIndividual2 = Uniform.create('selectedIndividual2', UniformType.Int, 1) #if 1, shaders turn on.  If 0, shaders turn off
+# selectedIndividual2.setInt(4693)
 
-movePointScale = Uniform.create('movePointScale', UniformType.Float, 1)
-movePointScale.setFloat(8.0)
+# movePointScale = Uniform.create('movePointScale', UniformType.Float, 1)
+# movePointScale.setFloat(8.0)
 
-#Point cloud created here- makes sure it is different name from James point cloud
-movePointProgram = ProgramAsset()
-movePointProgram.name = "movePoints"
-movePointProgram.vertexShaderName = "movementShaders/Sphere.vert" #here are our shaders
-movePointProgram.fragmentShaderName = "movementShaders/Line.frag"
-movePointProgram.geometryShaderName = "movementShaders/myLine.geom"
-movePointProgram.geometryOutVertices = 4
-movePointProgram.geometryInput = PrimitiveType.LineStrip
-movePointProgram.geometryOutput = PrimitiveType.TriangleStrip
-scene.addProgram(movePointProgram)
+# #Point cloud created here- makes sure it is different name from James point cloud
+# movePointProgram = ProgramAsset()
+# movePointProgram.name = "movePoints"
+# movePointProgram.vertexShaderName = "movementShaders/Sphere.vert" #here are our shaders
+# movePointProgram.fragmentShaderName = "movementShaders/Sphere.frag"
+# movePointProgram.geometryShaderName = "movementShaders/mySphere.geom"
+# movePointProgram.geometryOutVertices = 4
+# movePointProgram.geometryInput = PrimitiveType.Points
+# movePointProgram.geometryOutput = PrimitiveType.TriangleStrip
+# scene.addProgram(movePointProgram)
 
-movePointCloudModel = ModelInfo()
-movePointCloudModel.name = 'movePointCloud'
-movePointCloudModel.path = 'allChibi.xyzb'#'XY_Chibi_Christmas_Parsed.xyzb'#'Chibi_Christmas_Parsed.xyzb' #'newpng.xyzb'
-#movePointCloudModel.options = "10000 100:1000000:5 20:100:4 6:20:2 0:5:1"
-movePointCloudModel.options = "10000 100:1000000:20 20:100:10 6:20:5 0:5:5"
-#movePointCloudModel.options = "10000 0:1000000:1"
-scene.loadModel(movePointCloudModel)
+# movePointCloudModel = ModelInfo()
+# movePointCloudModel.name = 'movePointCloud'
+# movePointCloudModel.path = 'allChibi.xyzb'#'XY_Chibi_Christmas_Parsed.xyzb'#'Chibi_Christmas_Parsed.xyzb' #'newpng.xyzb'
+# #movePointCloudModel.options = "10000 100:1000000:5 20:100:4 6:20:2 0:5:1"
+# movePointCloudModel.options = "10000 100:1000000:20 20:100:10 6:20:5 0:5:5"
+# #movePointCloudModel.options = "10000 0:1000000:1"
+# scene.loadModel(movePointCloudModel)
 
-movePointCloud = StaticObject.create(movePointCloudModel.name)
-# attach shader uniforms
-moveMat = movePointCloud.getMaterial()
-moveMat.setProgram(movePointProgram.name)
+# movePointCloud = StaticObject.create(movePointCloudModel.name)
+# # attach shader uniforms
+# moveMat = movePointCloud.getMaterial()
+# moveMat.setProgram(movePointProgram.name)
 
-moveMat.attachUniform(movePointScale)
-moveMat.attachUniform(startDay)
-moveMat.attachUniform(endDay)
-moveMat.attachUniform(selectedIndividual1)
-moveMat.attachUniform(selectedIndividual2)
-moveMat.attachUniform(colorBy)
+# moveMat.attachUniform(movePointScale)
+# moveMat.attachUniform(startDay)
+# moveMat.attachUniform(endDay)
+# moveMat.attachUniform(selectedIndividual1)
+# moveMat.attachUniform(selectedIndividual2)
+# moveMat.attachUniform(colorBy)
 
 
 #CPU Version
 # movement = open("parsedAllChibi.txt", "r")
-# moveContent = movement.readlines()
 # thickness3 = 8
 # c3 = LineSet.create()
 # moveList = []
 # moveIndex = 0
 
-# for line in moveContent:
+# for line in movement:
 #     tokens = line.split(" ")
 #     moveList.append([])
 #     moveList[moveIndex].append(tokens[0])
@@ -136,8 +148,88 @@ moveMat.attachUniform(colorBy)
 #         c3.setEffect('colored -e blue')
 # movement.close()
 
+#Cylinder and Sphere Version
+
+def computeUTMToIMGXY (utmx, utmy):
+    startIMGUTMX = 624030.0137255481
+    startIMGUTMY = 1015207.0834458455
+
+    imgResRatioX = 0.18/(float(10260)/32064)
+    imgResRatioY = 0.18/(float(9850)/30780)
+
+    lastIMGUTMX = startIMGUTMX + 10260*imgResRatioX
+    lastIMGUTMY = startIMGUTMY - 9850*imgResRatioY
+
+    imgX = (utmx-startIMGUTMX)/(lastIMGUTMX-startIMGUTMX)*10260
+    imgY = (utmy-startIMGUTMY)/(lastIMGUTMY-startIMGUTMY)*9850
+    return (imgX, imgY)
+
+f = open("Chibi.txt", "r")
+
+thickness3 = 5
+thickness4 = 3
+firstRun = True
+counter = 0
+prevLine = ""
+for line in f:
+    line2 = f.next()
+    
+    if counter == 8000:
+        break
+    if not line2:
+        break
+    tokens2 = line2.split(" ")
+    if firstRun:
+        tokens = line.split(" ")
+        firstRun = False
+    else:
+        tokens = prevLine.split(" ")
+    pos1 = Vector3(float(tokens[0]), float(tokens[1]), float(tokens[2]))
+
+
+    # if firstRun:
+    #     s = SphereShape.create(thickness3/2, 1)
+    #     s.setPosition(pos1)
+    #     s.setEffect('colored -d blue')
+    #     firstRun = False
+    
+    pos2 = Vector3(float(tokens2[0]), float(tokens2[1]), float(tokens2[2]))
+    
+    # s2 = SphereShape.create(thickness3/2, 2)
+    # s2.setPosition(pos2)
+    # s2.setEffect('colored -d blue')
+
+    vec = pos2 - pos1
+    pointX = vec.x
+    pointY = vec.y
+    pointZ = vec.z
+
+    c = CylinderShape.create(abs(vec)+1, float(thickness4/2), float(thickness4/2), 0, 2)
+    c.setPosition(pos1)
+
+    if (pointZ >= 0 and pointX >= 0):
+        rotX = -math.atan2(pointY,pointZ)
+        rotY = math.atan2(pointX, sqrt(pointY*pointY+pointZ*pointZ))
+    else:
+        rotX = -math.atan2(pointY,pointZ)
+        rotY = math.atan2(pointX, sqrt(pointY*pointY+pointZ*pointZ))
+
+    c.pitch(rotX)
+    c.yaw(rotY)
+    c.setEffect('colored -d blue')
+    prevLine = line2
+    counter = counter + 1
+print "finished parsing"
+f.close()
+
 #-----------------------------------------------------------------------------
 #Terrain code
+#pixel = PixelData.create(6413,6156,'FormatPng')
+
+#island20 = loadImage('20Island.png')
+#scene.createTexture('20Island', island20)
+
+
 # def loadModelAsync(name, path):
 #     model = ModelInfo()
 #     model.name = name
@@ -148,27 +240,62 @@ moveMat.attachUniform(colorBy)
 
 # def onModelLoaded(name):
 #     model = StaticObject.create(name)
-#     model.setEffect('colored -d #404040')
+#     model.setEffect('textured')
 
-# loadModelAsync("Terrain", "5terrainMap.fbx")
+# modelPath = "/home/evl/jhwang47/v1"
+# def loadModel(name, path):
+#     model = ModelInfo()
+#     model.name = name
+#     model.path = path
+#     model.optimize = True
+#     model.usePowerOfTwoTextures = False
+#     scene.loadModel(model)
+#     model = StaticObject.create(name)
+#     #model.setEffect("colored -d #4d4d4d")
+#     model.setEffect("textured -d 20Island.png")
+#     #model.setEffect("20Island")
+
+# loadModel("Terrain", modelPath+"/terrainMap.fbx")
 
 #---------------------------------------------------------------------------
 #Set up Lights
-# light = Light.create()
-# light.setColor(Color("white"))
-# light.setAmbient(Color("black"))
-# light.setPosition(Vector3(imgResRatioX*10260/2, imgResRatioY*9850/2, 2000))
-# light.setEnabled(True)
 
-# headlight = Light.create()
-# headlight.setColor(Color("white"))
-# headlight.setEnabled(True)
+light = Light.create()
+light.setColor(Color("#AAADAD"))
+light.setPosition(Vector3(imgResRatioX*10260, imgResRatioY*9850, 1000))
+light.setEnabled(True)
 
-# light2 = Light.create()
-# light2.setAmbient(Color("black"))
-# light2.setEnabled(True)
+headlight = Light.create()
+headlight.setColor(Color("#AAADAD"))
+headlight.setEnabled(True)
 
-# getDefaultCamera().addChild(headlight)
+light3 = Light.create()
+light3.setColor(Color("#A3BCC4"))
+light3.setAmbient(Color("#A3BDC4"))
+light3.setEnabled(True)
+
+lightSphere1 = SphereShape.create(100, 4)
+lightSphere1.setEffect("colored -d yellow -e #ffffff")
+lightSphere1.setPosition(Vector3(0, imgResRatioY*9850/2, 1000))
+lightSphere1.addChild(light3)
+lightSphere1.castShadow(False)
+
+light4 = Light.create()
+light4.setColor(Color("#AAADAD"))
+light4.setPosition(Vector3(0, imgResRatioY*9850/4, 1000))
+light4.setEnabled(True)
+
+light5 = Light.create()
+light5.setColor(Color("#AAADAD"))
+light5.setPosition(Vector3(imgResRatioX*10260, imgResRatioY*9850/4, 250))
+light5.setEnabled(True)
+
+light2 = Light.create()
+light2.setAmbient(Color("#393A3B"))
+light2.setPosition(Vector3(0, 0, 250))
+light2.setEnabled(True)
+
+getDefaultCamera().addChild(headlight)
 
 
 #---------------------------------------------------------------------------
@@ -293,9 +420,9 @@ for line in treeContent:
     l.setThickness(thickness)
     s = SphereShape.create(thickness/2, 2)
     c1.addChild(s)
-    s.setEffect('colored -e black')
+    s.setEffect('colored -e #9b30ff')
     s.setPosition(Vector3(float(tokens[0]), float(tokens[1]), int(tokens[2])))
-    c1.setEffect('colored -e black')
+    c1.setEffect('colored -e #9b30ff')
 trees.close()
 treeNode.addChild(c1)
 treeNode.setChildrenVisible(False)
@@ -329,22 +456,26 @@ def onUpdate(frame, time, dt):
     global c2
     global lineList
 
+    numLines = 0
+    if lineList:
+        c2.removeChild("s2")
+
     while lineList:
         line = lineList.pop()
         c2.removeLine(line)
-
+        
     if (toggleLineToTrees):
         thickness2 = 3
         for node in treeList:
             vec = Vector3(node[0], node[1], node[2]*0.18)
             camVec = getDefaultCamera().getPosition()
             if (abs(vec - camVec) <= 100):
-                l2 = c2.addLine()
-                l2.setStart(vec)
+                lineList.append(c2.addLine())
+                lineList[numLines].setStart(vec)
                 vec2 = vec - camVec
                 normal = vec2.normalize()
-                l2.setEnd(camVec - 10*normal)
-                l2.setThickness(thickness2)
+                lineList[numLines].setEnd(camVec - 10*normal)
+                lineList[numLines].setThickness(thickness2)
                 s2 = SphereShape.create(thickness2/2, 2)
                 c2.addChild(s2)
                 s2.setEffect('colored -e red')
@@ -444,8 +575,6 @@ def onAlphaSliderValueChanged(value):
         a = 0.0
     #globalAlpha.setFloat(a)
     pointCloud.getMaterial().setAlpha(a)
-
-
 
 def viewVertical(value):
     global currentPitch
