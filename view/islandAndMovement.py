@@ -172,15 +172,8 @@ firstRun = True
 prevLine = ""
 
 chibi8Days = []
-chibi8Days.append(SceneNode.create('chibi8Days1'))
-chibi8Days.append(SceneNode.create('chibi8Days2'))
-chibi8Days.append(SceneNode.create('chibi8Days3'))
-chibi8Days.append(SceneNode.create('chibi8Days4'))
-chibi8Days.append(SceneNode.create('chibi8Days5'))
-chibi8Days.append(SceneNode.create('chibi8Days6'))
-chibi8Days.append(SceneNode.create('chibi8Days7'))
-chibi8Days.append(SceneNode.create('chibi8Days8'))
-chibi8Days.append(SceneNode.create('chibi8Days9'))
+for i in range(1,10):
+    chibi8Days.append(SceneNode.create('chibi8Days'+str(i)))
 
 for line in f:
     line2 = f.next()
@@ -229,25 +222,11 @@ for line in f:
     c.setEffect('colored -d blue')
     prevLine = line2
 
-    dayDelta = int(tokens2[3])
-    if dayDelta < 8:
-        chibi8Days[0].addChild(c)
-    elif dayDelta < 16:
-        chibi8Days[1].addChild(c)
-    elif dayDelta < 24:
-        chibi8Days[2].addChild(c)
-    elif dayDelta < 32:
-        chibi8Days[3].addChild(c)
-    elif dayDelta < 40:
-        chibi8Days[4].addChild(c)
-    elif dayDelta < 48:
-        chibi8Days[5].addChild(c)
-    elif dayDelta < 56:
-        chibi8Days[6].addChild(c)
-    elif dayDelta < 64:
-        chibi8Days[7].addChild(c)
-    else:
-        chibi8Days[8].addChild(c)
+    dayDelta = int(tokens2[3])/8
+    if (dayDelta == 1):
+        c.setEffect('colored -d red')
+        
+    chibi8Days[dayDelta].addChild(c)
 
 print "finished parsing"
 f.close()
