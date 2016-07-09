@@ -169,23 +169,33 @@ f = open("Chibi.txt", "r")
 thickness3 = 5
 thickness4 = 3
 firstRun = True
-counter = 0
 prevLine = ""
+
+chibi8Days = []
+chibi8Days.append(SceneNode.create('chibi8Days1'))
+chibi8Days.append(SceneNode.create('chibi8Days2'))
+chibi8Days.append(SceneNode.create('chibi8Days3'))
+chibi8Days.append(SceneNode.create('chibi8Days4'))
+chibi8Days.append(SceneNode.create('chibi8Days5'))
+chibi8Days.append(SceneNode.create('chibi8Days6'))
+chibi8Days.append(SceneNode.create('chibi8Days7'))
+chibi8Days.append(SceneNode.create('chibi8Days8'))
+chibi8Days.append(SceneNode.create('chibi8Days9'))
+
 for line in f:
     line2 = f.next()
     
-    if counter == 8000:
-        break
     if not line2:
         break
     tokens2 = line2.split(" ")
     if firstRun:
         tokens = line.split(" ")
+        dayCounter = tokens[4]
+        nodeCounter = 1
         firstRun = False
     else:
         tokens = prevLine.split(" ")
     pos1 = Vector3(float(tokens[0]), float(tokens[1]), float(tokens[2]))
-
 
     # if firstRun:
     #     s = SphereShape.create(thickness3/2, 1)
@@ -218,9 +228,40 @@ for line in f:
     c.yaw(rotY)
     c.setEffect('colored -d blue')
     prevLine = line2
-    counter = counter + 1
+
+    dayDelta = int(tokens2[3])
+    if dayDelta < 8:
+        chibi8Days[0].addChild(c)
+    elif dayDelta < 16:
+        chibi8Days[1].addChild(c)
+    elif dayDelta < 24:
+        chibi8Days[2].addChild(c)
+    elif dayDelta < 32:
+        chibi8Days[3].addChild(c)
+    elif dayDelta < 40:
+        chibi8Days[4].addChild(c)
+    elif dayDelta < 48:
+        chibi8Days[5].addChild(c)
+    elif dayDelta < 56:
+        chibi8Days[6].addChild(c)
+    elif dayDelta < 64:
+        chibi8Days[7].addChild(c)
+    else:
+        chibi8Days[8].addChild(c)
+
 print "finished parsing"
 f.close()
+
+chibi8DaysSelector = 0
+chibi8Days[0].setChildrenVisible(True)
+chibi8Days[1].setChildrenVisible(False)
+chibi8Days[2].setChildrenVisible(False)
+chibi8Days[3].setChildrenVisible(False)
+chibi8Days[4].setChildrenVisible(False)
+chibi8Days[5].setChildrenVisible(False)
+chibi8Days[6].setChildrenVisible(False)
+chibi8Days[7].setChildrenVisible(False)
+chibi8Days[8].setChildrenVisible(False)
 
 #-----------------------------------------------------------------------------
 #Terrain code
@@ -318,75 +359,86 @@ ss = mm.getMainMenu().addSubMenu("Camera Options")
 vbtn = ss.addButton("Vertical View", "viewVertical(1)")
 hbtn = ss.addButton("Horizontal View", "viewHorizontal(1)")
 
-#SUBMENU STEPTHRO
-ss2 = mm.getMainMenu().addSubMenu("Step Through Options")
-btnOneUp = ss2.addButton("Forward a day", "oneDayStepUp(1)")
-btnOneDown = ss2.addButton("Backward a day", "oneDayStepDown(1)")
-btnSvnUp = ss2.addButton("7 Days Forward", "sevenDayStepUp(1)")
-btnSvnUp = ss2.addButton("7 Days Backward", "sevenDayStepDown(1)")
-ss2.addLabel("--------------------")
-btnAll = ss2.addButton("All Days", "allDay(1)")
+#------------------------------------------------------------------------------
+#CPU Submenu Items
+ss2 = mm.getMainMenu().addSubMenu("Selected Individual")
+subMenuChibi = ss2.addSubMenu("Chibi 4693")
+subMenuChibi.setStyleValue('fill', '#954FEA')
+subMenuChibi.addButton("Show Next 8 Days", "showNext8Days(1)")
+subMenuChibi.addButton("Show Prev 8 Days", "showPrev8Days(-1)")
 
-#SUBMENU COLOR
-ss3 = mm.getMainMenu().addSubMenu("Color Options")
-btnGrad1 = ss3.addButton("Hour Gradient 1", "setColorBy(0)")
-btnGrad2 = ss3.addButton("Hour Gradient 2", "setColorBy(1)")
-btnGrad3 = ss3.addButton("Hour Gradient 3", "setColorBy(2)")
-btnGrad4 = ss3.addButton("Day Gradient 1", "setColorBy(3)")
-btnGrad5 = ss3.addButton("Day Gradient 2", "setColorBy(4)")
-btnGrad6 = ss3.addButton("Color by individual", "setColorBy(5)")
+#------------------------------------------------------------------------------
+#GPU Submenu Items
 
-ss4 = mm.getMainMenu().addSubMenu("selected Individual 1")
-#ss4.setStyleValue('fill', '#954FEA')
-btn1 = ss4.addButton("Veruca 4690", "setSelInd1(4690)")
-btn2 = ss4.addButton("Chibi 4693", "setSelInd1(4693)")
-btn3 = ss4.addButton("Abby 4652", "setSelInd1(4652)")
-btn4 = ss4.addButton("Ben Bob 4653", "setSelInd1(4653)")
-btn5 = ss4.addButton("Bonnie 4658", "setSelInd1(4658)")
-btn6 = ss4.addButton("Chloe 4052", "setSelInd1(4052)")
-btn7 = ss4.addButton("Clementina 4672", "setSelInd1(4672)")
-btn8 = ss4.addButton("Ellie 4668", "setSelInd1(4668)")
-btn9 = ss4.addButton("Gillian 4671", "setSelInd1(4671)")
-btn10 = ss4.addButton("Ornette 4669", "setSelInd1(4669)")
-btn11 = ss4.addButton("Pliny 4675", "setSelInd1(4675)")
-btn12 = ss4.addButton("Ripley 4650", "setSelInd1(4650)")
-btn13 = ss4.addButton("Serge 4670", "setSelInd1(4670)")
-btn14 = ss4.addButton("Sofie 4674", "setSelInd1(4674)")
-btn15 = ss4.addButton("Greg 4689", "setSelInd1(4689)")
-btn16 = ss4.addButton("Ibeth 4654", "setSelInd1(4654)")
-btn17 = ss4.addButton("Olga 4657", "setSelInd1(4657)")
-btn18 = ss4.addButton("Mimi 4660", "setSelInd1(4660)")
-btn19 = ss4.addButton("Kyle 4692", "setSelInd1(4692)")
-btn20 = ss4.addButton("Atlas 4673", "setSelInd1(4673)")
-btn21 = ss4.addButton("Vielle 4670", "setSelInd1(4670)")
-btn22 = ss4.addButton("Judy 4656", "setSelInd1(4656)")
-btn23 = ss4.addButton("Merk 4665", "setSelInd1(4665)")
+# #SUBMENU STEPTHRO
+# ss2 = mm.getMainMenu().addSubMenu("Step Through Options")
+# btnOneUp = ss2.addButton("Forward a day", "oneDayStepUp(1)")
+# btnOneDown = ss2.addButton("Backward a day", "oneDayStepDown(1)")
+# btnSvnUp = ss2.addButton("7 Days Forward", "sevenDayStepUp(1)")
+# btnSvnUp = ss2.addButton("7 Days Backward", "sevenDayStepDown(1)")
+# ss2.addLabel("--------------------")
+# btnAll = ss2.addButton("All Days", "allDay(1)")
 
-ss5 = mm.getMainMenu().addSubMenu("selected Individual 2")
-#ss5.setStyleValue('fill', '#5588F4')
-btn1 = ss5.addButton("Veruca 4690", "setSelInd2(4690)")
-btn2 = ss5.addButton("Chibi 4693", "setSelInd2(4693)")
-btn3 = ss5.addButton("Abby 4652", "setSelInd2(4652)")
-btn4 = ss5.addButton("Ben Bob 4653", "setSelInd2(4653)")
-btn5 = ss5.addButton("Bonnie 4658", "setSelInd2(4658)")
-btn6 = ss5.addButton("Chloe 4052", "setSelInd2(4052)")
-btn7 = ss5.addButton("Clementina 4672", "setSelInd2(4672)")
-btn8 = ss5.addButton("Ellie 4668", "setSelInd2(4668)")
-btn9 = ss5.addButton("Gillian 4671", "setSelInd2(4671)")
-btn10 = ss5.addButton("Ornette 4669", "setSelInd2(4669)")
-btn11 = ss5.addButton("Pliny 4675", "setSelInd2(4675)")
-btn12 = ss5.addButton("Ripley 4650", "setSelInd2(4650)")
-btn13 = ss5.addButton("Serge 4670", "setSelInd2(4670)")
-btn14 = ss5.addButton("Sofie 4674", "setSelInd2(4674)")
-btn15 = ss5.addButton("Greg 4689", "setSelInd2(4689)")
-btn16 = ss5.addButton("Ibeth 4654", "setSelInd2(4654)")
-btn17 = ss5.addButton("Olga 4657", "setSelInd2(4657)")
-btn18 = ss5.addButton("Mimi 4660", "setSelInd2(4660)")
-btn19 = ss5.addButton("Kyle 4692", "setSelInd2(4692)")
-btn20 = ss5.addButton("Atlas 4673", "setSelInd2(4673)")
-btn21 = ss5.addButton("Vielle 4670", "setSelInd2(4670)")
-btn22 = ss5.addButton("Judy 4656", "setSelInd2(4656)")
-btn23 = ss5.addButton("Merk 4665", "setSelInd2(4665)")
+# #SUBMENU COLOR
+# ss3 = mm.getMainMenu().addSubMenu("Color Options")
+# btnGrad1 = ss3.addButton("Hour Gradient 1", "setColorBy(0)")
+# btnGrad2 = ss3.addButton("Hour Gradient 2", "setColorBy(1)")
+# btnGrad3 = ss3.addButton("Hour Gradient 3", "setColorBy(2)")
+# btnGrad4 = ss3.addButton("Day Gradient 1", "setColorBy(3)")
+# btnGrad5 = ss3.addButton("Day Gradient 2", "setColorBy(4)")
+# btnGrad6 = ss3.addButton("Color by individual", "setColorBy(5)")
+
+# ss4 = mm.getMainMenu().addSubMenu("selected Individual 1")
+# #ss4.setStyleValue('fill', '#954FEA')
+# btn1 = ss4.addButton("Veruca 4690", "setSelInd1(4690)")
+# btn2 = ss4.addButton("Chibi 4693", "setSelInd1(4693)")
+# btn3 = ss4.addButton("Abby 4652", "setSelInd1(4652)")
+# btn4 = ss4.addButton("Ben Bob 4653", "setSelInd1(4653)")
+# btn5 = ss4.addButton("Bonnie 4658", "setSelInd1(4658)")
+# btn6 = ss4.addButton("Chloe 4052", "setSelInd1(4052)")
+# btn7 = ss4.addButton("Clementina 4672", "setSelInd1(4672)")
+# btn8 = ss4.addButton("Ellie 4668", "setSelInd1(4668)")
+# btn9 = ss4.addButton("Gillian 4671", "setSelInd1(4671)")
+# btn10 = ss4.addButton("Ornette 4669", "setSelInd1(4669)")
+# btn11 = ss4.addButton("Pliny 4675", "setSelInd1(4675)")
+# btn12 = ss4.addButton("Ripley 4650", "setSelInd1(4650)")
+# btn13 = ss4.addButton("Serge 4670", "setSelInd1(4670)")
+# btn14 = ss4.addButton("Sofie 4674", "setSelInd1(4674)")
+# btn15 = ss4.addButton("Greg 4689", "setSelInd1(4689)")
+# btn16 = ss4.addButton("Ibeth 4654", "setSelInd1(4654)")
+# btn17 = ss4.addButton("Olga 4657", "setSelInd1(4657)")
+# btn18 = ss4.addButton("Mimi 4660", "setSelInd1(4660)")
+# btn19 = ss4.addButton("Kyle 4692", "setSelInd1(4692)")
+# btn20 = ss4.addButton("Atlas 4673", "setSelInd1(4673)")
+# btn21 = ss4.addButton("Vielle 4670", "setSelInd1(4670)")
+# btn22 = ss4.addButton("Judy 4656", "setSelInd1(4656)")
+# btn23 = ss4.addButton("Merk 4665", "setSelInd1(4665)")
+
+# ss5 = mm.getMainMenu().addSubMenu("selected Individual 2")
+# #ss5.setStyleValue('fill', '#5588F4')
+# btn1 = ss5.addButton("Veruca 4690", "setSelInd2(4690)")
+# btn2 = ss5.addButton("Chibi 4693", "setSelInd2(4693)")
+# btn3 = ss5.addButton("Abby 4652", "setSelInd2(4652)")
+# btn4 = ss5.addButton("Ben Bob 4653", "setSelInd2(4653)")
+# btn5 = ss5.addButton("Bonnie 4658", "setSelInd2(4658)")
+# btn6 = ss5.addButton("Chloe 4052", "setSelInd2(4052)")
+# btn7 = ss5.addButton("Clementina 4672", "setSelInd2(4672)")
+# btn8 = ss5.addButton("Ellie 4668", "setSelInd2(4668)")
+# btn9 = ss5.addButton("Gillian 4671", "setSelInd2(4671)")
+# btn10 = ss5.addButton("Ornette 4669", "setSelInd2(4669)")
+# btn11 = ss5.addButton("Pliny 4675", "setSelInd2(4675)")
+# btn12 = ss5.addButton("Ripley 4650", "setSelInd2(4650)")
+# btn13 = ss5.addButton("Serge 4670", "setSelInd2(4670)")
+# btn14 = ss5.addButton("Sofie 4674", "setSelInd2(4674)")
+# btn15 = ss5.addButton("Greg 4689", "setSelInd2(4689)")
+# btn16 = ss5.addButton("Ibeth 4654", "setSelInd2(4654)")
+# btn17 = ss5.addButton("Olga 4657", "setSelInd2(4657)")
+# btn18 = ss5.addButton("Mimi 4660", "setSelInd2(4660)")
+# btn19 = ss5.addButton("Kyle 4692", "setSelInd2(4692)")
+# btn20 = ss5.addButton("Atlas 4673", "setSelInd2(4673)")
+# btn21 = ss5.addButton("Vielle 4670", "setSelInd2(4670)")
+# btn22 = ss5.addButton("Judy 4656", "setSelInd2(4656)")
+# btn23 = ss5.addButton("Merk 4665", "setSelInd2(4665)")
 
 ss6 = mm.getMainMenu().addButton("Show Fruit Trees", "markTrees(1)")
 ss7 = mm.getMainMenu().addButton("Draw Lines to Trees", "drawLinesToTrees(1)")
@@ -488,93 +540,115 @@ setUpdateFunction(onUpdate)
 
 #--------------------------------------------------------------------------------------
 #Functions
-def oneDayStepUp(value):
-    global myStartDay
-    global myEndDay
-    global numberOfDays
+def showNext8Days(value):
+    global chibi8Days
+    global chibi8DaysSelector
 
-    myStartDay = myStartDay + 1
-    if myStartDay > numberOfDays:
-        myStartDay = 0
-    myEndDay = myStartDay + 1
-    endDay.setInt(myEndDay)
-    startDay.setInt(myStartDay)
+    chibi8Days[chibi8DaysSelector].showChildrenVisible(False)
+    if chibi8DaysSelector < 7:
+        chibi8DaysSelector = chibi8DaysSelector + value
+    else:
+        chibi8DaysSelector = 0
+    chibi8Days[chibi8DaysSelector].showChildrenVisible(True)
 
-    # print( "one day step up" + myStartDay)
+def showPrev8Days(value):
+    global chibi8Days
+    global chibi8DaysSelector
 
-def oneDayStepDown(value):
-    global myStartDay
-    global myEndDay
-    global numberOfDays
+    chibi8Days[chibi8DaysSelector].showChildrenVisible(False)
+    if chibi8DaysSelector > 0:
+        chibi8DaysSelector = chibi8DaysSelector + value
+    else:
+        chibi8DaysSelector = 7
+    chibi8Days[chibi8DaysSelector].showChildrenVisible(True)
 
-    myStartDay = myStartDay - 1
-    if myStartDay < 0:
-        myStartDay = numberOfDays-1
-    myEndDay = myStartDay + 1
-    endDay.setInt(myEndDay)
-    startDay.setInt(myStartDay)
+# def oneDayStepUp(value):
+#     global myStartDay
+#     global myEndDay
+#     global numberOfDays
 
-    # print( "one day step down " + myStartDay)
+#     myStartDay = myStartDay + 1
+#     if myStartDay > numberOfDays:
+#         myStartDay = 0
+#     myEndDay = myStartDay + 1
+#     endDay.setInt(myEndDay)
+#     startDay.setInt(myStartDay)
 
-def sevenDayStepUp(value):
-    global myStartDay
-    global myEndDay
-    global numberOfDays
+#     # print( "one day step up" + myStartDay)
 
-    myStartDay = myStartDay + 7
-    if myStartDay > numberOfDays:
-        myStartDay = 0
-    myEndDay = myStartDay + 7
-    endDay.setInt(myEndDay)
-    startDay.setInt(myStartDay)
+# def oneDayStepDown(value):
+#     global myStartDay
+#     global myEndDay
+#     global numberOfDays
 
-    # print( "seven day step up" + myStartDay)
+#     myStartDay = myStartDay - 1
+#     if myStartDay < 0:
+#         myStartDay = numberOfDays-1
+#     myEndDay = myStartDay + 1
+#     endDay.setInt(myEndDay)
+#     startDay.setInt(myStartDay)
 
-def sevenDayStepDown(value):
-    global myStartDay
-    global myEndDay
-    global numberOfDays
+#     # print( "one day step down " + myStartDay)
 
-    myStartDay = myStartDay - 7
-    if myStartDay < 0:
-        myStartDay = numberOfDays-7
-    myEndDay = myStartDay + 7
-    endDay.setInt(myEndDay)
-    startDay.setInt(myStartDay)
+# def sevenDayStepUp(value):
+#     global myStartDay
+#     global myEndDay
+#     global numberOfDays
+
+#     myStartDay = myStartDay + 7
+#     if myStartDay > numberOfDays:
+#         myStartDay = 0
+#     myEndDay = myStartDay + 7
+#     endDay.setInt(myEndDay)
+#     startDay.setInt(myStartDay)
+
+#     # print( "seven day step up" + myStartDay)
+
+# def sevenDayStepDown(value):
+#     global myStartDay
+#     global myEndDay
+#     global numberOfDays
+
+#     myStartDay = myStartDay - 7
+#     if myStartDay < 0:
+#         myStartDay = numberOfDays-7
+#     myEndDay = myStartDay + 7
+#     endDay.setInt(myEndDay)
+#     startDay.setInt(myStartDay)
 
     # print( "seven day step down " + myStartDay)
 
-def allDay(value):
-    global numberOfDays
-    endDay.setInt(numberOfDays)
-    startDay.setInt(0)
+# def allDay(value):
+#     global numberOfDays
+#     endDay.setInt(numberOfDays)
+#     startDay.setInt(0)
 
-    # print( "one day step " + myStartDay)
+#     # print( "one day step " + myStartDay)
 
-def setColorBy(value):
-    colorBy.setInt(value)
+# def setColorBy(value):
+#     colorBy.setInt(value)
 
-    # print( "set color by " + value)
+#     # print( "set color by " + value)
 
-def setSelIn1(value):
-    colorBy.setInt(value)
+# def setSelIn1(value):
+#     colorBy.setInt(value)
 
-    # print( "set color by " + value)
+#     # print( "set color by " + value)
 
-def onPointSizeSliderValueChanged(value):
-    if (value != 0):
-        size = .95 + value * .05
-    else:
-        size = 0.0
-    pointScale.setFloat(size)
+# def onPointSizeSliderValueChanged(value):
+#     if (value != 0):
+#         size = .95 + value * .05
+#     else:
+#         size = 0.0
+#     pointScale.setFloat(size)
 
-def onAlphaSliderValueChanged(value):
-    if (value != 0):
-        a = value/10.0
-    else:
-        a = 0.0
-    #globalAlpha.setFloat(a)
-    pointCloud.getMaterial().setAlpha(a)
+# def onAlphaSliderValueChanged(value):
+#     if (value != 0):
+#         a = value/10.0
+#     else:
+#         a = 0.0
+#     #globalAlpha.setFloat(a)
+#     pointCloud.getMaterial().setAlpha(a)
 
 def viewVertical(value):
     global currentPitch
