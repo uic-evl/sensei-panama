@@ -223,8 +223,6 @@ for line in f:
     prevLine = line2
 
     dayDelta = int(tokens2[3])/8
-    if (dayDelta == 1):
-        c.setEffect('colored -d red')
         
     chibi8Days[dayDelta].addChild(c)
 
@@ -232,23 +230,14 @@ print "finished parsing"
 f.close()
 
 chibi8DaysSelector = 0
-chibi8Days[0].setChildrenVisible(True)
-chibi8Days[1].setChildrenVisible(False)
-chibi8Days[2].setChildrenVisible(False)
-chibi8Days[3].setChildrenVisible(False)
-chibi8Days[4].setChildrenVisible(False)
-chibi8Days[5].setChildrenVisible(False)
-chibi8Days[6].setChildrenVisible(False)
-chibi8Days[7].setChildrenVisible(False)
-chibi8Days[8].setChildrenVisible(False)
+for i in range(0,9):
+    if i == 0:
+        chibi8Days[i].setChildrenVisible(True)
+    else:
+        chibi8Days[i].setChildrenVisible(False)
 
 #-----------------------------------------------------------------------------
 #Terrain code
-#pixel = PixelData.create(6413,6156,'FormatPng')
-
-#island20 = loadImage('20Island.png')
-#scene.createTexture('20Island', island20)
-
 
 # def loadModelAsync(name, path):
 #     model = ModelInfo()
