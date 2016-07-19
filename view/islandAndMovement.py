@@ -73,9 +73,9 @@ getDefaultCamera().setPosition(imgResRatioX*10260/2, imgResRatioY*9850/2, 2500)
 # myEndDay = 1
 # dayIncrement = 1
 # numberOfDays = 84
-# currentPitch = 0
-# currentYaw = 0
-# currentRoll = 0
+currentPitch = 0
+currentYaw = 0
+currentRoll = 0
 
 # startDay.setInt(myStartDay)
 # endDay.setInt(myEndDay)
@@ -150,32 +150,18 @@ getDefaultCamera().setPosition(imgResRatioX*10260/2, imgResRatioY*9850/2, 2500)
 
 #Cylinder and Sphere Version
 
-def computeUTMToIMGXY (utmx, utmy):
-    startIMGUTMX = 624030.0137255481
-    startIMGUTMY = 1015207.0834458455
-
-    imgResRatioX = 0.18/(float(10260)/32064)
-    imgResRatioY = 0.18/(float(9850)/30780)
-
-    lastIMGUTMX = startIMGUTMX + 10260*imgResRatioX
-    lastIMGUTMY = startIMGUTMY - 9850*imgResRatioY
-
-    imgX = (utmx-startIMGUTMX)/(lastIMGUTMX-startIMGUTMX)*10260
-    imgY = (utmy-startIMGUTMY)/(lastIMGUTMY-startIMGUTMY)*9850
-    return (imgX, imgY)
-
 f = open("Chibi.txt", "r")
 
-thickness3 = 5
-thickness4 = 3
 firstRun = True
 prevLine = ""
 
-chibi8Days = []
-for i in range(1,10):
-    chibi8Days.append(SceneNode.create('chibi8Days'+str(i)))
+chibiDay = []
+
+for i in range(0,68):
+    chibiDay.append(SceneNode.create('chibiDay'+str(i)))
 
 for line in f:
+
     line2 = f.next()
     
     if not line2:
@@ -188,53 +174,134 @@ for line in f:
         firstRun = False
     else:
         tokens = prevLine.split(" ")
-    pos1 = Vector3(float(tokens[0]), float(tokens[1]), float(tokens[2]))
 
-    # if firstRun:
-    #     s = SphereShape.create(thickness3/2, 1)
-    #     s.setPosition(pos1)
-    #     s.setEffect('colored -d blue')
-    #     firstRun = False
+    pos1 = Vector3(float(tokens[0]), float(tokens[1]), float(tokens[2]))
     
     pos2 = Vector3(float(tokens2[0]), float(tokens2[1]), float(tokens2[2]))
-    
-    # s2 = SphereShape.create(thickness3/2, 2)
-    # s2.setPosition(pos2)
-    # s2.setEffect('colored -d blue')
 
     vec = pos2 - pos1
     pointX = vec.x
     pointY = vec.y
     pointZ = vec.z
 
-    c = CylinderShape.create(abs(vec)+1, float(thickness4/2), float(thickness4/2), 0, 2)
-    c.setPosition(pos1)
+    geom = ModelGeometry.create('quad')
+    v1 = geom.addVertex(Vector3(0, -10, 0))
+    geom.addColor(Color('blue'))
+    v2 = geom.addVertex(Vector3(0, 10, 0))
+    geom.addColor(Color('blue'))
+    v3 = geom.addVertex(Vector3(0, -10, abs(vec)))
+    geom.addColor(Color('red'))
+    v4 = geom.addVertex(Vector3(0, 10, abs(vec)))
+    geom.addColor(Color('red'))
+    geom.addPrimitive(PrimitiveType.TriangleStrip, 0, 4)
+
+    scene.addModel(geom)
+    quad = StaticObject.create('quad')
+    quad.setPosition(pos1)
+
+    quad.getMaterial().setProgram('colored')
+    quad.getMaterial().setTransparent(False)
+    #quad.getMaterial().setAlpha(0.75)
 
     if (pointZ >= 0 and pointX >= 0):
-        rotX = -math.atan2(pointY,pointZ)
-        rotY = math.atan2(pointX, sqrt(pointY*pointY+pointZ*pointZ))
+        rotX = -atan2(pointY,pointZ)
+        rotY = atan2(pointX, sqrt(pointY*pointY+pointZ*pointZ))
     else:
-        rotX = -math.atan2(pointY,pointZ)
-        rotY = math.atan2(pointX, sqrt(pointY*pointY+pointZ*pointZ))
+        rotX = -atan2(pointY,pointZ)
+        rotY = atan2(pointX, sqrt(pointY*pointY+pointZ*pointZ))
+    quad.pitch(rotX)
+    quad.yaw(rotY)
+    dayDelta = int(tokens2[3])
+    chibiDay[dayDelta].addChild(quad)
 
-    c.pitch(rotX)
-    c.yaw(rotY)
-    c.setEffect('colored -d blue')
     prevLine = line2
-
-    dayDelta = int(tokens2[3])/8
-        
-    chibi8Days[dayDelta].addChild(c)
-
-print "finished parsing"
+    
 f.close()
 
-chibi8DaysSelector = 0
-for i in range(0,9):
+listSelector = 0
+
+for i in range(0, 68):
     if i == 0:
-        chibi8Days[i].setChildrenVisible(True)
+        chibiDay[i].setChildrenVisible(True)
     else:
-        chibi8Days[i].setChildrenVisible(False)
+        chibiDay[i].setChildrenVisible(False)
+
+numDays = 1
+
+f = open("Abby.txt", "r")
+
+firstRun = True
+
+abbyDay = []
+
+line2 = ""
+
+for i in range(0,78):
+    abbyDay.append(SceneNode.create('abbyDay'+str(i)))
+
+for line in f:
+    if line == "-999":
+        break
+
+    line2 = f.next()
+
+    if line2 == "-999":
+        break
+    
+    tokens2 = line2.split(" ")
+    if firstRun:
+        tokens = line.split(" ")
+        dayCounter = tokens[4]
+        nodeCounter = 1
+        firstRun = False
+    else:
+        tokens = prevLine.split(" ")
+    pos1 = Vector3(float(tokens[0]), float(tokens[1]), float(tokens[2]))
+    
+    pos2 = Vector3(float(tokens2[0]), float(tokens2[1]), float(tokens2[2]))
+
+    vec = pos2 - pos1
+    pointX = vec.x
+    pointY = vec.y
+    pointZ = vec.z
+
+    geom = ModelGeometry.create('quad')
+    v1 = geom.addVertex(Vector3(0, -2.5, 0))
+    geom.addColor(Color('blue'))
+    v2 = geom.addVertex(Vector3(0, 2.5, 0))
+    geom.addColor(Color('blue'))
+    v3 = geom.addVertex(Vector3(0, -2.5, abs(vec)))
+    geom.addColor(Color('red'))
+    v4 = geom.addVertex(Vector3(0, 2.5, abs(vec)))
+    geom.addColor(Color('red'))
+    geom.addPrimitive(PrimitiveType.TriangleStrip, 0, 4)
+
+    scene.addModel(geom)
+    quad = StaticObject.create('quad')
+    quad.setPosition(pos1)
+
+    quad.getMaterial().setProgram('colored byvertex-emissive')
+    quad.getMaterial().setTransparent(True)
+    quad.getMaterial().setAlpha(0.5)
+
+    if (pointZ >= 0 and pointX >= 0):
+        rotX = -atan2(pointY,pointZ)
+        rotY = atan2(pointX, sqrt(pointY*pointY+pointZ*pointZ))
+    else:
+        rotX = -atan2(pointY,pointZ)
+        rotY = atan2(pointX, sqrt(pointY*pointY+pointZ*pointZ))
+    quad.pitch(rotX)
+    quad.yaw(rotY)
+    dayDelta = int(tokens2[3])
+    abbyDay[dayDelta].addChild(quad)
+
+    prevLine = line2
+f.close()
+
+listSelector = 0
+
+for i in range(0, 78):
+        abbyDay[i].setChildrenVisible(False)
 
 #-----------------------------------------------------------------------------
 #Terrain code
@@ -331,9 +398,23 @@ hbtn = ss.addButton("Horizontal View", "viewHorizontal(1)")
 #CPU Submenu Items
 ss2 = mm.getMainMenu().addSubMenu("Selected Individual")
 subMenuChibi = ss2.addSubMenu("Chibi 4693")
-subMenuChibi.setStyleValue('fill', '#954FEA')
-subMenuChibi.addButton("Show Next 8 Days", "showNext8Days(1)")
-subMenuChibi.addButton("Show Prev 8 Days", "showPrev8Days(-1)")
+#subMenuChibi.setStyleValue('fill', '#954FEA')
+subMenuChibi.addLabel("# of Days to Show")
+daySliderChibi = subMenuChibi.addSlider(4, "setDaySize(%value%)")
+daySliderC = daySliderChibi.getSlider()
+daySliderC.setValue(1)
+
+subMenuChibi.addButton("Show Next Day(s)", "showNextDay(4693)")
+subMenuChibi.addButton("Show Previous Day(s)", "showPrevDay(4693)")
+
+subMenuAbby = ss2.addSubMenu("Abby 4652")
+subMenuAbby.addLabel("# of Days to Show")
+daySliderAbby = subMenuAbby.addSlider(4, "setDaySize(%value%)")
+daySliderA = daySliderAbby.getSlider()
+daySliderA.setValue(1)
+
+subMenuAbby.addButton("Show Next Day(s)", "showNextDay(4652)")
+subMenuAbby.addButton("Show Previous Day(s)", "showPrevDay(4652)")
 
 #------------------------------------------------------------------------------
 #GPU Submenu Items
@@ -469,22 +550,35 @@ def drawLinesToTrees(value):
         toggleLineToTrees = not toggleLineToTrees
 
 
+hasCameraMoved = False
+drawnCamPos = getDefaultCamera().getPosition()
+
 def onUpdate(frame, time, dt):
     global treeList
     global toggleLineToTrees
     global showOtherTrees
     global c2
     global lineList
+    global hasCameraMoved
+    global drawnCamPos
+    #hasCameraMoved = False
 
-    numLines = 0
-    if lineList:
-        c2.removeChild("s2")
+    currCamPos = getDefaultCamera().getPosition()
+    xPos = currCamPos[0]
+    yPos = currCamPos[1]
+    zPos = currCamPos[2]
 
-    while lineList:
+    hasCameraMoved = False
+
+    if (drawnCamPos[0]+5 < xPos or drawnCamPos[0]-5 > xPos) or (drawnCamPos[1]+5 < yPos or drawnCamPos[1]-5 > yPos) or (drawnCamPos[2]+5 < zPos or drawnCamPos[2]-5 > zPos):
+        hasCameraMoved = True
+
+    
+    while lineList and hasCameraMoved:
         line = lineList.pop()
         c2.removeLine(line)
         
-    if (toggleLineToTrees):
+    if (toggleLineToTrees and hasCameraMoved):
         thickness2 = 3
         for node in treeList:
             vec = Vector3(node[0], node[1], node[2]*0.18)
@@ -502,33 +596,134 @@ def onUpdate(frame, time, dt):
                 s2.setPosition(camVec - 10*normal)
                 c2.setEffect('colored -e red')
                 lineList.append(l2)
+                drawnCamPos = getDefaultCamera().getPosition()
+
         #showOtherTrees.addChild(c2)
 setUpdateFunction(onUpdate)
         
 
 #--------------------------------------------------------------------------------------
 #Functions
-def showNext8Days(value):
-    global chibi8Days
-    global chibi8DaysSelector
+def setDaySize(value):
+    global numDays
+    numDays = value
 
-    chibi8Days[chibi8DaysSelector].showChildrenVisible(False)
-    if chibi8DaysSelector < 7:
-        chibi8DaysSelector = chibi8DaysSelector + value
+sphereList = []
+workingList = chibiDay
+prevWorkingList = chibiDay
+
+def showNextDay(value):
+    global chibiDay
+    global listSelector
+    global abbyDay
+    global workingList
+    global prevWorkingList
+
+    global numDays
+    global sphereList
+
+    maxDay = 0
+
+    if value == 4693:
+        workingList = chibiDay
+        maxDay = 68
+    elif value == 4652:
+        workingList = abbyDay
+        maxDay = 78
+
+    # while sphereList:
+    #     sphere = sphereList.pop()
+    #     #sphere.remove()
+
+    nextNDays = 0
+    prevNDays = 0
+
+    if listSelector+numDays < maxDay:
+        nextNDays = listSelector+numDays
     else:
-        chibi8DaysSelector = 0
-    chibi8Days[chibi8DaysSelector].showChildrenVisible(True)
+        nextNDays = maxDay
 
-def showPrev8Days(value):
-    global chibi8Days
-    global chibi8DaysSelector
-
-    chibi8Days[chibi8DaysSelector].showChildrenVisible(False)
-    if chibi8DaysSelector > 0:
-        chibi8DaysSelector = chibi8DaysSelector + value
+    if listSelector-numDays >= 0:
+        prevNdays = listSelector-numDays
     else:
-        chibi8DaysSelector = 7
-    chibi8Days[chibi8DaysSelector].showChildrenVisible(True)
+        prevNDays = 0
+
+    for i in range(prevNDays, nextNDays):
+        if prevWorkingList is workingList:
+            workingList[i].setChildrenVisible(False)
+        else:
+            if prevWorkingList[i]:
+                prevWorkingList[i].setChildrenVisible(False)
+
+    if listSelector+numDays < maxDay:
+        listSelector = listSelector + numDays
+        for i in range(listSelector-numDays, listSelector):
+            workingList[i].setChildrenVisible(True)
+    else:
+        for i in range(listSelector, maxDay):
+            workingList[i].setChildrenVisible(True)
+        # startVec = workingList[listSelector].getChildByIndex(0).getPosition()
+        # numChildren = workingList[maxDay].numChildren()
+        # endVec = workingList[maxDay].getChildByIndex(numChildren).getPosition()
+        # sphereList.append(SphereShape.create(3.5,1))
+        # sphereList[0].setPosition(startVec)
+        # hexString = createHexString(61, 18, 85)
+        # sphereList[0].setEffect('colored -e #'+hexString)
+        # sphereList.append(SphereShape.create(3.5,1))
+        # sphereList[1].setPosition(endVec)
+        # hexString = createHexString(160, 24, 239)
+        # sphereList[1].setEffect('colored -e #'+hexString)
+            listSelector = 0
+
+    prevWorkingList = workingList
+
+def showPrevDay(value):
+    global chibiDay
+    global abbyDay
+    global workingList 
+    global prevWorkingList
+
+    global listSelector
+
+    maxDay = 0
+
+    if value == 4693:
+        workingList = chibiDay
+        maxDay = 68
+    elif value == 4652:
+        workingList = abbyDay
+        maxDay = 78
+
+    nextNDays = 0
+    prevNDays = 0
+    if listSelector+numDays < maxDay:
+        nextNDays = listSelector+numDays
+    else:
+        nextNDays = maxDay
+        
+    if listSelector-numDays >= 0:
+        prevNdays = listSelector-numDays
+    else:
+        prevNDays = 0
+
+    for i in range(prevNDays, nextNDays):
+        if prevWorkingList is workingList:
+            workingList[i].setChildrenVisible(False)
+        else:
+            if prevWorkingList[i]:
+                prevWorkingList[i].setChildrenVisible(False)
+            
+
+    if listSelector-numDays >= 0:
+        listSelector = listSelector - numDays
+        for i in range(listSelector, listSelector+numDays):
+            workingList[i].setChildrenVisible(True)
+    else:
+        for i in range(0, listSelector):
+            workingList[i].setChildrenVisible(True)
+            listSelector = maxDay
+
+    prevWorkingList = workingList
 
 # def oneDayStepUp(value):
 #     global myStartDay
@@ -603,20 +798,20 @@ def showPrev8Days(value):
 
 #     # print( "set color by " + value)
 
-# def onPointSizeSliderValueChanged(value):
-#     if (value != 0):
-#         size = .95 + value * .05
-#     else:
-#         size = 0.0
-#     pointScale.setFloat(size)
+def onPointSizeSliderValueChanged(value):
+    if (value != 0):
+        size = .95 + value * .05
+    else:
+        size = 0.0
+    pointScale.setFloat(size)
 
-# def onAlphaSliderValueChanged(value):
-#     if (value != 0):
-#         a = value/10.0
-#     else:
-#         a = 0.0
-#     #globalAlpha.setFloat(a)
-#     pointCloud.getMaterial().setAlpha(a)
+def onAlphaSliderValueChanged(value):
+    if (value != 0):
+        a = value/10.0
+    else:
+        a = 0.0
+    #globalAlpha.setFloat(a)
+    pointCloud.getMaterial().setAlpha(a)
 
 def viewVertical(value):
     global currentPitch
