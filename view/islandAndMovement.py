@@ -3,6 +3,182 @@ from cyclops import *
 from pointCloud import *
 from math import *
 
+def createCustomGeom(f, scene, color, geomName):
+    firstRun = True
+
+    numVertices = 0
+    prevV3 = Vector3(0,0,0)
+    prevV4 = Vector3(0,0,0)
+    prevV7 = Vector3(0,0,0)
+    prevV8 = Vector3(0,0,0)
+
+    prevLine = ""
+
+    unitY = Vector3(0,1,0)
+    unitZ = Vector3(0,0,1)
+
+    geom = ModelGeometry.create(geomName)
+    for line in f:
+        # if numVertices == 6:
+        #     break
+        line2 = f.next()
+        
+        if not line2:
+            break
+        tokens2 = line2.split(" ")
+        if firstRun:
+            tokens = line.split(" ")
+            dayCounter = tokens[4]
+            nodeCounter = 1
+        else:
+            tokens = prevLine.split(" ")
+
+        pos1 = Vector3(float(tokens[0]), float(tokens[1]), float(tokens[2]))
+        
+        pos2 = Vector3(float(tokens2[0]), float(tokens2[1]), float(tokens2[2]))
+
+        vec = pos2 - pos1
+        d = vec.normalize()
+        unitZV1 = d.cross(unitZ)
+        unitYV1 = d.cross(unitY)
+
+        v1 = pos1+1*unitZV1+1*unitYV1       #list of vertices
+        v2 = pos1+1*unitZV1-1*unitYV1
+        v3 = pos2+1*unitZV1+1*unitYV1
+        v4 = pos2+1*unitZV1-1*unitYV1
+
+        v5 = pos1-1*unitZV1+1*unitYV1
+        v6 = pos1-1*unitZV1-1*unitYV1
+        v7 = pos2-1*unitZV1+1*unitYV1
+        v8 = pos2-1*unitZV1-1*unitYV1
+
+    #####################Front Panel##################################################
+        geom.addVertex( v3 )
+        geom.addColor(Color(color))
+        if firstRun:
+            geom.addVertex( v2 )
+            geom.addColor(Color(color))
+            geom.addVertex( v1 )
+            geom.addColor(Color(color))
+        else:
+            geom.addVertex( prevV4 )
+            geom.addColor(Color(color))
+            geom.addVertex( prevV3 )
+            geom.addColor(Color(color))
+
+        if firstRun:
+            geom.addVertex( v2 )
+            geom.addColor(Color(color))
+        else:
+            geom.addVertex( prevV4 )
+            geom.addColor(Color(color))
+        geom.addVertex( v3 )
+        geom.addColor(Color(color))
+        geom.addVertex( v4 )
+        geom.addColor(Color(color))
+    ##################################################################################
+    #####################Back Panel##################################################
+        geom.addVertex( v7 )
+        geom.addColor(Color(color))
+        if firstRun:
+            geom.addVertex( v6 )
+            geom.addColor(Color(color))
+            geom.addVertex( v5 )
+            geom.addColor(Color(color))
+        else:
+            geom.addVertex( prevV8 )
+            geom.addColor(Color(color))
+            geom.addVertex( prevV7 )
+            geom.addColor(Color(color))
+
+        if firstRun:
+            geom.addVertex( v6 )
+            geom.addColor(Color(color))
+        else:
+            geom.addVertex( prevV8)
+            geom.addColor(Color(color))
+        geom.addVertex( v7 )
+        geom.addColor(Color(color))
+        geom.addVertex( v8 )
+        geom.addColor(Color(color))
+    ##################################################################################
+    #####################Top Panel##################################################
+        geom.addVertex( v7 )
+        geom.addColor(Color(color))
+        if firstRun:
+            geom.addVertex( v1 )
+            geom.addColor(Color(color))
+            geom.addVertex( v5 )
+            geom.addColor(Color(color))
+        else:
+            geom.addVertex( prevV3 )
+            geom.addColor(Color(color))
+            geom.addVertex( prevV7 )
+            geom.addColor(Color(color))
+        
+        geom.addVertex( v7 )
+        geom.addColor(Color(color))
+        geom.addVertex( v3 )
+        geom.addColor(Color(color))
+        if firstRun:
+            geom.addVertex( v1 )
+            geom.addColor(Color(color))
+        else:
+            geom.addVertex( prevV3 )
+            geom.addColor(Color(color))
+    ##################################################################################
+    #####################Bottom Panel##################################################
+        
+        if firstRun:
+            geom.addVertex( v2 )
+            geom.addColor(Color(color))
+            geom.addVertex( v6 )
+            geom.addColor(Color(color))
+        else:
+            geom.addVertex( prevV4 )
+            geom.addColor(Color(color))
+            geom.addVertex( prevV8 )
+            geom.addColor(Color(color))
+        geom.addVertex( v4 )
+        geom.addColor(Color(color)) 
+
+        if firstRun:
+            geom.addVertex( v6 )
+            geom.addColor(Color(color))
+            firstRun = False
+        else:
+            geom.addVertex( prevV8 )
+            geom.addColor(Color(color))
+        geom.addVertex( v4 )
+        geom.addColor(Color(color))    
+        geom.addVertex( v8 )
+        geom.addColor(Color(color))
+        
+    ##################################################################################
+        
+        numVertices = numVertices + 24
+
+        prevV3 = v3                 #Store beginning points of next line
+        prevV4 = v4
+        prevV7 = v7
+        prevV8 = v8
+
+        prevLine = line2
+        
+    f.close()
+    geom.addPrimitive(PrimitiveType.Triangles, 0, numVertices)
+
+    scene.addModel(geom)
+    obj = StaticObject.create(geomName)
+    obj.setPosition(0, 0, 0)
+    obj.setEffect('colored -e blue -C -t -a')
+
+    obj.getMaterial().setProgram('colored byvertex-emissive')
+    obj.getMaterial().setTransparent(True)
+    obj.getMaterial().setAlpha(0.75)
+    print 'finished Parsing'
+
+    return obj 
 
 #----------------------------------------------------------------------------
 #UI Module code
@@ -150,158 +326,17 @@ currentRoll = 0
 
 #Cylinder and Sphere Version
 
-f = open("Chibi.txt", "r")
+f = open("gpsMovement/Chibi.txt", "r")
 
-firstRun = True
-prevLine = ""
+chibi = createCustomGeom(f, scene, 'blue', 'chibi')
 
-chibiDay = []
+f = open("gpsMovement/Abby.txt", "r")
 
-for i in range(0,68):
-    chibiDay.append(SceneNode.create('chibiDay'+str(i)))
+abby = createCustomGeom(f, scene, 'purple', 'abby')
 
-for line in f:
+f = open("gpsMovement/Veruca.txt", "r")
 
-    line2 = f.next()
-    
-    if not line2:
-        break
-    tokens2 = line2.split(" ")
-    if firstRun:
-        tokens = line.split(" ")
-        dayCounter = tokens[4]
-        nodeCounter = 1
-        firstRun = False
-    else:
-        tokens = prevLine.split(" ")
-
-    pos1 = Vector3(float(tokens[0]), float(tokens[1]), float(tokens[2]))
-    
-    pos2 = Vector3(float(tokens2[0]), float(tokens2[1]), float(tokens2[2]))
-
-    vec = pos2 - pos1
-    pointX = vec.x
-    pointY = vec.y
-    pointZ = vec.z
-
-    geom = ModelGeometry.create('quad')
-    v1 = geom.addVertex(Vector3(0, -10, 0))
-    geom.addColor(Color('blue'))
-    v2 = geom.addVertex(Vector3(0, 10, 0))
-    geom.addColor(Color('blue'))
-    v3 = geom.addVertex(Vector3(0, -10, abs(vec)))
-    geom.addColor(Color('red'))
-    v4 = geom.addVertex(Vector3(0, 10, abs(vec)))
-    geom.addColor(Color('red'))
-    geom.addPrimitive(PrimitiveType.TriangleStrip, 0, 4)
-
-    scene.addModel(geom)
-    quad = StaticObject.create('quad')
-    quad.setPosition(pos1)
-
-    quad.getMaterial().setProgram('colored')
-    quad.getMaterial().setTransparent(False)
-    #quad.getMaterial().setAlpha(0.75)
-
-    if (pointZ >= 0 and pointX >= 0):
-        rotX = -atan2(pointY,pointZ)
-        rotY = atan2(pointX, sqrt(pointY*pointY+pointZ*pointZ))
-    else:
-        rotX = -atan2(pointY,pointZ)
-        rotY = atan2(pointX, sqrt(pointY*pointY+pointZ*pointZ))
-    quad.pitch(rotX)
-    quad.yaw(rotY)
-    dayDelta = int(tokens2[3])
-    chibiDay[dayDelta].addChild(quad)
-
-    prevLine = line2
-    
-f.close()
-
-listSelector = 0
-
-for i in range(0, 68):
-    if i == 0:
-        chibiDay[i].setChildrenVisible(True)
-    else:
-        chibiDay[i].setChildrenVisible(False)
-
-numDays = 1
-
-f = open("Abby.txt", "r")
-
-firstRun = True
-
-abbyDay = []
-
-line2 = ""
-
-for i in range(0,78):
-    abbyDay.append(SceneNode.create('abbyDay'+str(i)))
-
-for line in f:
-    if line == "-999":
-        break
-
-    line2 = f.next()
-
-    if line2 == "-999":
-        break
-    
-    tokens2 = line2.split(" ")
-    if firstRun:
-        tokens = line.split(" ")
-        dayCounter = tokens[4]
-        nodeCounter = 1
-        firstRun = False
-    else:
-        tokens = prevLine.split(" ")
-    pos1 = Vector3(float(tokens[0]), float(tokens[1]), float(tokens[2]))
-    
-    pos2 = Vector3(float(tokens2[0]), float(tokens2[1]), float(tokens2[2]))
-
-    vec = pos2 - pos1
-    pointX = vec.x
-    pointY = vec.y
-    pointZ = vec.z
-
-    geom = ModelGeometry.create('quad')
-    v1 = geom.addVertex(Vector3(0, -2.5, 0))
-    geom.addColor(Color('blue'))
-    v2 = geom.addVertex(Vector3(0, 2.5, 0))
-    geom.addColor(Color('blue'))
-    v3 = geom.addVertex(Vector3(0, -2.5, abs(vec)))
-    geom.addColor(Color('red'))
-    v4 = geom.addVertex(Vector3(0, 2.5, abs(vec)))
-    geom.addColor(Color('red'))
-    geom.addPrimitive(PrimitiveType.TriangleStrip, 0, 4)
-
-    scene.addModel(geom)
-    quad = StaticObject.create('quad')
-    quad.setPosition(pos1)
-
-    quad.getMaterial().setProgram('colored byvertex-emissive')
-    quad.getMaterial().setTransparent(True)
-    quad.getMaterial().setAlpha(0.5)
-
-    if (pointZ >= 0 and pointX >= 0):
-        rotX = -atan2(pointY,pointZ)
-        rotY = atan2(pointX, sqrt(pointY*pointY+pointZ*pointZ))
-    else:
-        rotX = -atan2(pointY,pointZ)
-        rotY = atan2(pointX, sqrt(pointY*pointY+pointZ*pointZ))
-    quad.pitch(rotX)
-    quad.yaw(rotY)
-    dayDelta = int(tokens2[3])
-    abbyDay[dayDelta].addChild(quad)
-
-    prevLine = line2
-f.close()
-
-listSelector = 0
-
-for i in range(0, 78):
-        abbyDay[i].setChildrenVisible(False)
+veruca = createCustomGeom(f, scene, 'red', 'veruca')
 
 #-----------------------------------------------------------------------------
 #Terrain code
@@ -604,126 +639,6 @@ setUpdateFunction(onUpdate)
 
 #--------------------------------------------------------------------------------------
 #Functions
-def setDaySize(value):
-    global numDays
-    numDays = value
-
-sphereList = []
-workingList = chibiDay
-prevWorkingList = chibiDay
-
-def showNextDay(value):
-    global chibiDay
-    global listSelector
-    global abbyDay
-    global workingList
-    global prevWorkingList
-
-    global numDays
-    global sphereList
-
-    maxDay = 0
-
-    if value == 4693:
-        workingList = chibiDay
-        maxDay = 68
-    elif value == 4652:
-        workingList = abbyDay
-        maxDay = 78
-
-    # while sphereList:
-    #     sphere = sphereList.pop()
-    #     #sphere.remove()
-
-    nextNDays = 0
-    prevNDays = 0
-
-    if listSelector+numDays < maxDay:
-        nextNDays = listSelector+numDays
-    else:
-        nextNDays = maxDay
-
-    if listSelector-numDays >= 0:
-        prevNdays = listSelector-numDays
-    else:
-        prevNDays = 0
-
-    for i in range(prevNDays, nextNDays):
-        if prevWorkingList is workingList:
-            workingList[i].setChildrenVisible(False)
-        else:
-            if prevWorkingList[i]:
-                prevWorkingList[i].setChildrenVisible(False)
-
-    if listSelector+numDays < maxDay:
-        listSelector = listSelector + numDays
-        for i in range(listSelector-numDays, listSelector):
-            workingList[i].setChildrenVisible(True)
-    else:
-        for i in range(listSelector, maxDay):
-            workingList[i].setChildrenVisible(True)
-        # startVec = workingList[listSelector].getChildByIndex(0).getPosition()
-        # numChildren = workingList[maxDay].numChildren()
-        # endVec = workingList[maxDay].getChildByIndex(numChildren).getPosition()
-        # sphereList.append(SphereShape.create(3.5,1))
-        # sphereList[0].setPosition(startVec)
-        # hexString = createHexString(61, 18, 85)
-        # sphereList[0].setEffect('colored -e #'+hexString)
-        # sphereList.append(SphereShape.create(3.5,1))
-        # sphereList[1].setPosition(endVec)
-        # hexString = createHexString(160, 24, 239)
-        # sphereList[1].setEffect('colored -e #'+hexString)
-            listSelector = 0
-
-    prevWorkingList = workingList
-
-def showPrevDay(value):
-    global chibiDay
-    global abbyDay
-    global workingList 
-    global prevWorkingList
-
-    global listSelector
-
-    maxDay = 0
-
-    if value == 4693:
-        workingList = chibiDay
-        maxDay = 68
-    elif value == 4652:
-        workingList = abbyDay
-        maxDay = 78
-
-    nextNDays = 0
-    prevNDays = 0
-    if listSelector+numDays < maxDay:
-        nextNDays = listSelector+numDays
-    else:
-        nextNDays = maxDay
-        
-    if listSelector-numDays >= 0:
-        prevNdays = listSelector-numDays
-    else:
-        prevNDays = 0
-
-    for i in range(prevNDays, nextNDays):
-        if prevWorkingList is workingList:
-            workingList[i].setChildrenVisible(False)
-        else:
-            if prevWorkingList[i]:
-                prevWorkingList[i].setChildrenVisible(False)
-            
-
-    if listSelector-numDays >= 0:
-        listSelector = listSelector - numDays
-        for i in range(listSelector, listSelector+numDays):
-            workingList[i].setChildrenVisible(True)
-    else:
-        for i in range(0, listSelector):
-            workingList[i].setChildrenVisible(True)
-            listSelector = maxDay
-
-    prevWorkingList = workingList
 
 # def oneDayStepUp(value):
 #     global myStartDay
