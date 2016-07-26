@@ -3,7 +3,9 @@ from cyclops import *
 from pointCloud import *
 from math import *
 
-def createCustomGeom(f, scene, color, geomName):
+def createCustomGeom(f, scene, color, geomName):        #Function parses file and creates lines
+                                                        #that represent movement into a single
+                                                        #custom shape.
     firstRun = True
 
     numVertices = 0
@@ -17,14 +19,20 @@ def createCustomGeom(f, scene, color, geomName):
     unitY = Vector3(0,1,0)
     unitZ = Vector3(0,0,1)
 
+    thickness = 1.5
+
     geom = ModelGeometry.create(geomName)
     for line in f:
         # if numVertices == 6:
         #     break
+        if line == '-999':
+            break
+
         line2 = f.next()
         
-        if not line2:
+        if line2 == '-999':
             break
+
         tokens2 = line2.split(" ")
         if firstRun:
             tokens = line.split(" ")
@@ -41,37 +49,37 @@ def createCustomGeom(f, scene, color, geomName):
         d = vec.normalize()
         unitZV1 = d.cross(unitZ)
         unitYV1 = d.cross(unitY)
+        if firstRun:
+            v1 = pos1+thickness*unitZV1+thickness*unitYV1       #list of vertices
+            v2 = pos1+thickness*unitZV1-thickness*unitYV1
+        else:
+            v1 = prevV3
+            v2 = prevV4
+            
+        v3 = pos2+thickness*unitZV1+thickness*unitYV1
+        v4 = pos2+thickness*unitZV1-thickness*unitYV1
 
-        v1 = pos1+1*unitZV1+1*unitYV1       #list of vertices
-        v2 = pos1+1*unitZV1-1*unitYV1
-        v3 = pos2+1*unitZV1+1*unitYV1
-        v4 = pos2+1*unitZV1-1*unitYV1
+        if firstRun:
+            v5 = pos1-thickness*unitZV1+thickness*unitYV1
+            v6 = pos1-thickness*unitZV1-thickness*unitYV1
+            firstRun = False
+        else:
+            v5 = prevV7
+            v6 = prevV8
 
-        v5 = pos1-1*unitZV1+1*unitYV1
-        v6 = pos1-1*unitZV1-1*unitYV1
-        v7 = pos2-1*unitZV1+1*unitYV1
-        v8 = pos2-1*unitZV1-1*unitYV1
+        v7 = pos2-thickness*unitZV1+thickness*unitYV1
+        v8 = pos2-thickness*unitZV1-thickness*unitYV1
 
     #####################Front Panel##################################################
         geom.addVertex( v3 )
         geom.addColor(Color(color))
-        if firstRun:
-            geom.addVertex( v2 )
-            geom.addColor(Color(color))
-            geom.addVertex( v1 )
-            geom.addColor(Color(color))
-        else:
-            geom.addVertex( prevV4 )
-            geom.addColor(Color(color))
-            geom.addVertex( prevV3 )
-            geom.addColor(Color(color))
+        geom.addVertex( v2 )
+        geom.addColor(Color(color))
+        geom.addVertex( v1 )
+        geom.addColor(Color(color))
 
-        if firstRun:
-            geom.addVertex( v2 )
-            geom.addColor(Color(color))
-        else:
-            geom.addVertex( prevV4 )
-            geom.addColor(Color(color))
+        geom.addVertex( v2 )
+        geom.addColor(Color(color))
         geom.addVertex( v3 )
         geom.addColor(Color(color))
         geom.addVertex( v4 )
@@ -80,23 +88,13 @@ def createCustomGeom(f, scene, color, geomName):
     #####################Back Panel##################################################
         geom.addVertex( v7 )
         geom.addColor(Color(color))
-        if firstRun:
-            geom.addVertex( v6 )
-            geom.addColor(Color(color))
-            geom.addVertex( v5 )
-            geom.addColor(Color(color))
-        else:
-            geom.addVertex( prevV8 )
-            geom.addColor(Color(color))
-            geom.addVertex( prevV7 )
-            geom.addColor(Color(color))
+        geom.addVertex( v6 )
+        geom.addColor(Color(color))
+        geom.addVertex( v5 )
+        geom.addColor(Color(color))
 
-        if firstRun:
-            geom.addVertex( v6 )
-            geom.addColor(Color(color))
-        else:
-            geom.addVertex( prevV8)
-            geom.addColor(Color(color))
+        geom.addVertex( v6 )
+        geom.addColor(Color(color))
         geom.addVertex( v7 )
         geom.addColor(Color(color))
         geom.addVertex( v8 )
@@ -105,50 +103,29 @@ def createCustomGeom(f, scene, color, geomName):
     #####################Top Panel##################################################
         geom.addVertex( v7 )
         geom.addColor(Color(color))
-        if firstRun:
-            geom.addVertex( v1 )
-            geom.addColor(Color(color))
-            geom.addVertex( v5 )
-            geom.addColor(Color(color))
-        else:
-            geom.addVertex( prevV3 )
-            geom.addColor(Color(color))
-            geom.addVertex( prevV7 )
-            geom.addColor(Color(color))
+        geom.addVertex( v1 )
+        geom.addColor(Color(color))
+        geom.addVertex( v5 )
+        geom.addColor(Color(color))
         
         geom.addVertex( v7 )
         geom.addColor(Color(color))
         geom.addVertex( v3 )
         geom.addColor(Color(color))
-        if firstRun:
-            geom.addVertex( v1 )
-            geom.addColor(Color(color))
-        else:
-            geom.addVertex( prevV3 )
-            geom.addColor(Color(color))
+        geom.addVertex( v1 )
+        geom.addColor(Color(color))
     ##################################################################################
     #####################Bottom Panel##################################################
         
-        if firstRun:
-            geom.addVertex( v2 )
-            geom.addColor(Color(color))
-            geom.addVertex( v6 )
-            geom.addColor(Color(color))
-        else:
-            geom.addVertex( prevV4 )
-            geom.addColor(Color(color))
-            geom.addVertex( prevV8 )
-            geom.addColor(Color(color))
+        geom.addVertex( v2 )
+        geom.addColor(Color(color))
+        geom.addVertex( v6 )
+        geom.addColor(Color(color))
         geom.addVertex( v4 )
         geom.addColor(Color(color)) 
 
-        if firstRun:
-            geom.addVertex( v6 )
-            geom.addColor(Color(color))
-            firstRun = False
-        else:
-            geom.addVertex( prevV8 )
-            geom.addColor(Color(color))
+        geom.addVertex( v6 )
+        geom.addColor(Color(color))
         geom.addVertex( v4 )
         geom.addColor(Color(color))    
         geom.addVertex( v8 )
@@ -162,6 +139,8 @@ def createCustomGeom(f, scene, color, geomName):
         prevV4 = v4
         prevV7 = v7
         prevV8 = v8
+
+        prevVec = vec
 
         prevLine = line2
         
@@ -334,9 +313,9 @@ f = open("gpsMovement/Abby.txt", "r")
 
 abby = createCustomGeom(f, scene, 'purple', 'abby')
 
-f = open("gpsMovement/Veruca.txt", "r")
+f = open("gpsMovement/Clementina.txt", "r")
 
-veruca = createCustomGeom(f, scene, 'red', 'veruca')
+clementina = createCustomGeom(f, scene, 'red', 'clementina')
 
 #-----------------------------------------------------------------------------
 #Terrain code
