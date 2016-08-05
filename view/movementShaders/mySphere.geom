@@ -8,8 +8,7 @@ uniform int startDay;
 uniform int endDay;
 
 uniform int colorBy;
-uniform int selectedIndividual1;
-uniform int selectedIndividual2;
+uniform int bitMapSelectedIndividuals[21];
 
 
 flat out vec3 vertex_light_position;
@@ -32,6 +31,8 @@ main(void)
 	int min = int(gl_FrontColor.b);
   int individualID = int(gl_FrontColor.a);
   float dayModSeven = mod(day, 7);
+
+  int selectedIndividuals[21] = int[21](4690, 4693, 4652, 4653, 4658, 4052, 4672, 4668, 4671, 4669, 4675, 4650, 4674, 4689, 4654, 4657, 4660, 4692, 4673, 4656, 4665);
 	  
 	//Example using the gl_FrontColor values for filtering!!
 	bool drawPoint = true;
@@ -39,12 +40,18 @@ main(void)
   //figure out if this point will be drawn
   //day = 1, startDay =1 endDay =2 -> draw
    //day =2 or 0, startDay = 1 end day = 2 not draw
-  //if( individualID - 4693 == 0)//selectedIndividual1 || individualID == selectedIndividual2 )
+  // if( individualID - 4693 == 0)//selectedIndividual1 || individualID == selectedIndividual2 )
   //    drawPoint = true; 
-  if( drawPoint && (day >= startDay && day < endDay) )
-	    drawPoint = true;
-  else
-      drawPoint = false;
+  for (int i = 0; i < 21; i++) 
+  {
+    if (bitMapSelectedIndividuals[i] == 1) 
+    {
+      if( drawPoint && (day >= startDay && day < endDay) && (selectedIndividuals[i] == individualID) )
+        drawPoint = true;
+      else
+        drawPoint = false;
+    }
+  }
 
   //***********************************************************************************************
   //Don't worry about this. It's computing a color by time
@@ -140,10 +147,10 @@ main(void)
         gl_FrontColor = vec4( 122.0/255.0,1.0/255.0,119.0/255.0, 1.0 );
     }
     if( colorBy == 5 ){
-      if( individualID == selectedIndividual1 )
-        gl_FrontColor = vec4( 149.0/255.0,79.0/255.0,234.0/255.0, 1.0 );
-      if( individualID == selectedIndividual2 )
-        gl_FrontColor = vec4( 85.0/255.0,136.0/255.0,244.0/255.0, 1.0 );
+      for (int i = 0; i < 21; i++) {
+        if( bitMapSelectedIndividuals[i] == 1 )
+          gl_FrontColor = vec4( 149.0/255.0,79.0/255.0,234.0/255.0, 1.0 );
+      }
     }
 
 
