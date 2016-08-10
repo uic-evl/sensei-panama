@@ -7,8 +7,9 @@ uniform float movePointScale;
 uniform int startDay;
 uniform int endDay;
 
-uniform int colorBy;
+//uniform int colorBy;
 uniform int bitMapSelectedIndividuals[21];
+uniform int colorByBitMap[21];
 
 
 flat out vec3 vertex_light_position;
@@ -24,18 +25,19 @@ main(void)
   float halfsize = sphere_radius * 0.5;
 
   gl_FrontColor = gl_FrontColorIn[0];
-  gl_FrontColor.a = globalAlpha;
+  //gl_FrontColor.a = globalAlpha;
 
 	int day = int(gl_FrontColor.r);
 	int hr = int(gl_FrontColor.g);
 	int min = int(gl_FrontColor.b);
   int individualID = int(gl_FrontColor.a);
   float dayModSeven = mod(day, 7);
+  int saveIndInfo = -999;
 
   int selectedIndividuals[21] = int[21](4690, 4693, 4652, 4653, 4658, 4052, 4672, 4668, 4671, 4669, 4675, 4650, 4674, 4689, 4654, 4657, 4660, 4692, 4673, 4656, 4665);
 	  
 	//Example using the gl_FrontColor values for filtering!!
-	bool drawPoint = true;
+	bool drawPoint = false;
 
   //figure out if this point will be drawn
   //day = 1, startDay =1 endDay =2 -> draw
@@ -46,12 +48,14 @@ main(void)
   {
     if (bitMapSelectedIndividuals[i] == 1) 
     {
-      if( drawPoint && (day >= startDay && day < endDay) && (selectedIndividuals[i] == individualID) )
+      if((day >= startDay && day < endDay) && (selectedIndividuals[i] == individualID) )
+        saveIndInfo = i
         drawPoint = true;
-      else
-        drawPoint = false;
+        break;
     }
   }
+
+  gl_FrontColor.a = globalAlpha;
 
   //***********************************************************************************************
   //Don't worry about this. It's computing a color by time
@@ -60,7 +64,7 @@ main(void)
 
     gl_FrontColor = vec4( 255.0/255.0 , 0.0, 0.0 , 1.0); 
 
-    if( colorBy == 0 ){ //one color palette
+    if( colorByBitMap[saveIndInfo] == 0 ){ //one color palette
       if( hr < 4 )
         gl_FrontColor = vec4( 255.0/255.0,255.0/255.0,204.0/255.0, 1.0 );
       if( hr >= 4 && hr < 8 )
@@ -74,7 +78,7 @@ main(void)
       if( hr >= 20 && hr < 24 )
         gl_FrontColor = vec4( 37.0/255.0,52.0/255.0,148.0/255.0, 1.0 );
     }
-    if( colorBy == 1 ){
+    if( colorByBitMap[saveIndInfo] == 1 ){
       if( hr < 3 )
         gl_FrontColor = vec4( 69.0/255.0,117.0/255.0,180.0/255.0, 1.0 );
       if( hr >= 3 && hr < 6 )
@@ -92,7 +96,7 @@ main(void)
       if( hr >= 21 && hr < 24 )
         gl_FrontColor = vec4( 215.0/255.0,48.0/255.0,39.0/255.0, 1.0 );
     }
-    if( colorBy == 2){
+    if( colorByBitMap[saveIndInfo] == 2){
       if( hr < 3 )
         gl_FrontColor = vec4( 104.0/255.0,79.0/255.0,227.0/255.0, 1.0 );
       if( hr >= 3 && hr < 6 )
@@ -110,7 +114,7 @@ main(void)
       if( hr >= 21 && hr < 24 )
         gl_FrontColor = vec4( 78.0/255.0,181.0/255.0,226.0/255.0, 1.0 );
     }
-    if( colorBy == 3){
+    if( colorByBitMap[saveIndInfo] == 3){
       if( dayModSeven == 0 )
         gl_FrontColor = vec4( 247.0/255.0,251.0/255.0,255.0/255.0, 1.0 );
       if( dayModSeven == 1 )
@@ -128,7 +132,7 @@ main(void)
       //if( day >= 70 && day < 84 )
       //  gl_FrontColor = vec4( 8.0/255.0,81.0/255.0,156.0/255.0, 1.0 );
     }
-    if( colorBy == 4){
+    if( colorByBitMap[saveIndInfo] == 4){
       if( day < 10 )
         gl_FrontColor = vec4( 255.0/255.0,247.0/255.0,243.0/255.0, 1.0 );
       if( day >= 10 && day < 20 )
@@ -146,7 +150,7 @@ main(void)
       if( day >= 70 && day < 84 )
         gl_FrontColor = vec4( 122.0/255.0,1.0/255.0,119.0/255.0, 1.0 );
     }
-    if( colorBy == 5 ){
+    if( colorByBitMap[saveIndInfo] == 5 ){
       for (int i = 0; i < 21; i++) {
         if( bitMapSelectedIndividuals[i] == 1 )
           gl_FrontColor = vec4( 149.0/255.0,79.0/255.0,234.0/255.0, 1.0 );
