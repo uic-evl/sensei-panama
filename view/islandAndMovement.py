@@ -457,7 +457,7 @@ abbyBtnGrad6 = abbyCO.addButton("Color by individual", "setColorBy(2, 5)")
 
 benbobMenu = subSelectInd.addSubMenu("Ben Bob 4653")
 benbobBtn1 = subSelectInd.addButton("Show Data", "setSelInd(3)")
-benBobCO = benBobMenu.addSubMenu("Color Options")
+benBobCO = benbobMenu.addSubMenu("Color Options")
 benBtnGrad1 = benBobCO.addButton("Hour Gradient 1", "setColorBy(3, 0)")
 benBtnGrad2 = benBobCO.addButton("Hour Gradient 2", "setColorBy(3, 1)")
 benBtnGrad3 = benBobCO.addButton("Hour Gradient 3", "setColorBy(3, 2)")
