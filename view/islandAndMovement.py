@@ -23,7 +23,6 @@ def createCustomGeom(f, scene, geomName):        #Function parses file and creat
     unitZ = Vector3(0,0,1)
 
     thickness = 2
-
     geom = ModelGeometry.create(geomName)
     for line in f:
         # if numVertices == 6:
@@ -230,10 +229,15 @@ getDefaultCamera().setPosition(imgResRatioX*10260/2, imgResRatioY*9850/2, 2500)
 #---------------------------------------------------------------------------
 #Cylinder and Sphere Version
 
-myStartDay = 0
-myEndDay = 1
+myStartDay = []
+myEndDay = []
+for i in range(0, 21):
+    myStartDay.append(0)
+    myEndDay.append(1)
+
 dayIncrement = 1
-numberOfDays = 84
+#numberOfDays = 85
+numberOfDaysByIndividual = [85, 70, 78, 80, 54, 18, 83, 80, 79, 67, 65, 72, 73, 71, 72, 67, 82, 86, 35, 39, 2]
 currentPitch = 0
 currentYaw = 0
 currentRoll = 0
@@ -244,12 +248,9 @@ moveLineProgram.vertexShaderName = "lineShaders/Line.vert"
 moveLineProgram.fragmentShaderName = "lineShaders/Line.frag"
 scene.addProgram(moveLineProgram)
 
-startDay = Uniform.create('startDay', UniformType.Int, 1)
-startDay.setInt(myStartDay)
-endDay = Uniform.create('endDay', UniformType.Int, 1)
-endDay.setInt(myEndDay)
-# colorBy = Uniform.create('colorBy', UniformType.Int, 1)
-# colorBy.setInt(0)
+startDay = Uniform.create('startDay', UniformType.Int, 21)
+endDay = Uniform.create('endDay', UniformType.Int, 21)
+
 bitMapSelectedIndividuals = Uniform.create('bitMapSelectedIndividuals', UniformType.Int, 21)
 colorByBitMap = Uniform.create('colorByBitMap', UniformType.Int, 21)
 
@@ -258,9 +259,8 @@ for i in range(0,21):
         bitMapSelectedIndividuals.setIntElement(1, i)
     else:
         bitMapSelectedIndividuals.setIntElement(0, i)
-
-for i in range(0, 21):
-    bitMapSelectedIndividuals.setIntElement(0, i)
+    startDay.setIntElement(myStartDay[i], i)
+    endDay.setIntElement(myEndDay[i], i)
 
 f = open("gpsMovement/all.txt", "r")
 
@@ -273,18 +273,8 @@ allMat.attachUniform(endDay)
 allMat.attachUniform(colorByBitMap)
 allMat.attachUniform(bitMapSelectedIndividuals)
 
-#--------------------------------------------------------------------------------------------
-# Movement point cloud code GPU Version
-
-#filters
-# startDay = Uniform.create('startDay', UniformType.Int, 1)
-# endDay = Uniform.create('endDay', UniformType.Int, 1)
-
-movePointScale = Uniform.create('movePointScale', UniformType.Float, 1)
-movePointScale.setFloat(8.0)
-
 movePointProgram = ProgramAsset()
-movePointProgram.name = "movePoints"
+movePointProgram.name = "movePoint"
 movePointProgram.vertexShaderName = "movementShaders/Sphere.vert" #here are our shaders
 movePointProgram.fragmentShaderName = "movementShaders/Sphere.frag"
 movePointProgram.geometryShaderName = "movementShaders/mySphere.geom"
@@ -293,22 +283,49 @@ movePointProgram.geometryInput = PrimitiveType.Points
 movePointProgram.geometryOutput = PrimitiveType.TriangleStrip
 scene.addProgram(movePointProgram)
 
-movePointCloudModel = ModelInfo()
-movePointCloudModel.name = 'movePointCloud'
-movePointCloudModel.path = 'all.xyzb'
-movePointCloudModel.options = "10000 100:1000000:20 20:100:10 6:20:5 0:5:5"
-scene.loadModel(movePointCloudModel)
+f = open("gpsMovement/all.txt", "r")
 
-movePointCloud = StaticObject.create(movePointCloudModel.name)
-# attach shader uniforms
-moveMat = movePointCloud.getMaterial()
-moveMat.setProgram(movePointProgram.name)
-moveMat.attachUniform(startDay)
-moveMat.attachUniform(endDay)
-# moveMat.attachUniform(colorBy)
-moveMat.attachUniform(bitMapSelectedIndividuals)
-moveMat.attachUniform(colorByBitMap)
-moveMat.attachUniform(movePointScale)
+allPoints = createCustomGeom(f, scene, 'allPoints')
+allPoints.getMaterial().setProgram(movePointProgram.name)
+allPoints.getMaterial().attachUniform(startDay)
+allPoints.getMaterial().attachUniform(endDay)
+allPoints.getMaterial().attachUniform(colorByBitMap)
+allPoints.getMaterial().attachUniform(bitMapSelectedIndividuals)
+
+#--------------------------------------------------------------------------------------------
+# Movement point cloud code GPU Version
+
+#filters
+# movePointScale = Uniform.create('movePointScale', UniformType.Float, 1)
+# movePointScale.setFloat(8.0)
+
+# movePointProgram = ProgramAsset()
+# movePointProgram.name = "movePoints"
+# movePointProgram.vertexShaderName = "movementShaders/Sphere.vert" #here are our shaders
+# movePointProgram.fragmentShaderName = "movementShaders/Sphere.frag"
+# movePointProgram.geometryShaderName = "movementShaders/mySphere.geom"
+# movePointProgram.geometryOutVertices = 4
+# movePointProgram.geometryInput = PrimitiveType.Points
+# movePointProgram.geometryOutput = PrimitiveType.TriangleStrip
+# scene.addProgram(movePointProgram)
+
+# movePointCloudModel = ModelInfo()
+# movePointCloudModel.name = 'movePointCloud'
+# movePointCloudModel.path = 'gpsMovement/all.xyzb'
+# movePointCloudModel.options = "10000 100:1000000:20 20:100:10 6:20:5 0:5:5"
+# scene.loadModel(movePointCloudModel)
+
+# movePointCloud = StaticObject.create(movePointCloudModel.name)
+# # attach shader uniforms
+# moveMat = movePointCloud.getMaterial()
+# moveMat.setProgram(movePointProgram.name)
+# moveMat.attachUniform(startDay)
+# moveMat.attachUniform(endDay)
+# moveMat.attachUniform(bitMapSelectedIndividuals)
+# moveMat.attachUniform(colorByBitMap)
+# moveMat.attachUniform(movePointScale)
+
+
 
 #----------------------------------------------------------------------------
 
@@ -407,13 +424,13 @@ hbtn = ss.addButton("Horizontal View", "viewHorizontal(1)")
 #GPU Submenu Items
 
 # #SUBMENU STEPTHRO
-ss2 = mm.getMainMenu().addSubMenu("Step Through Options")
-btnOneUp = ss2.addButton("Forward a day", "oneDayStepUp(1)")
-btnOneDown = ss2.addButton("Backward a day", "oneDayStepDown(1)")
-btnSvnUp = ss2.addButton("7 Days Forward", "sevenDayStepUp(1)")
-btnSvnUp = ss2.addButton("7 Days Backward", "sevenDayStepDown(1)")
+ss2 = mm.getMainMenu().addSubMenu("Global Step Through Options")
+btnOneUp = ss2.addButton("Forward a day", "globalOneDayStepUp(1)")
+btnOneDown = ss2.addButton("Backward a day", "globalOneDayStepDown(1)")
+btnSvnUp = ss2.addButton("7 Days Forward", "globalSevenDayStepUp(1)")
+btnSvnUp = ss2.addButton("7 Days Backward", "globalSevenDayStepDown(1)")
 ss2.addLabel("--------------------")
-btnAll = ss2.addButton("All Days", "allDay(1)")
+btnAll = ss2.addButton("All Days", "globalAllDay(1)")
 
 # #SUBMENU COLOR
 # ss3 = mm.getMainMenu().addSubMenu("Color Options")
@@ -424,9 +441,23 @@ btnAll = ss2.addButton("All Days", "allDay(1)")
 # btnGrad5 = ss3.addButton("Day Gradient 2", "setColorBy(4)")
 # btnGrad6 = ss3.addButton("Color by individual", "setColorBy(5)")
 
+#-----------------------------------------------------------------------------
+#Selected Individuals Menu
 subSelectInd = mm.getMainMenu().addSubMenu("Selected Individuals")
+subSelectInd2 = mm.getMainMenu().addSubMenu("Selected Individuals (2nd Half)")
+
+#Veruca-----------------------------------------------------------------------
+
 verucaMenu = subSelectInd.addSubMenu("Veruca 4690")
 verBtn1 = verucaMenu.addButton("Show Data", "setSelInd(0)")
+
+verucaMenu.addButton("Forward a day", "oneDayStepUp(0)")
+verucaMenu.addButton("Backward a day", "oneDayStepDown(0)")
+verucaMenu.addButton("7 Days Forward", "sevenDayStepUp(0)")
+verucaMenu.addButton("7 Days Backward", "sevenDayStepDown(0)")
+verucaMenu.addLabel("----------------")
+verucaMenu.addButton("All Days", "allDay(0)")
+
 verCO = verucaMenu.addSubMenu("Color Options")
 verBtnGrad1 = verCO.addButton("Hour Gradient 1", "setColorBy(0, 0)")
 verBtnGrad2 = verCO.addButton("Hour Gradient 2", "setColorBy(0, 1)")
@@ -435,8 +466,17 @@ verBtnGrad4 = verCO.addButton("Day Gradient 1", "setColorBy(0, 3)")
 verBtnGrad5 = verCO.addButton("Day Gradient 2", "setColorBy(0, 4)")
 verBtnGrad6 = verCO.addButton("Color by individual", "setColorBy(0, 5)")
 
+#Chibi-----------------------------------------------------------------------
 chibiMenu = subSelectInd.addSubMenu("Chibi 4693")
 chibiBtn1 = chibiMenu.addButton("Show Data", "setSelInd(1)")
+
+chibiMenu.addButton("Forward a day", "oneDayStepUp(1)")
+chibiMenu.addButton("Backward a day", "oneDayStepDown(1)")
+chibiMenu.addButton("7 Days Forward", "sevenDayStepUp(1)")
+chibiMenu.addButton("7 Days Backward", "sevenDayStepDown(1)")
+chibiMenu.addLabel("----------------")
+chibiMenu.addButton("All Days", "allDay(1)")
+
 chibiCO = chibiMenu.addSubMenu("Color Options")
 chibiBtnGrad1 = chibiCO.addButton("Hour Gradient 1", "setColorBy(1, 0)")
 chibiBtnGrad2 = chibiCO.addButton("Hour Gradient 2", "setColorBy(1, 1)")
@@ -445,8 +485,17 @@ chibiBtnGrad4 = chibiCO.addButton("Day Gradient 1", "setColorBy(1, 3)")
 chibiBtnGrad5 = chibiCO.addButton("Day Gradient 2", "setColorBy(1, 4)")
 chibiBtnGrad6 = chibiCO.addButton("Color by individual", "setColorBy(1, 5)")
 
+#Abby---------------------------------------------------------------------
 abbyMenu = subSelectInd.addSubMenu("Abby 4652")
-abbyBtn1 = subSelectInd.addButton("Show Data", "setSelInd(2)")
+abbyBtn1 = abbyMenu.addButton("Show Data", "setSelInd(2)")
+
+abbyMenu.addButton("Forward a day", "oneDayStepUp(2)")
+abbyMenu.addButton("Backward a day", "oneDayStepDown(2)")
+abbyMenu.addButton("7 Days Forward", "sevenDayStepUp(2)")
+abbyMenu.addButton("7 Days Backward", "sevenDayStepDown(2)")
+abbyMenu.addLabel("----------------")
+abbyMenu.addButton("All Days", "allDay(2)")
+
 abbyCO = abbyMenu.addSubMenu("Color Options")
 abbyBtnGrad1 = abbyCO.addButton("Hour Gradient 1", "setColorBy(2, 0)")
 abbyBtnGrad2 = abbyCO.addButton("Hour Gradient 2", "setColorBy(2, 1)")
@@ -455,8 +504,17 @@ abbyBtnGrad4 = abbyCO.addButton("Day Gradient 1", "setColorBy(2, 3)")
 abbyBtnGrad5 = abbyCO.addButton("Day Gradient 2", "setColorBy(2, 4)")
 abbyBtnGrad6 = abbyCO.addButton("Color by individual", "setColorBy(2, 5)")
 
+#Ben Bob-----------------------------------------------------------------
 benbobMenu = subSelectInd.addSubMenu("Ben Bob 4653")
-benbobBtn1 = subSelectInd.addButton("Show Data", "setSelInd(3)")
+benbobBtn1 = benbobMenu.addButton("Show Data", "setSelInd(3)")
+
+benbobMenu.addButton("Forward a day", "oneDayStepUp(3)")
+benbobMenu.addButton("Backward a day", "oneDayStepDown(3)")
+benbobMenu.addButton("7 Days Forward", "sevenDayStepUp(3)")
+benbobMenu.addButton("7 Days Backward", "sevenDayStepDown(3)")
+benbobMenu.addLabel("----------------")
+benbobMenu.addButton("All Days", "allDay(3)")
+
 benBobCO = benbobMenu.addSubMenu("Color Options")
 benBtnGrad1 = benBobCO.addButton("Hour Gradient 1", "setColorBy(3, 0)")
 benBtnGrad2 = benBobCO.addButton("Hour Gradient 2", "setColorBy(3, 1)")
@@ -465,8 +523,17 @@ benBtnGrad4 = benBobCO.addButton("Day Gradient 1", "setColorBy(3, 3)")
 benBtnGrad5 = benBobCO.addButton("Day Gradient 2", "setColorBy(3, 4)")
 benBtnGrad6 = benBobCO.addButton("Color by individual", "setColorBy(3, 5)")
 
+#Bonnie------------------------------------------------------------------
 bonnieMenu = subSelectInd.addSubMenu("Bonnie 4658")
-bonnieBtn1 = subSelectInd.addButton("Show Data", "setSelInd(4)")
+bonnieBtn1 = bonnieMenu.addButton("Show Data", "setSelInd(4)")
+
+bonnieMenu.addButton("Forward a day", "oneDayStepUp(4)")
+bonnieMenu.addButton("Backward a day", "oneDayStepDown(4)")
+bonnieMenu.addButton("7 Days Forward", "sevenDayStepUp(4)")
+bonnieMenu.addButton("7 Days Backward", "sevenDayStepDown(4)")
+bonnieMenu.addLabel("----------------")
+bonnieMenu.addButton("All Days", "allDay(4)")
+
 bonCO = bonnieMenu.addSubMenu("Color Options")
 bonBtnGrad1 = bonCO.addButton("Hour Gradient 1", "setColorBy(4, 0)")
 bonBtnGrad2 = bonCO.addButton("Hour Gradient 2", "setColorBy(4, 1)")
@@ -475,8 +542,17 @@ bonBtnGrad4 = bonCO.addButton("Day Gradient 1", "setColorBy(4, 3)")
 bonBtnGrad5 = bonCO.addButton("Day Gradient 2", "setColorBy(4, 4)")
 bonBtnGrad6 = bonCO.addButton("Color by individual", "setColorBy(4, 5)")
 
+#Chloe-------------------------------------------------------------------
 chloeMenu = subSelectInd.addSubMenu("Chloe 4052")
-chloeBtn1 = subSelectInd.addButton("Chloe 4052", "setSelInd(5)")
+chloeBtn1 = chloeMenu.addButton("Show Data", "setSelInd(5)")
+
+chloeMenu.addButton("Forward a day", "oneDayStepUp(5)")
+chloeMenu.addButton("Backward a day", "oneDayStepDown(5)")
+chloeMenu.addButton("7 Days Forward", "sevenDayStepUp(5)")
+chloeMenu.addButton("7 Days Backward", "sevenDayStepDown(5)")
+chloeMenu.addLabel("----------------")
+chloeMenu.addButton("All Days", "allDay(5)")
+
 chloeCO = chloeMenu.addSubMenu("Color Options")
 chloeBtnGrad1 = chloeCO.addButton("Hour Gradient 1", "setColorBy(5, 0)")
 chloeBtnGrad2 = chloeCO.addButton("Hour Gradient 2", "setColorBy(5, 1)")
@@ -485,8 +561,17 @@ chloeBtnGrad4 = chloeCO.addButton("Day Gradient 1", "setColorBy(5, 3)")
 chloeBtnGrad5 = chloeCO.addButton("Day Gradient 2", "setColorBy(5, 4)")
 chloeBtnGrad6 = chloeCO.addButton("Color by individual", "setColorBy(5, 5)")
 
+#Clementina---------------------------------------------------------------
 clementinaMenu = subSelectInd.addSubMenu("Clementina 4672")
-clemBtn1 = subSelectInd.addButton("Clementina 4672", "setSelInd(6)")
+clemBtn1 = clementinaMenu.addButton("Show Data", "setSelInd(6)")
+
+clementinaMenu.addButton("Forward a day", "oneDayStepUp(6)")
+clementinaMenu.addButton("Backward a day", "oneDayStepDown(6)")
+clementinaMenu.addButton("7 Days Forward", "sevenDayStepUp(6)")
+clementinaMenu.addButton("7 Days Backward", "sevenDayStepDown(6)")
+clementinaMenu.addLabel("----------------")
+clementinaMenu.addButton("All Days", "allDay(6)")
+
 clemCO = clementinaMenu.addSubMenu("Color Options")
 clemBtnGrad1 = clemCO.addButton("Hour Gradient 1", "setColorBy(6, 0)")
 clemBtnGrad2 = clemCO.addButton("Hour Gradient 2", "setColorBy(6, 1)")
@@ -495,9 +580,17 @@ clemBtnGrad4 = clemCO.addButton("Day Gradient 1", "setColorBy(6, 3)")
 clemBtnGrad5 = clemCO.addButton("Day Gradient 2", "setColorBy(6, 4)")
 clemBtnGrad6 = clemCO.addButton("Color by individual", "setColorBy(6, 5)")
 
-
+#Ellie---------------------------------------------------------------------
 ellieMenu = subSelectInd.addSubMenu("Ellie 4668")
-ellieBtn1 = subSelectInd.addButton("Ellie 4668", "setSelInd(7)")
+ellieBtn1 = ellieMenu.addButton("Show Data", "setSelInd(7)")
+
+ellieMenu.addButton("Forward a day", "oneDayStepUp(7)")
+ellieMenu.addButton("Backward a day", "oneDayStepDown(7)")
+ellieMenu.addButton("7 Days Forward", "sevenDayStepUp(7)")
+ellieMenu.addButton("7 Days Backward", "sevenDayStepDown(7)")
+ellieMenu.addLabel("----------------")
+ellieMenu.addButton("All Days", "allDay(7)")
+
 elCO = ellieMenu.addSubMenu("Color Options")
 elBtnGrad1 = elCO.addButton("Hour Gradient 1", "setColorBy(7, 0)")
 elBtnGrad2 = elCO.addButton("Hour Gradient 2", "setColorBy(7, 1)")
@@ -506,8 +599,17 @@ elBtnGrad4 = elCO.addButton("Day Gradient 1", "setColorBy(7, 3)")
 elBtnGrad5 = elCO.addButton("Day Gradient 2", "setColorBy(7, 4)")
 elBtnGrad6 = elCO.addButton("Color by individual", "setColorBy(7, 5)")
 
+#Gillian-------------------------------------------------------------------
 gillianMenu = subSelectInd.addSubMenu("Gillian 4671")
-gillBtn1 = subSelectInd.addButton("Gillian 4671", "setSelInd(8)")
+gillBtn1 = gillianMenu.addButton("Show Data", "setSelInd(8)")
+
+gillianMenu.addButton("Forward a day", "oneDayStepUp(8)")
+gillianMenu.addButton("Backward a day", "oneDayStepDown(8)")
+gillianMenu.addButton("7 Days Forward", "sevenDayStepUp(8)")
+gillianMenu.addButton("7 Days Backward", "sevenDayStepDown(8)")
+gillianMenu.addLabel("----------------")
+gillianMenu.addButton("All Days", "allDay(8)")
+
 gilCO = gillianMenu.addSubMenu("Color Options")
 gilBtnGrad1 = gilCO.addButton("Hour Gradient 1", "setColorBy(8, 0)")
 gilBtnGrad2 = gilCO.addButton("Hour Gradient 2", "setColorBy(8, 1)")
@@ -516,8 +618,17 @@ gilBtnGrad4 = gilCO.addButton("Day Gradient 1", "setColorBy(8, 3)")
 gilBtnGrad5 = gilCO.addButton("Day Gradient 2", "setColorBy(8, 4)")
 gilBtnGrad6 = gilCO.addButton("Color by individual", "setColorBy(8, 5)")
 
+#Ornette------------------------------------------------------------------
 ornetteMenu = subSelectInd.addSubMenu("Ornette 4669")
-ornetteBtn1 = subSelectInd.addButton("Ornette 4669", "setSelInd(9)")
+ornetteBtn1 = ornetteMenu.addButton("Show Data", "setSelInd(9)")
+
+ornetteMenu.addButton("Forward a day", "oneDayStepUp(9)")
+ornetteMenu.addButton("Backward a day", "oneDayStepDown(9)")
+ornetteMenu.addButton("7 Days Forward", "sevenDayStepUp(9)")
+ornetteMenu.addButton("7 Days Backward", "sevenDayStepDown(9)")
+ornetteMenu.addLabel("----------------")
+ornetteMenu.addButton("All Days", "allDay(9)")
+
 ornCO = ornetteMenu.addSubMenu("Color Options")
 ornBtnGrad1 = ornCO.addButton("Hour Gradient 1", "setColorBy(9, 0)")
 ornBtnGrad2 = ornCO.addButton("Hour Gradient 2", "setColorBy(9, 1)")
@@ -526,8 +637,17 @@ ornBtnGrad4 = ornCO.addButton("Day Gradient 1", "setColorBy(9, 3)")
 ornBtnGrad5 = ornCO.addButton("Day Gradient 2", "setColorBy(9, 4)")
 ornBtnGrad6 = ornCO.addButton("Color by individual", "setColorBy(9, 5)")
 
+#Pliny-------------------------------------------------------------------
 plinyMenu = subSelectInd.addSubMenu("Pliny 4675")
-plinyBtn1 = subSelectInd.addButton("Pliny 4675", "setSelInd(10)")
+plinyBtn1 = plinyMenu.addButton("Show Data", "setSelInd(10)")
+
+plinyMenu.addButton("Forward a day", "oneDayStepUp(10)")
+plinyMenu.addButton("Backward a day", "oneDayStepDown(10)")
+plinyMenu.addButton("7 Days Forward", "sevenDayStepUp(10)")
+plinyMenu.addButton("7 Days Backward", "sevenDayStepDown(10)")
+plinyMenu.addLabel("----------------")
+plinyMenu.addButton("All Days", "allDay(10)")
+
 pliCO = plinyMenu.addSubMenu("Color Options")
 pliBtnGrad1 = pliCO.addButton("Hour Gradient 1", "setColorBy(10, 0)")
 pliBtnGrad2 = pliCO.addButton("Hour Gradient 2", "setColorBy(10, 1)")
@@ -536,8 +656,17 @@ pliBtnGrad4 = pliCO.addButton("Day Gradient 1", "setColorBy(10, 3)")
 pliBtnGrad5 = pliCO.addButton("Day Gradient 2", "setColorBy(10, 4)")
 pliBtnGrad6 = pliCO.addButton("Color by individual", "setColorBy(10, 5)")
 
-ripleyMenu = subSelectInd.addSubMenu("Ripley 4650")
-ripleyBtn1 = subSelectInd.addButton("Ripley 4650", "setSelInd(11)")
+#Ripley-----------------------------------------------------------------
+ripleyMenu = subSelectInd2.addSubMenu("Ripley 4650")
+ripleyBtn1 = ripleyMenu.addButton("Show Data", "setSelInd(11)")
+
+ripleyMenu.addButton("Forward a day", "oneDayStepUp(11)")
+ripleyMenu.addButton("Backward a day", "oneDayStepDown(11)")
+ripleyMenu.addButton("7 Days Forward", "sevenDayStepUp(11)")
+ripleyMenu.addButton("7 Days Backward", "sevenDayStepDown(11)")
+ripleyMenu.addLabel("----------------")
+ripleyMenu.addButton("All Days", "allDay(11)")
+
 ripCO = ripleyMenu.addSubMenu("Color Options")
 ripBtnGrad1 = ripCO.addButton("Hour Gradient 1", "setColorBy(11, 0)")
 ripBtnGrad2 = ripCO.addButton("Hour Gradient 2", "setColorBy(11, 1)")
@@ -546,8 +675,17 @@ ripBtnGrad4 = ripCO.addButton("Day Gradient 1", "setColorBy(11, 3)")
 ripBtnGrad5 = ripCO.addButton("Day Gradient 2", "setColorBy(11, 4)")
 ripBtnGrad6 = ripCO.addButton("Color by individual", "setColorBy(11, 5)")
 
-sofieMenu = subSelectInd.addSubMenu("Sofie 4674")
-sofieBtn1 = subSelectInd.addButton("Sofie 4674", "setSelInd(12)")
+#Sofie-------------------------------------------------------------------
+sofieMenu = subSelectInd2.addSubMenu("Sofie 4674")
+sofieBtn1 = sofieMenu.addButton("Show Data", "setSelInd(12)")
+
+sofieMenu.addButton("Forward a day", "oneDayStepUp(12)")
+sofieMenu.addButton("Backward a day", "oneDayStepDown(12)")
+sofieMenu.addButton("7 Days Forward", "sevenDayStepUp(12)")
+sofieMenu.addButton("7 Days Backward", "sevenDayStepDown(12)")
+sofieMenu.addLabel("----------------")
+sofieMenu.addButton("All Days", "allDay(12)")
+
 sofCO = sofieMenu.addSubMenu("Color Options")
 sofBtnGrad1 = sofCO.addButton("Hour Gradient 1", "setColorBy(12, 0)")
 sofBtnGrad2 = sofCO.addButton("Hour Gradient 2", "setColorBy(12, 1)")
@@ -556,8 +694,17 @@ sofBtnGrad4 = sofCO.addButton("Day Gradient 1", "setColorBy(12, 3)")
 sofBtnGrad5 = sofCO.addButton("Day Gradient 2", "setColorBy(12, 4)")
 sofBtnGrad6 = sofCO.addButton("Color by individual", "setColorBy(12, 5)")
 
-gregMenu = subSelectInd.addSubMenu("Greg 4689")
-gregBtn1 = subSelectInd.addButton("Greg 4689", "setSelInd(13)")
+#Greg--------------------------------------------------------------------
+gregMenu = subSelectInd2.addSubMenu("Greg 4689")
+gregBtn1 = gregMenu.addButton("Show Data", "setSelInd(13)")
+
+gregMenu.addButton("Forward a day", "oneDayStepUp(13)")
+gregMenu.addButton("Backward a day", "oneDayStepDown(13)")
+gregMenu.addButton("7 Days Forward", "sevenDayStepUp(13)")
+gregMenu.addButton("7 Days Backward", "sevenDayStepDown(13)")
+gregMenu.addLabel("----------------")
+gregMenu.addButton("All Days", "allDay(13)")
+
 gregCO = gregMenu.addSubMenu("Color Options")
 gregBtnGrad1 = gregCO.addButton("Hour Gradient 1", "setColorBy(13, 0)")
 gregBtnGrad2 = gregCO.addButton("Hour Gradient 2", "setColorBy(13, 1)")
@@ -566,8 +713,17 @@ gregBtnGrad4 = gregCO.addButton("Day Gradient 1", "setColorBy(13, 3)")
 gregBtnGrad5 = gregCO.addButton("Day Gradient 2", "setColorBy(13, 4)")
 gregBtnGrad6 = gregCO.addButton("Color by individual", "setColorBy(13, 5)")
 
-ibethMenu = subSelectInd.addSubMenu("Ibeth 4654")
-ibethBtn1 = subSelectInd.addButton("Ibeth 4654", "setSelInd(14)")
+#Ibeth------------------------------------------------------------------
+ibethMenu = subSelectInd2.addSubMenu("Ibeth 4654")
+ibethBtn1 = ibethMenu.addButton("Show Data", "setSelInd(14)")
+
+ibethMenu.addButton("Forward a day", "oneDayStepUp(14)")
+ibethMenu.addButton("Backward a day", "oneDayStepDown(14)")
+ibethMenu.addButton("7 Days Forward", "sevenDayStepUp(14)")
+ibethMenu.addButton("7 Days Backward", "sevenDayStepDown(14)")
+ibethMenu.addLabel("----------------")
+ibethMenu.addButton("All Days", "allDay(14)")
+
 ibeCO = ibethMenu.addSubMenu("Color Options")
 ibeBtnGrad1 = ibeCO.addButton("Hour Gradient 1", "setColorBy(14, 0)")
 ibeBtnGrad2 = ibeCO.addButton("Hour Gradient 2", "setColorBy(14, 1)")
@@ -576,8 +732,17 @@ ibeBtnGrad4 = ibeCO.addButton("Day Gradient 1", "setColorBy(14, 3)")
 ibeBtnGrad5 = ibeCO.addButton("Day Gradient 2", "setColorBy(14, 4)")
 ibeBtnGrad6 = ibeCO.addButton("Color by individual", "setColorBy(14, 5)")
 
-olgaMenu = subSelectInd.addSubMenu("Olga 4657")
-olgaBtn1 = subSelectInd.addButton("Olga 4657", "setSelInd(15)")
+#Olga-------------------------------------------------------------------
+olgaMenu = subSelectInd2.addSubMenu("Olga 4657")
+olgaBtn1 = olgaMenu.addButton("Show Data", "setSelInd(15)")
+
+olgaMenu.addButton("Forward a day", "oneDayStepUp(15)")
+olgaMenu.addButton("Backward a day", "oneDayStepDown(15)")
+olgaMenu.addButton("7 Days Forward", "sevenDayStepUp(15)")
+olgaMenu.addButton("7 Days Backward", "sevenDayStepDown(15)")
+olgaMenu.addLabel("----------------")
+olgaMenu.addButton("All Days", "allDay(15)")
+
 olgaCO = olgaMenu.addSubMenu("Color Options")
 olgaBtnGrad1 = olgaCO.addButton("Hour Gradient 1", "setColorBy(15, 0)")
 olgaBtnGrad2 = olgaCO.addButton("Hour Gradient 2", "setColorBy(15, 1)")
@@ -586,8 +751,17 @@ olgaBtnGrad4 = olgaCO.addButton("Day Gradient 1", "setColorBy(15, 3)")
 olgaBtnGrad5 = olgaCO.addButton("Day Gradient 2", "setColorBy(15, 4)")
 olgaBtnGrad6 = olgaCO.addButton("Color by individual", "setColorBy(15, 5)")
 
-mimiMenu = subSelectInd.addSubMenu("Mimi 4660")
-mimiBtn1 = subSelectInd.addButton("Mimi 4660", "setSelInd(16)")
+#Mimi--------------------------------------------------------------------
+mimiMenu = subSelectInd2.addSubMenu("Mimi 4660")
+mimiBtn1 = mimiMenu.addButton("Show Data", "setSelInd(16)")
+
+mimiMenu.addButton("Forward a day", "oneDayStepUp(16)")
+mimiMenu.addButton("Backward a day", "oneDayStepDown(16)")
+mimiMenu.addButton("7 Days Forward", "sevenDayStepUp(16)")
+mimiMenu.addButton("7 Days Backward", "sevenDayStepDown(16)")
+mimiMenu.addLabel("----------------")
+mimiMenu.addButton("All Days", "allDay(16)")
+
 mimiCO = mimiMenu.addSubMenu("Color Options")
 mimiBtnGrad1 = mimiCO.addButton("Hour Gradient 1", "setColorBy(16, 0)")
 mimiBtnGrad2 = mimiCO.addButton("Hour Gradient 2", "setColorBy(16, 1)")
@@ -596,8 +770,17 @@ mimiBtnGrad4 = mimiCO.addButton("Day Gradient 1", "setColorBy(16, 3)")
 mimiBtnGrad5 = mimiCO.addButton("Day Gradient 2", "setColorBy(16, 4)")
 mimiBtnGrad6 = mimiCO.addButton("Color by individual", "setColorBy(16, 5)")
 
-kyleMenu = subSelectInd.addSubMenu("Kyle 4692")
-kyleBtn1 = subSelectInd.addButton("Kyle 4692", "setSelInd(17)")
+#Kyle---------------------------------------------------------------------
+kyleMenu = subSelectInd2.addSubMenu("Kyle 4692")
+kyleBtn1 = kyleMenu.addButton("Show Data", "setSelInd(17)")
+
+kyleMenu.addButton("Forward a day", "oneDayStepUp(17)")
+kyleMenu.addButton("Backward a day", "oneDayStepDown(17)")
+kyleMenu.addButton("7 Days Forward", "sevenDayStepUp(17)")
+kyleMenu.addButton("7 Days Backward", "sevenDayStepDown(17)")
+kyleMenu.addLabel("----------------")
+kyleMenu.addButton("All Days", "allDay(17)")
+
 kyleCO = kyleMenu.addSubMenu("Color Options")
 kyleBtnGrad1 = kyleCO.addButton("Hour Gradient 1", "setColorBy(17, 0)")
 kyleBtnGrad2 = kyleCO.addButton("Hour Gradient 2", "setColorBy(17, 1)")
@@ -606,8 +789,17 @@ kyleBtnGrad4 = kyleCO.addButton("Day Gradient 1", "setColorBy(17, 3)")
 kyleBtnGrad5 = kyleCO.addButton("Day Gradient 2", "setColorBy(17, 4)")
 kyleBtnGrad6 = kyleCO.addButton("Color by individual", "setColorBy(17, 5)")
 
-atlasMenu = subSelectInd.addSubMenu("Atlas 4673")
-atlasBtn1 = subSelectInd.addButton("Atlas 4673", "setSelInd(18)")
+#Atlas-------------------------------------------------------------------
+atlasMenu = subSelectInd2.addSubMenu("Atlas 4673")
+atlasBtn1 = atlasMenu.addButton("Show Data", "setSelInd(18)")
+
+atlasMenu.addButton("Forward a day", "oneDayStepUp(18)")
+atlasMenu.addButton("Backward a day", "oneDayStepDown(18)")
+atlasMenu.addButton("7 Days Forward", "sevenDayStepUp(18)")
+atlasMenu.addButton("7 Days Backward", "sevenDayStepDown(18)")
+atlasMenu.addLabel("----------------")
+atlasMenu.addButton("All Days", "allDay(18)")
+
 atlasCO = atlasMenu.addSubMenu("Color Options")
 atlasBtnGrad1 = atlasCO.addButton("Hour Gradient 1", "setColorBy(18, 0)")
 atlasBtnGrad2 = atlasCO.addButton("Hour Gradient 2", "setColorBy(18, 1)")
@@ -616,8 +808,17 @@ atlasBtnGrad4 = atlasCO.addButton("Day Gradient 1", "setColorBy(18, 3)")
 atlasBtnGrad5 = atlasCO.addButton("Day Gradient 2", "setColorBy(18, 4)")
 atlasBtnGrad6 = atlasCO.addButton("Color by individual", "setColorBy(18, 5)")
 
-judyMenu = subSelectInd.addSubMenu("Judy 4656")
-judyBtn1 = subSelectInd.addButton("Judy 4656", "setSelInd(19)")
+#Judy----------------------------------------------------------------------
+judyMenu = subSelectInd2.addSubMenu("Judy 4656")
+judyBtn1 = judyMenu.addButton("Show Data", "setSelInd(19)")
+
+judyMenu.addButton("Forward a day", "oneDayStepUp(19)")
+judyMenu.addButton("Backward a day", "oneDayStepDown(19)")
+judyMenu.addButton("7 Days Forward", "sevenDayStepUp(19)")
+judyMenu.addButton("7 Days Backward", "sevenDayStepDown(19)")
+judyMenu.addLabel("----------------")
+judyMenu.addButton("All Days", "allDay(19)")
+
 judyCO = judyMenu.addSubMenu("Color Options")
 judyBtnGrad1 = judyCO.addButton("Hour Gradient 1", "setColorBy(19, 0)")
 judyBtnGrad2 = judyCO.addButton("Hour Gradient 2", "setColorBy(19, 1)")
@@ -626,8 +827,17 @@ judyBtnGrad4 = judyCO.addButton("Day Gradient 1", "setColorBy(19, 3)")
 judyBtnGrad5 = judyCO.addButton("Day Gradient 2", "setColorBy(19, 4)")
 judyBtnGrad6 = judyCO.addButton("Color by individual", "setColorBy(19, 5)")
 
-merkMenu = subSelectInd.addSubMenu("Merk 4665")
-merkBtn1 = subSelectInd.addButton("Merk 4665", "setSelInd(20)")
+#Merk---------------------------------------------------------------------
+merkMenu = subSelectInd2.addSubMenu("Merk 4665")
+merkBtn1 = merkMenu.addButton("Show Data", "setSelInd(20)")
+
+merkMenu.addButton("Forward a day", "oneDayStepUp(20)")
+merkMenu.addButton("Backward a day", "oneDayStepDown(20)")
+merkMenu.addButton("7 Days Forward", "sevenDayStepUp(20)")
+merkMenu.addButton("7 Days Backward", "sevenDayStepDown(20)")
+merkMenu.addLabel("----------------")
+merkMenu.addButton("All Days", "allDay(20)")
+
 merkCO = merkMenu.addSubMenu("Color Options")
 merkBtnGrad1 = merkCO.addButton("Hour Gradient 1", "setColorBy(20, 0)")
 merkBtnGrad2 = merkCO.addButton("Hour Gradient 2", "setColorBy(20, 1)")
@@ -778,63 +988,137 @@ setUpdateFunction(onUpdate)
 def oneDayStepUp(value):
     global myStartDay
     global myEndDay
-    global numberOfDays
+    global startDay
+    global endDay
+    global numberOfDaysByIndividual
 
-    myStartDay = myStartDay + 1
-    if myStartDay > numberOfDays:
-        myStartDay = 0
-    myEndDay = myStartDay + 1
-    endDay.setInt(myEndDay)
-    startDay.setInt(myStartDay)
+    myStartDay[value] = myStartDay[value] + 1
+    if myStartDay[value] > numberOfDaysByIndividual[value]:
+        myStartDay[value] = 0
+    myEndDay[value] = myStartDay[value] + 1
+    endDay.setIntElement(myEndDay[value], value)
+    startDay.setIntElement(myStartDay[value], value)
+
+def globalOneDayStepUp(value):
+    global myStartDay
+    global myEndDay
+    global startDay
+    global endDay
+    global numberOfDaysByIndividual
+
+    for i in range(0, 21):
+        myStartDay[i] = myStartDay[i] + 1
+        if myStartDay[i] > numberOfDaysByIndividual[i]:
+            myStartDay[i] = 0
+        myEndDay[i] = myStartDay[i] + 1
+        endDay.setIntElement(myEndDay[i], i)
+        startDay.setIntElement(myStartDay[i], i)
 
     # print( "one day step up" + myStartDay)
 
 def oneDayStepDown(value):
+    myStartDay[value] = myStartDay[value] - 1
+    if myStartDay[value] < 0:
+        myStartDay[value] = numberOfDaysByIndividual[value]-1
+    myEndDay[value] = myStartDay[value] + 1
+    endDay.setIntElement(myEndDay[value], value)
+    startDay.setIntElement(myStartDay[value], value)
+
+def globalOneDayStepDown(value):
     global myStartDay
     global myEndDay
-    global numberOfDays
+    global startDay
+    global endDay
+    global numberOfDaysByIndividual
 
-    myStartDay = myStartDay - 1
-    if myStartDay < 0:
-        myStartDay = numberOfDays-1
-    myEndDay = myStartDay + 1
-    endDay.setInt(myEndDay)
-    startDay.setInt(myStartDay)
+    for i in range(0, 21):
+        myStartDay[i] = myStartDay[i] - 1
+        if myStartDay[i] < 0:
+            myStartDay[i] = numberOfDaysByIndividual[i]-1
+        myEndDay[i] = myStartDay[i] + 1
+        endDay.setIntElement(myEndDay[i], i)
+        startDay.setIntElement(myStartDay[i], i)
 
     # print( "one day step down " + myStartDay)
 
 def sevenDayStepUp(value):
     global myStartDay
     global myEndDay
-    global numberOfDays
+    global startDay
+    global endDay
+    global numberOfDaysByIndividual
 
-    myStartDay = myStartDay + 7
-    if myStartDay > numberOfDays:
-        myStartDay = 0
-    myEndDay = myStartDay + 7
-    endDay.setInt(myEndDay)
-    startDay.setInt(myStartDay)
+    myStartDay[value] = myStartDay[value] + 7
+    if myStartDay[value] > numberOfDaysByIndividual[value]:
+        myStartDay[value] = 0
+    myEndDay[value] = myStartDay[value] + 7
+    endDay.setIntElement(myEndDay[value], value)
+    startDay.setIntElement(myStartDay[value], value)
+
+def globalSevenDayStepUp(value):
+    global myStartDay
+    global myEndDay
+    global startDay
+    global endDay
+    global numberOfDaysByIndividual
+
+    for i in range(0, 21):
+        myStartDay[i] = myStartDay[i] + 7
+        if myStartDay[i] > numberOfDaysByIndividual[i]:
+            myStartDay[i] = 0
+        myEndDay[i] = myStartDay[i] + 7
+        endDay.setIntElement(myEndDay[i], i)
+        startDay.setIntElement(myStartDay[i], i)
 
     # print( "seven day step up" + myStartDay)
 
 def sevenDayStepDown(value):
     global myStartDay
     global myEndDay
-    global numberOfDays
+    global startDay
+    global endDay
+    global numberOfDaysByIndividual
 
-    myStartDay = myStartDay - 7
-    if myStartDay < 0:
-        myStartDay = numberOfDays-7
-    myEndDay = myStartDay + 7
-    endDay.setInt(myEndDay)
-    startDay.setInt(myStartDay)
+    myStartDay[value] = myStartDay[value] - 7
+    if myStartDay[value] < 0:
+        myStartDay[value] = numberOfDaysByIndividual[i]-7
+    myEndDay[value] = myStartDay[value] + 7
+    endDay.setIntElement(myEndDay[value], value)
+    startDay.setIntElement(myStartDay[value], value)
+
+def globalSevenDayStepDown(value):
+    global myStartDay
+    global myEndDay
+    global startDay
+    global endDay
+    global numberOfDaysByIndividual
+
+    for i in range(0, 21):
+        myStartDay[i] = myStartDay[i] - 7
+        if myStartDay[i] < 0:
+            myStartDay[i] = numberOfDaysByIndividual[i]-7
+        myEndDay[i] = myStartDay[i] + 7
+        endDay.setIntElement(myEndDay[i], i)
+        startDay.setIntElement(myStartDay[i], i)
 
     # print( "seven day step down " + myStartDay)
 
 def allDay(value):
-    global numberOfDays
-    endDay.setInt(numberOfDays)
-    startDay.setInt(0)
+    global numberOfDaysByIndividual
+    global startDay
+    global endDay
+
+    endDay.setIntElement(numberOfDaysByIndividual[value], value)
+    startDay.setIntElement(0, value)
+
+def globalAllDay(value):
+    global numberOfDaysByIndividual
+    global startDay
+    global endDay
+
+    for i in range(0, 21):
+        endDay.setIntElement(numberOfDaysByIndividual[i], i)
+        startDay.setIntElement(0, i)
 
     # print( "one day step " + myStartDay)
 

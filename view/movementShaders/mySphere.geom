@@ -4,10 +4,9 @@
 
 uniform float movePointScale;
 
-uniform int startDay;
-uniform int endDay;
+uniform int startDay[21];
+uniform int endDay[21];
 
-//uniform int colorBy;
 uniform int bitMapSelectedIndividuals[21];
 uniform int colorByBitMap[21];
 
@@ -32,9 +31,9 @@ main(void)
 	int min = int(gl_FrontColor.b);
   int individualID = int(gl_FrontColor.a);
   float dayModSeven = mod(day, 7);
-  int saveIndInfo = -999;
+  int saveIndInfo;
 
-  int selectedIndividuals[21] = int[21](4690, 4693, 4652, 4653, 4658, 4052, 4672, 4668, 4671, 4669, 4675, 4650, 4674, 4689, 4654, 4657, 4660, 4692, 4673, 4656, 4665);
+  const int selectedIndividuals[21] = int[21](4690, 4693, 4652, 4653, 4658, 4052, 4672, 4668, 4671, 4669, 4675, 4650, 4674, 4689, 4654, 4657, 4660, 4692, 4673, 4656, 4665);
 	  
 	//Example using the gl_FrontColor values for filtering!!
 	bool drawPoint = false;
@@ -46,16 +45,16 @@ main(void)
   //    drawPoint = true; 
   for (int i = 0; i < 21; i++) 
   {
-    if (bitMapSelectedIndividuals[i] == 1) 
+
+    if((day >= startDay[i]) && (day < endDay[i]) && (bitMapSelectedIndividuals[i] == 1) && (selectedIndividuals[i] == individualID)) 
     {
-      if((day >= startDay && day < endDay) && (selectedIndividuals[i] == individualID) )
-        saveIndInfo = i
-        drawPoint = true;
-        break;
+      saveIndInfo = i;
+      drawPoint = true;
+      break;
     }
   }
 
-  gl_FrontColor.a = globalAlpha;
+  //gl_FrontColor.a = globalAlpha;
 
   //***********************************************************************************************
   //Don't worry about this. It's computing a color by time
@@ -151,10 +150,8 @@ main(void)
         gl_FrontColor = vec4( 122.0/255.0,1.0/255.0,119.0/255.0, 1.0 );
     }
     if( colorByBitMap[saveIndInfo] == 5 ){
-      for (int i = 0; i < 21; i++) {
-        if( bitMapSelectedIndividuals[i] == 1 )
-          gl_FrontColor = vec4( 149.0/255.0,79.0/255.0,234.0/255.0, 1.0 );
-      }
+      if( bitMapSelectedIndividuals[saveIndInfo] == 1 )
+        gl_FrontColor = vec4( 149.0/255.0,79.0/255.0,234.0/255.0, 1.0 );
     }
 
 
