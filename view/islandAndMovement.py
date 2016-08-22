@@ -273,25 +273,6 @@ allMat.attachUniform(endDay)
 allMat.attachUniform(colorByBitMap)
 allMat.attachUniform(bitMapSelectedIndividuals)
 
-movePointProgram = ProgramAsset()
-movePointProgram.name = "movePoint"
-movePointProgram.vertexShaderName = "movementShaders/Sphere.vert" #here are our shaders
-movePointProgram.fragmentShaderName = "movementShaders/Sphere.frag"
-movePointProgram.geometryShaderName = "movementShaders/mySphere.geom"
-movePointProgram.geometryOutVertices = 4
-movePointProgram.geometryInput = PrimitiveType.Points
-movePointProgram.geometryOutput = PrimitiveType.TriangleStrip
-scene.addProgram(movePointProgram)
-
-f = open("gpsMovement/all.txt", "r")
-
-allPoints = createCustomGeom(f, scene, 'allPoints')
-allPoints.getMaterial().setProgram(movePointProgram.name)
-allPoints.getMaterial().attachUniform(startDay)
-allPoints.getMaterial().attachUniform(endDay)
-allPoints.getMaterial().attachUniform(colorByBitMap)
-allPoints.getMaterial().attachUniform(bitMapSelectedIndividuals)
-
 #--------------------------------------------------------------------------------------------
 # Movement point cloud code GPU Version
 
@@ -362,42 +343,42 @@ allPoints.getMaterial().attachUniform(bitMapSelectedIndividuals)
 #---------------------------------------------------------------------------
 #Set up Lights
 
-light = Light.create()
-light.setColor(Color("#AAADAD"))
-light.setPosition(Vector3(imgResRatioX*10260, imgResRatioY*9850, 1000))
-light.setEnabled(True)
+# light = Light.create()
+# light.setColor(Color("#AAADAD"))
+# light.setPosition(Vector3(imgResRatioX*10260, imgResRatioY*9850, 1000))
+# light.setEnabled(True)
 
-headlight = Light.create()
-headlight.setColor(Color("#AAADAD"))
-headlight.setEnabled(True)
+# headlight = Light.create()
+# headlight.setColor(Color("#AAADAD"))
+# headlight.setEnabled(True)
 
-light3 = Light.create()
-light3.setColor(Color("#A3BCC4"))
-light3.setAmbient(Color("#A3BDC4"))
-light3.setEnabled(True)
+# light3 = Light.create()
+# light3.setColor(Color("#A3BCC4"))
+# light3.setAmbient(Color("#A3BDC4"))
+# light3.setEnabled(True)
 
-lightSphere1 = SphereShape.create(100, 4)
-lightSphere1.setEffect("colored -d yellow -e #ffffff")
-lightSphere1.setPosition(Vector3(0, imgResRatioY*9850/2, 1000))
-lightSphere1.addChild(light3)
-lightSphere1.castShadow(False)
+# lightSphere1 = SphereShape.create(100, 4)
+# lightSphere1.setEffect("colored -d yellow -e #ffffff")
+# lightSphere1.setPosition(Vector3(0, imgResRatioY*9850/2, 1000))
+# lightSphere1.addChild(light3)
+# lightSphere1.castShadow(False)
 
-light4 = Light.create()
-light4.setColor(Color("#AAADAD"))
-light4.setPosition(Vector3(0, imgResRatioY*9850/4, 1000))
-light4.setEnabled(True)
+# light4 = Light.create()
+# light4.setColor(Color("#AAADAD"))
+# light4.setPosition(Vector3(0, imgResRatioY*9850/4, 1000))
+# light4.setEnabled(True)
 
-light5 = Light.create()
-light5.setColor(Color("#AAADAD"))
-light5.setPosition(Vector3(imgResRatioX*10260, imgResRatioY*9850/4, 250))
-light5.setEnabled(True)
+# light5 = Light.create()
+# light5.setColor(Color("#AAADAD"))
+# light5.setPosition(Vector3(imgResRatioX*10260, imgResRatioY*9850/4, 250))
+# light5.setEnabled(True)
 
-light2 = Light.create()
-light2.setAmbient(Color("#393A3B"))
-light2.setPosition(Vector3(0, 0, 250))
-light2.setEnabled(True)
+# light2 = Light.create()
+# light2.setAmbient(Color("#393A3B"))
+# light2.setPosition(Vector3(0, 0, 250))
+# light2.setEnabled(True)
 
-getDefaultCamera().addChild(headlight)
+# getDefaultCamera().addChild(headlight)
 
 
 #---------------------------------------------------------------------------
