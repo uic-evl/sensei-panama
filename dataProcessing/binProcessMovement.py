@@ -80,7 +80,7 @@ for line in f:
 
             #assign prevMin to currMin because this is the first iteration
             prevMin = currMin
-        elif (prevMin != currMin):
+        elif (prevMin != currMin) and tokens[27] == "\"4665\"":     #4670 is assigned to two individuals
             prevUtmE = tokens[eastingColumn]
             prevUtmN = tokens[northingColumn]
             prevHeight = tokens[heightColumn]
@@ -94,27 +94,15 @@ for line in f:
             if not firstItemParsed:
                 firstDate = date(int(dateT[0]), int(dateT[1]), int(dateT[2]))
                 firstItemParsed = True
-            month = int(dateT[1])
-            dayAccumulator = 0
-            while (month != firstDate.month):
-                if (month <= 0):
-                    month = 12
-                    daysAccumulator = dayAccumulator + daysInMonth[month-1]
-                    if month == firstDate.month:
-                        break
-                    month = month - 1
-                else:
-                    dayAccumulator = dayAccumulator + daysInMonth[month-1]
-                    month = month - 1
+                
             secondDate = date(int(dateT[0]), int(dateT[1]), int(dateT[2]))
 
-            delta = secondDate.day + dayAccumulator - firstDate.day
+            diffDate = secondDate - firstDate                       #get difference of days between two days
+            delta = diffDate.days                                   #stores how many days are between the first date and the new date
 
 
             #We are on a different burst and it's time to store it to the CSV
             xy = calculateXY(float(prevUtmE), float(prevUtmN))
-            
-            #fileString += str(xy[0]) + " " + str(xy[1]) + " " + str(prevHeight) + " " + str(delta) + " " + str(time[0]) + " " + str(time[1]) + " " + str(individualId) + "\n"
 
             dataBytes = struct.pack('ddddddd', float(xy[0]), float(xy[1]), float(prevHeight), float(delta), float(time[0]), float(time[1]), float(individualId))
             
@@ -124,7 +112,6 @@ for line in f:
             prevMin = currMin
             prevID = tokens[27]
     firstIter = False
-#fileString += '-999'
-#f2.write(fileString)
+
 f.close()
 f2.close()

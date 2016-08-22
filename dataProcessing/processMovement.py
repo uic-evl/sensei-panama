@@ -48,23 +48,11 @@ f2 = open(fileToWrite, 'w')
     
 f = open('FoodForThought_ComparativeFrugivoreTracking.csv', "r")
 
-daysInMonth = []
-daysInMonth.append(31)
-daysInMonth.append(28)
-daysInMonth.append(31)
-daysInMonth.append(30)
-daysInMonth.append(31)
-daysInMonth.append(30)
-daysInMonth.append(31)
-daysInMonth.append(31)
-daysInMonth.append(30)
-daysInMonth.append(31)
-daysInMonth.append(30)
-daysInMonth.append(31)
 #print rest
 firstIter = True
 firstItemParsed = False
 fileString = ""
+
 for line in f:
     tokens = line.split(",")
     if (tokens[30] and tokens[31] and not firstIter):
@@ -93,36 +81,24 @@ for line in f:
             if not firstItemParsed:
                 firstDate = date(int(dateT[0]), int(dateT[1]), int(dateT[2]))
                 firstItemParsed = True
-            month = int(dateT[1])
-            dayAccumulator = 0
-            while (month != firstDate.month):
-                if (month <= 0):
-                    month = 12
-                    daysAccumulator = dayAccumulator + daysInMonth[month-1]
-                    if month == firstDate.month:
-                        break
-                    month = month - 1
-                else:
-                    dayAccumulator = dayAccumulator + daysInMonth[month-1]
-                    month = month - 1
+
             secondDate = date(int(dateT[0]), int(dateT[1]), int(dateT[2]))
 
-            delta = secondDate.day + dayAccumulator - firstDate.day
-
+            diffDate = secondDate - firstDate
+            delta = diffDate.days
 
             #We are on a different burst and it's time to store it to the CSV
             xy = calculateXY(float(prevUtmE), float(prevUtmN))
-            
-            fileString += str(prevUtmE) + " " + str(prevUtmN) + " " + str(prevHeight) + " " + str(delta) + " " + str(time[0]) + " " + str(time[1]) + " " + str(individualId) + "\n"
 
-            #dataBytes = struct.pack('ddddddd', float(xy[0]), float(xy[1]), float(prevHeight), float(delta), float(time[0]), float(time[1]), float(individualId))
+            print "string ", str(xy[0])
+            print "float ", float(xy[0])
             
-            #f2.write(dataBytes)
+            fileString += str(xy[0]) + " " + str(xy[1]) + " " + str(prevHeight) + " " + str(delta) + " " + str(time[0]) + " " + str(time[1]) + " " + str(individualId) + "\n"
 
             #Move prevMin to currMin
             prevMin = currMin
     firstIter = False
-fileString += '-999'
+#fileString += '-999'
 f2.write(fileString)
 f.close()
 f2.close()
