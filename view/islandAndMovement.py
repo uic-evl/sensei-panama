@@ -3,10 +3,12 @@ from cyclops import *
 from pointCloud import *
 from math import *
 
+
 def createCustomGeom(f, scene, geomName):        #Function parses file and creates lines
                                                         #that represent movement into a single
                                                         #custom shape.
     global moveLineProgram
+    global movementData
 
     firstRun = True
 
@@ -16,6 +18,9 @@ def createCustomGeom(f, scene, geomName):        #Function parses file and creat
     prevV7 = Vector3(0,0,0)
     prevV8 = Vector3(0,0,0)
 
+    arrayIter = 0
+
+    prevDayDelta = ""
     prevID = ""
     prevLine = ""
 
@@ -25,133 +30,190 @@ def createCustomGeom(f, scene, geomName):        #Function parses file and creat
     thickness = 2
     geom = ModelGeometry.create(geomName)
     for line in f:
-        # if numVertices == 6:
-        #     break
         if line == '-999':
             break
-
-        line2 = f.next()
-        
-        if line2 == '-999':
-            break
-
-        tokens2 = line2.split(" ")
-
-        if prevID != int(tokens2[6]):
-            firstRun = True
-
+    
         if firstRun:
             tokens = line.split(" ")
+            prevDayDelta = tokens[3]
+            prevLine = line
             firstRun = False
+            movementData.append([])
+            movementData[arrayIter].append([])
+            movementData[arrayIter].append((tokens[4], tokens[5]))
+            prevID = tokens[6]
         else:
             tokens = prevLine.split(" ")
+            tokens2 = line.split(" ")
 
-        pos1 = Vector3(float(tokens[0]), float(tokens[1]), float(tokens[2]))
-        
-        pos2 = Vector3(float(tokens2[0]), float(tokens2[1]), float(tokens2[2]))
+            if prevID != tokens[6]:
+                movementData.append([])
+                arrayIter += 1
+                movementData[arrayIter].append([])
+                movementData[arrayIter].append((tokens[4],tokens[5]))
+            else:
+                movementData[arrayIter].append((tokens[4], tokens[5]))
 
-        vec = pos2 - pos1
-        d = vec.normalize()
-        unitZV1 = d.cross(unitZ)
-        unitYV1 = d.cross(unitY)
 
-        v1 = pos1+thickness*unitZV1+thickness*unitYV1       #list of vertices
-        v2 = pos1+thickness*unitZV1-thickness*unitYV1       
-        v3 = pos2+thickness*unitZV1+thickness*unitYV1
-        v4 = pos2+thickness*unitZV1-thickness*unitYV1
-        v5 = pos1-thickness*unitZV1+thickness*unitYV1
-        v6 = pos1-thickness*unitZV1-thickness*unitYV1
-        v7 = pos2-thickness*unitZV1+thickness*unitYV1
-        v8 = pos2-thickness*unitZV1-thickness*unitYV1
+            pos1 = Vector3(float(tokens[0]), float(tokens[1]), float(tokens[2]))
+            
+            pos2 = Vector3(float(tokens2[0]), float(tokens2[1]), float(tokens2[2]))
 
-        dayDelta = int(tokens2[3])
-        hr = int(tokens2[4])
-        minute = int(tokens2[5])
-        individualID = int(tokens2[6])
+            vec = pos2 - pos1
+            d = vec.normalize()
+            unitZV1 = d.cross(unitZ)
+            unitYV1 = d.cross(unitY)
 
-        color = []
-        color.append(int(tokens[3]))
-        color.append(int(tokens[4]))
-        color.append(int(tokens[5]))
-        color.append(int(tokens[6]))
-        color.append(int(tokens2[3]))
-        color.append(int(tokens2[4]))
-        color.append(int(tokens2[5]))
-        color.append(int(tokens2[6]))
+            v1 = pos1+thickness*unitZV1+thickness*unitYV1       #list of vertices
+            v2 = pos1+thickness*unitZV1-thickness*unitYV1       
+            v3 = pos2+thickness*unitZV1+thickness*unitYV1
+            v4 = pos2+thickness*unitZV1-thickness*unitYV1
+            v5 = pos1-thickness*unitZV1+thickness*unitYV1
+            v6 = pos1-thickness*unitZV1-thickness*unitYV1
+            v7 = pos2-thickness*unitZV1+thickness*unitYV1
+            v8 = pos2-thickness*unitZV1-thickness*unitYV1
 
-    #####################Front Panel##################################################
-        geom.addVertex( v1 )
-        geom.addColor(Color(color[0], color[1], color[2], color[3]))
-        geom.addVertex( v2 )
-        geom.addColor(Color(color[0], color[1], color[2], color[3]))
-        geom.addVertex( v3 )
-        geom.addColor(Color(color[4], color[5], color[6], color[7]))
+            dayDelta = int(tokens[3])
+            hr = int(tokens[4])
+            minute = int(tokens[5])
+            individualID = int(tokens[6])
 
-        geom.addVertex( v3 )
-        geom.addColor(Color(color[4], color[5], color[6], color[7]))
-        geom.addVertex( v2 )
-        geom.addColor(Color(color[0], color[1], color[2], color[3]))
-        geom.addVertex( v4 )
-        geom.addColor(Color(color[4], color[5], color[6], color[7]))
-    ##################################################################################
-    #####################Back Panel##################################################
-        geom.addVertex( v7 )
-        geom.addColor(Color(color[4], color[5], color[6], color[7]))
-        geom.addVertex( v6 )
-        geom.addColor(Color(color[0], color[1], color[2], color[3]))
-        geom.addVertex( v5 )
-        geom.addColor(Color(color[0], color[1], color[2], color[3]))
+        #####################Front Panel##################################################
+            if pos1.x <= pos2.x:
+                geom.addVertex( v1 )
+                geom.addColor(Color(dayDelta, hr, minute, individualID))
+                geom.addVertex( v2 )
+                geom.addColor(Color(dayDelta, hr, minute, individualID))
+                geom.addVertex( v3 )
+                geom.addColor(Color(dayDelta, hr, minute, individualID))
 
-        geom.addVertex( v8 )
-        geom.addColor(Color(color[4], color[5], color[6], color[7]))
-        geom.addVertex( v6 )
-        geom.addColor(Color(color[0], color[1], color[2], color[3]))
-        geom.addVertex( v7 )
-        geom.addColor(Color(color[4], color[5], color[6], color[7]))
-    ##################################################################################
-    #####################Top Panel##################################################
-        geom.addVertex( v1 )
-        geom.addColor(Color(color[0], color[1], color[2], color[3]))
-        geom.addVertex( v7 )
-        geom.addColor(Color(color[4], color[5], color[6], color[7]))
-        geom.addVertex( v5 )
-        geom.addColor(Color(color[0], color[1], color[2], color[3]))
-        
-        geom.addVertex( v7 )
-        geom.addColor(Color(color[4], color[5], color[6], color[7]))
-        geom.addVertex( v1 )
-        geom.addColor(Color(color[0], color[1], color[2], color[3]))
-        geom.addVertex( v3 )
-        geom.addColor(Color(color[4], color[5], color[6], color[7]))
-    ##################################################################################
-    #####################Bottom Panel##################################################
-        
-        geom.addVertex( v8 )
-        geom.addColor(Color(color[4], color[5], color[6], color[7]))
-        geom.addVertex( v4 )
-        geom.addColor(Color(color[4], color[5], color[6], color[7]))
-        geom.addVertex( v2 )
-        geom.addColor(Color(color[0], color[1], color[2], color[3])) 
+                geom.addVertex( v3 )
+                geom.addColor(Color(dayDelta, hr, minute, individualID))
+                geom.addVertex( v2 )
+                geom.addColor(Color(dayDelta, hr, minute, individualID))
+                geom.addVertex( v4 )
+                geom.addColor(Color(dayDelta, hr, minute, individualID))
 
-        geom.addVertex( v6 )
-        geom.addColor(Color(color[0], color[1], color[2], color[3]))
-        geom.addVertex( v8 )
-        geom.addColor(Color(color[4], color[5], color[6], color[7]))    
-        geom.addVertex( v2 )
-        geom.addColor(Color(color[0], color[1], color[2], color[3]))
-        
-    ##################################################################################
-        
-        numVertices = numVertices + 24
+            if pos1.x > pos2.x:
+                geom.addVertex( v3 )
+                geom.addColor(Color(dayDelta, hr, minute, individualID))
+                geom.addVertex( v2 )
+                geom.addColor(Color(dayDelta, hr, minute, individualID))
+                geom.addVertex( v1 )
+                geom.addColor(Color(dayDelta, hr, minute, individualID))
 
-        prevV3 = v3                 #Store beginning points of next line
-        prevV4 = v4
-        prevV7 = v7
-        prevV8 = v8
+                geom.addVertex( v4 )
+                geom.addColor(Color(dayDelta, hr, minute, individualID))
+                geom.addVertex( v2 )
+                geom.addColor(Color(dayDelta, hr, minute, individualID))
+                geom.addVertex( v3 )
+                geom.addColor(Color(dayDelta, hr, minute, individualID))
+        ##################################################################################
+        #####################Back Panel##################################################
+            if pos1.x <= pos2.x:
+                geom.addVertex( v7 )
+                geom.addColor(Color(dayDelta, hr, minute, individualID))
+                geom.addVertex( v6 )
+                geom.addColor(Color(dayDelta, hr, minute, individualID))
+                geom.addVertex( v5 )
+                geom.addColor(Color(dayDelta, hr, minute, individualID))
 
-        prevVec = vec
-        prevID = int(tokens2[6])
-        prevLine = line2
+                geom.addVertex( v8 )
+                geom.addColor(Color(dayDelta, hr, minute, individualID))
+                geom.addVertex( v6 )
+                geom.addColor(Color(dayDelta, hr, minute, individualID))
+                geom.addVertex( v7 )
+                geom.addColor(Color(dayDelta, hr, minute, individualID))
+
+            if pos1.x > pos2.x:
+                geom.addVertex( v5 )
+                geom.addColor(Color(dayDelta, hr, minute, individualID))
+                geom.addVertex( v6 )
+                geom.addColor(Color(dayDelta, hr, minute, individualID))
+                geom.addVertex( v7 )
+                geom.addColor(Color(dayDelta, hr, minute, individualID))
+
+                geom.addVertex( v7 )
+                geom.addColor(Color(dayDelta, hr, minute, individualID))
+                geom.addVertex( v6 )
+                geom.addColor(Color(dayDelta, hr, minute, individualID))
+                geom.addVertex( v8 )
+                geom.addColor(Color(dayDelta, hr, minute, individualID))
+        ##################################################################################
+        #####################Top Panel##################################################
+            if pos1.x <= pos2.x:
+                geom.addVertex( v1 )
+                geom.addColor(Color(dayDelta, hr, minute, individualID))
+                geom.addVertex( v7 )
+                geom.addColor(Color(dayDelta, hr, minute, individualID))
+                geom.addVertex( v5 )
+                geom.addColor(Color(dayDelta, hr, minute, individualID))
+                
+                geom.addVertex( v7 )
+                geom.addColor(Color(dayDelta, hr, minute, individualID))
+                geom.addVertex( v1 )
+                geom.addColor(Color(dayDelta, hr, minute, individualID))
+                geom.addVertex( v3 )
+                geom.addColor(Color(dayDelta, hr, minute, individualID))
+
+            if pos1.x > pos2.x:
+                geom.addVertex( v5 )
+                geom.addColor(Color(dayDelta, hr, minute, individualID))
+                geom.addVertex( v7 )
+                geom.addColor(Color(dayDelta, hr, minute, individualID))
+                geom.addVertex( v1 )
+                geom.addColor(Color(dayDelta, hr, minute, individualID))
+
+                geom.addVertex( v3 )
+                geom.addColor(Color(dayDelta, hr, minute, individualID))
+                geom.addVertex( v1 )
+                geom.addColor(Color(dayDelta, hr, minute, individualID))
+                geom.addVertex( v7 )
+                geom.addColor(Color(dayDelta, hr, minute, individualID))
+        ##################################################################################
+        #####################Bottom Panel##################################################
+            if pos1.x <= pos2.x:
+                geom.addVertex( v8 )
+                geom.addColor(Color(dayDelta, hr, minute, individualID))
+                geom.addVertex( v4 )
+                geom.addColor(Color(dayDelta, hr, minute, individualID))
+                geom.addVertex( v2 )
+                geom.addColor(Color(dayDelta, hr, minute, individualID)) 
+
+                geom.addVertex( v6 )
+                geom.addColor(Color(dayDelta, hr, minute, individualID))
+                geom.addVertex( v8 )
+                geom.addColor(Color(dayDelta, hr, minute, individualID))    
+                geom.addVertex( v2 )
+                geom.addColor(Color(dayDelta, hr, minute, individualID))
+
+            if pos1.x > pos2.x:
+                geom.addVertex( v2 )
+                geom.addColor(Color(dayDelta, hr, minute, individualID))
+                geom.addVertex( v4 )
+                geom.addColor(Color(dayDelta, hr, minute, individualID))
+                geom.addVertex( v8 )
+                geom.addColor(Color(dayDelta, hr, minute, individualID))
+
+                geom.addVertex( v2 )
+                geom.addColor(Color(dayDelta, hr, minute, individualID))
+                geom.addVertex( v8 )
+                geom.addColor(Color(dayDelta, hr, minute, individualID))
+                geom.addVertex( v6 )
+                geom.addColor(Color(dayDelta, hr, minute, individualID))
+            
+        ##################################################################################
+            
+            numVertices = numVertices + 24
+
+            prevV3 = v3                 #Store beginning points of next line
+            prevV4 = v4
+            prevV7 = v7
+            prevV8 = v8
+
+            prevVec = vec
+            prevLine = line
+            prevID = tokens[6]
         
     f.close()
     geom.addPrimitive(PrimitiveType.Triangles, 0, numVertices)
@@ -163,9 +225,14 @@ def createCustomGeom(f, scene, geomName):        #Function parses file and creat
 
     # obj.getMaterial().setProgram('colored byvertex-emissive')
     obj.getMaterial().setTransparent(True)
+    print 'Array: ', arrayIter
     print 'finished Parsing'
 
     return obj 
+
+#----------------------------------------------------------------------------
+
+
 
 #----------------------------------------------------------------------------
 #UI Module code
@@ -182,9 +249,9 @@ def createCustomGeom(f, scene, geomName):        #Function parses file and creat
 #Planeview code
 imgResRatioX = 0.18/(float(10260)/32064)
 imgResRatioY = 0.18/(float(9850)/30780)
-plane = PlaneShape.create(imgResRatioX*10260, imgResRatioY*9850)
-plane.setPosition(Vector3(imgResRatioX*10260/2, imgResRatioY*9850/2, 0))
-plane.setEffect("textured -v emissive -d 50Island.png")
+# plane = PlaneShape.create(imgResRatioX*10260, imgResRatioY*9850)
+# plane.setPosition(Vector3(imgResRatioX*10260/2, imgResRatioY*9850/2, 0))
+# plane.setEffect("textured -v emissive -d 50Island.png")
 
 #-----------------------------------------------------------------------------
 #PointCloud code
@@ -211,10 +278,8 @@ globalAlpha.setFloat(1)
 
 pointCloudModel = ModelInfo()
 pointCloudModel.name = 'pointCloud'
-pointCloudModel.path = 'hmColorHighFinal.xyzb'
-#pointCloudModel.options = "10000 100:1000000:5 20:100:4 6:20:2 0:5:1"
-pointCloudModel.options = "10000 100:1000000:20 20:100:10 6:20:5 0:5:5"
-#pointCloudModel.options = "10000 0:1000000:1"
+pointCloudModel.path = '/iridium_SSD/panama/hmColorHigh.xyzb'
+pointCloudModel.options = "10000 100:1000000:40 20:100:20 6:20:15 0:5:20"
 scene.loadModel(pointCloudModel)
 
 pointCloud = StaticObject.create(pointCloudModel.name)
@@ -228,7 +293,7 @@ getDefaultCamera().setPosition(imgResRatioX*10260/2, imgResRatioY*9850/2, 2500)
 
 #---------------------------------------------------------------------------
 #Cylinder and Sphere Version
-
+movementData = []
 myStartDay = []
 myEndDay = []
 for i in range(0, 21):
@@ -267,6 +332,7 @@ f = open("gpsMovement/all.txt", "r")
 allAnimals = createCustomGeom(f, scene, 'allAnimals')             #Ateles geoffroyi
 
 allMat = allAnimals.getMaterial()
+allMat.setTransparent(True)
 allMat.setProgram(moveLineProgram.name)
 allMat.attachUniform(startDay)
 allMat.attachUniform(endDay)
@@ -277,108 +343,78 @@ allMat.attachUniform(bitMapSelectedIndividuals)
 # Movement point cloud code GPU Version
 
 #filters
-# movePointScale = Uniform.create('movePointScale', UniformType.Float, 1)
-# movePointScale.setFloat(8.0)
+movePointScale = Uniform.create('movePointScale', UniformType.Float, 1)
+movePointScale.setFloat(8.0)
 
-# movePointProgram = ProgramAsset()
-# movePointProgram.name = "movePoints"
-# movePointProgram.vertexShaderName = "movementShaders/Sphere.vert" #here are our shaders
-# movePointProgram.fragmentShaderName = "movementShaders/Sphere.frag"
-# movePointProgram.geometryShaderName = "movementShaders/mySphere.geom"
-# movePointProgram.geometryOutVertices = 4
-# movePointProgram.geometryInput = PrimitiveType.Points
-# movePointProgram.geometryOutput = PrimitiveType.TriangleStrip
-# scene.addProgram(movePointProgram)
+movePointProgram = ProgramAsset()
+movePointProgram.name = "movePoints"
+movePointProgram.vertexShaderName = "movementShaders/Sphere.vert" #here are our shaders
+movePointProgram.fragmentShaderName = "movementShaders/Sphere.frag"
+movePointProgram.geometryShaderName = "movementShaders/mySphere.geom"
+movePointProgram.geometryOutVertices = 4
+movePointProgram.geometryInput = PrimitiveType.Points
+movePointProgram.geometryOutput = PrimitiveType.TriangleStrip
+scene.addProgram(movePointProgram)
 
-# movePointCloudModel = ModelInfo()
-# movePointCloudModel.name = 'movePointCloud'
-# movePointCloudModel.path = 'gpsMovement/all.xyzb'
-# movePointCloudModel.options = "10000 100:1000000:20 20:100:10 6:20:5 0:5:5"
-# scene.loadModel(movePointCloudModel)
+movePointCloudModel = ModelInfo()
+movePointCloudModel.name = 'movePointCloud'
+movePointCloudModel.path = 'gpsMovement/all.xyzb'
+movePointCloudModel.options = "10000 100:1000000:1 20:100:1 6:20:1 0:5:1"
+scene.loadModel(movePointCloudModel)
 
-# movePointCloud = StaticObject.create(movePointCloudModel.name)
-# # attach shader uniforms
-# moveMat = movePointCloud.getMaterial()
-# moveMat.setProgram(movePointProgram.name)
-# moveMat.attachUniform(startDay)
-# moveMat.attachUniform(endDay)
-# moveMat.attachUniform(bitMapSelectedIndividuals)
-# moveMat.attachUniform(colorByBitMap)
-# moveMat.attachUniform(movePointScale)
-
-
+movePointCloud = StaticObject.create(movePointCloudModel.name)
+# attach shader uniforms
+moveMat = movePointCloud.getMaterial()
+moveMat.setTransparent(True)
+moveMat.setProgram(movePointProgram.name)
+moveMat.attachUniform(startDay)
+moveMat.attachUniform(endDay)
+moveMat.attachUniform(bitMapSelectedIndividuals)
+moveMat.attachUniform(colorByBitMap)
+moveMat.attachUniform(movePointScale)
 
 #----------------------------------------------------------------------------
 
 #-----------------------------------------------------------------------------
 #Terrain code
 
-# def loadModelAsync(name, path):
-#     model = ModelInfo()
-#     model.name = name
-#     model.path = path
-#     model.optimize = True
-#     model.usePowerOfTwoTextures = False
-#     scene.loadModelAsync(model, "onModelLoaded('" + model.name + "')")
+def loadModelAsync(name, path):
+    model = ModelInfo()
+    model.name = name
+    model.path = path
+    model.optimize = True
+    model.usePowerOfTwoTextures = False
+    scene.loadModelAsync(model, "onModelLoaded('" + model.name + "')")
+    return model
 
-# def onModelLoaded(name):
-#     model = StaticObject.create(name)
-#     model.setEffect('textured')
+def onModelLoaded(name):
+    model = StaticObject.create(name)
+    model.setEffect('textured')
 
-# modelPath = "/home/evl/jhwang47/v1"
-# def loadModel(name, path):
-#     model = ModelInfo()
-#     model.name = name
-#     model.path = path
-#     model.optimize = True
-#     model.usePowerOfTwoTextures = False
-#     scene.loadModel(model)
-#     model = StaticObject.create(name)
-#     #model.setEffect("colored -d #4d4d4d")
-#     model.setEffect("textured -d 20Island.png")
-#     #model.setEffect("20Island")
-
-# loadModel("Terrain", modelPath+"/terrainMap.fbx")
+loadModelAsync("Terrain", "/iridium_SSD/panama/10mesh.fbx")
 
 #---------------------------------------------------------------------------
 #Set up Lights
 
-# light = Light.create()
-# light.setColor(Color("#AAADAD"))
-# light.setPosition(Vector3(imgResRatioX*10260, imgResRatioY*9850, 1000))
-# light.setEnabled(True)
+light1 = Light.create()
+light1.setColor(Color(0.4, 0.4, 0.4, 1))
+light1.setAmbient(Color(0.5, 0.5, 0.5, 1))
+light1.setLightType(LightType.Directional)
+light1.setLightDirection(Vector3(-0.4, -0.2, -0.2))
+light1.setEnabled(True)
 
-# headlight = Light.create()
-# headlight.setColor(Color("#AAADAD"))
-# headlight.setEnabled(True)
+light2 = Light.create()
+light2.setColor(Color(0.4, 0.38, 0.35, 1))
+light2.setAmbient(Color(0.5, 0.5, 0.5, 1))
+light2.setLightType(LightType.Directional)
+light2.setLightDirection(Vector3(1.5, 0.5, 1.1))
+light2.setEnabled(True)
 
-# light3 = Light.create()
-# light3.setColor(Color("#A3BCC4"))
-# light3.setAmbient(Color("#A3BDC4"))
-# light3.setEnabled(True)
+headlight = Light.create()
+headlight.setColor(Color(0.5, 0.5, 0.5, 1))
+headlight.setEnabled(True)
 
-# lightSphere1 = SphereShape.create(100, 4)
-# lightSphere1.setEffect("colored -d yellow -e #ffffff")
-# lightSphere1.setPosition(Vector3(0, imgResRatioY*9850/2, 1000))
-# lightSphere1.addChild(light3)
-# lightSphere1.castShadow(False)
-
-# light4 = Light.create()
-# light4.setColor(Color("#AAADAD"))
-# light4.setPosition(Vector3(0, imgResRatioY*9850/4, 1000))
-# light4.setEnabled(True)
-
-# light5 = Light.create()
-# light5.setColor(Color("#AAADAD"))
-# light5.setPosition(Vector3(imgResRatioX*10260, imgResRatioY*9850/4, 250))
-# light5.setEnabled(True)
-
-# light2 = Light.create()
-# light2.setAmbient(Color("#393A3B"))
-# light2.setPosition(Vector3(0, 0, 250))
-# light2.setEnabled(True)
-
-# getDefaultCamera().addChild(headlight)
+getDefaultCamera().addChild(headlight)
 
 
 #---------------------------------------------------------------------------
@@ -412,15 +448,6 @@ btnSvnUp = ss2.addButton("7 Days Forward", "globalSevenDayStepUp(1)")
 btnSvnUp = ss2.addButton("7 Days Backward", "globalSevenDayStepDown(1)")
 ss2.addLabel("--------------------")
 btnAll = ss2.addButton("All Days", "globalAllDay(1)")
-
-# #SUBMENU COLOR
-# ss3 = mm.getMainMenu().addSubMenu("Color Options")
-# btnGrad1 = ss3.addButton("Hour Gradient 1", "setColorBy(0)")
-# btnGrad2 = ss3.addButton("Hour Gradient 2", "setColorBy(1)")
-# btnGrad3 = ss3.addButton("Hour Gradient 3", "setColorBy(2)")
-# btnGrad4 = ss3.addButton("Day Gradient 1", "setColorBy(3)")
-# btnGrad5 = ss3.addButton("Day Gradient 2", "setColorBy(4)")
-# btnGrad6 = ss3.addButton("Color by individual", "setColorBy(5)")
 
 #-----------------------------------------------------------------------------
 #Selected Individuals Menu
@@ -826,30 +853,6 @@ merkBtnGrad3 = merkCO.addButton("Hour Gradient 3", "setColorBy(20, 2)")
 merkBtnGrad4 = merkCO.addButton("Day Gradient 1", "setColorBy(20, 3)")
 merkBtnGrad5 = merkCO.addButton("Day Gradient 2", "setColorBy(20, 4)")
 merkBtnGrad6 = merkCO.addButton("Color by individual", "setColorBy(20, 5)")
-
-# btn1 = subSelectInd.addButton("Veruca 4690", "setSelInd(0)")
-# btn2 = subSelectInd.addButton("Chibi 4693", "setSelInd(1)")
-# btn3 = subSelectInd.addButton("Abby 4652", "setSelInd(2)")
-# btn4 = subSelectInd.addButton("Ben Bob 4653", "setSelInd(3)")
-# btn5 = subSelectInd.addButton("Bonnie 4658", "setSelInd(4)")
-# btn6 = subSelectInd.addButton("Chloe 4052", "setSelInd(5)")
-# btn7 = subSelectInd.addButton("Clementina 4672", "setSelInd(6)")
-# btn8 = subSelectInd.addButton("Ellie 4668", "setSelInd(7)")
-# btn9 = subSelectInd.addButton("Gillian 4671", "setSelInd(8)")
-# btn10 = subSelectInd.addButton("Ornette 4669", "setSelInd(9)")
-# btn11 = subSelectInd.addButton("Pliny 4675", "setSelInd(10)")
-# btn12 = subSelectInd.addButton("Ripley 4650", "setSelInd(11)")
-# #btn13 = subSelectInd.addButton("Serge 4670", "setSelInd(12)")
-# btn13 = subSelectInd.addButton("Sofie 4674", "setSelInd(12)")
-# btn14 = subSelectInd.addButton("Greg 4689", "setSelInd(13)")
-# btn15 = subSelectInd.addButton("Ibeth 4654", "setSelInd(14)")
-# btn16 = subSelectInd.addButton("Olga 4657", "setSelInd(15)")
-# btn17 = subSelectInd.addButton("Mimi 4660", "setSelInd(16)")
-# btn18 = subSelectInd.addButton("Kyle 4692", "setSelInd(17)")
-# btn19 = subSelectInd.addButton("Atlas 4673", "setSelInd(18)")
-# #btn21 = subSelectInd.addButton("Vielle 4670", "setSelInd(20)")
-# btn20 = subSelectInd.addButton("Judy 4656", "setSelInd(19)")
-# btn21 = subSelectInd.addButton("Merk 4665", "setSelInd(20)")
 
 ss6 = mm.getMainMenu().addButton("Show Fruit Trees", "markTrees(1)")
 ss7 = mm.getMainMenu().addButton("Draw Lines to Trees", "drawLinesToTrees(1)")

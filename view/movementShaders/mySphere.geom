@@ -15,8 +15,6 @@ flat out vec3 vertex_light_position;
 flat out vec4 eye_position;
 flat out float sphere_radius;
 
-uniform float globalAlpha;
-
 void
 main(void)
 {
@@ -26,10 +24,10 @@ main(void)
   gl_FrontColor = gl_FrontColorIn[0];
   //gl_FrontColor.a = globalAlpha;
 
-	int day = int(gl_FrontColor.r);
-	int hr = int(gl_FrontColor.g);
-	int min = int(gl_FrontColor.b);
-  int individualID = int(gl_FrontColor.a);
+	highp int day = int(gl_FrontColor.r);
+	highp int hr = int(gl_FrontColor.g);
+	highp int minute = int(gl_FrontColor.b);
+  highp int individualID = int(gl_FrontColor.a);
   float dayModSeven = mod(day, 7);
   int saveIndInfo;
 
@@ -38,21 +36,112 @@ main(void)
 	//Example using the gl_FrontColor values for filtering!!
 	bool drawPoint = false;
 
-  //figure out if this point will be drawn
-  //day = 1, startDay =1 endDay =2 -> draw
-   //day =2 or 0, startDay = 1 end day = 2 not draw
-  // if( individualID - 4693 == 0)//selectedIndividual1 || individualID == selectedIndividual2 )
-  //    drawPoint = true; 
-  for (int i = 0; i < 21; i++) 
+  if((day >= startDay[0]) && (day < endDay[0]) && (bitMapSelectedIndividuals[0] == 1) && (selectedIndividuals[0] == individualID)) 
   {
-
-    if((day >= startDay[i]) && (day < endDay[i]) && (bitMapSelectedIndividuals[i] == 1) && (selectedIndividuals[i] == individualID)) 
-    {
-      saveIndInfo = i;
-      drawPoint = true;
-      break;
-    }
+    saveIndInfo = 0;
+    drawPoint = true;
   }
+  if((day >= startDay[1]) && (day < endDay[1]) && (bitMapSelectedIndividuals[1] == 1) && (selectedIndividuals[1] == individualID)) 
+  {
+    saveIndInfo = 1;
+    drawPoint = true;
+  }
+  if((day >= startDay[2]) && (day < endDay[2]) && (bitMapSelectedIndividuals[2] == 1) && (selectedIndividuals[2] == individualID)) 
+  {
+    saveIndInfo = 2;
+    drawPoint = true;
+  }
+  if((day >= startDay[3]) && (day < endDay[3]) && (bitMapSelectedIndividuals[3] == 1) && (selectedIndividuals[3] == individualID)) 
+  {
+    saveIndInfo = 3;
+    drawPoint = true;
+  }
+  if((day >= startDay[4]) && (day < endDay[4]) && (bitMapSelectedIndividuals[4] == 1) && (selectedIndividuals[4] == individualID)) 
+  {
+    saveIndInfo = 4;
+    drawPoint = true;
+  }
+  if((day >= startDay[5]) && (day < endDay[5]) && (bitMapSelectedIndividuals[5] == 1) && (selectedIndividuals[5] == individualID)) 
+  {
+    saveIndInfo = 5;
+    drawPoint = true;
+  }
+  if((day >= startDay[6]) && (day < endDay[6]) && (bitMapSelectedIndividuals[6] == 1) && (selectedIndividuals[6] == individualID)) 
+  {
+    saveIndInfo = 6;
+    drawPoint = true;
+  }
+  if((day >= startDay[7]) && (day < endDay[7]) && (bitMapSelectedIndividuals[7] == 1) && (selectedIndividuals[7] == individualID)) 
+  {
+    saveIndInfo = 7;
+    drawPoint = true;
+  }
+  if((day >= startDay[8]) && (day < endDay[8]) && (bitMapSelectedIndividuals[8] == 1) && (selectedIndividuals[8] == individualID)) 
+  {
+    saveIndInfo = 8;
+    drawPoint = true;
+  }
+  if((day >= startDay[9]) && (day < endDay[9]) && (bitMapSelectedIndividuals[9] == 1) && (selectedIndividuals[9] == individualID)) 
+  {
+    saveIndInfo = 9;
+    drawPoint = true;
+  }
+  if((day >= startDay[10]) && (day < endDay[10]) && (bitMapSelectedIndividuals[10] == 1) && (selectedIndividuals[10] == individualID)) 
+  {
+    saveIndInfo = 10;
+    drawPoint = true;
+  }
+  if((day >= startDay[11]) && (day < endDay[11]) && (bitMapSelectedIndividuals[11] == 1) && (selectedIndividuals[11] == individualID)) 
+  {
+    saveIndInfo = 11;
+    drawPoint = true;
+  }
+  if((day >= startDay[12]) && (day < endDay[12]) && (bitMapSelectedIndividuals[12] == 1) && (selectedIndividuals[12] == individualID)) 
+  {
+    saveIndInfo = 12;
+    drawPoint = true;
+  }
+  if((day >= startDay[13]) && (day < endDay[13]) && (bitMapSelectedIndividuals[13] == 1) && (selectedIndividuals[13] == individualID)) 
+  {
+    saveIndInfo = 13;
+    drawPoint = true;
+  }
+  if((day >= startDay[14]) && (day < endDay[14]) && (bitMapSelectedIndividuals[14] == 1) && (selectedIndividuals[14] == individualID)) 
+  {
+    saveIndInfo = 14;
+    drawPoint = true;
+  }
+  if((day >= startDay[15]) && (day < endDay[15]) && (bitMapSelectedIndividuals[15] == 1) && (selectedIndividuals[15] == individualID)) 
+  {
+    saveIndInfo = 15;
+    drawPoint = true;
+  }
+  if((day >= startDay[16]) && (day < endDay[16]) && (bitMapSelectedIndividuals[16] == 1) && (selectedIndividuals[16] == individualID)) 
+  {
+    saveIndInfo = 16;
+    drawPoint = true;
+  }
+  if((day >= startDay[17]) && (day < endDay[17]) && (bitMapSelectedIndividuals[17] == 1) && (selectedIndividuals[17] == individualID)) 
+  {
+    saveIndInfo = 17;
+    drawPoint = true;
+  }
+  if((day >= startDay[18]) && (day < endDay[18]) && (bitMapSelectedIndividuals[18] == 1) && (selectedIndividuals[18] == individualID)) 
+  {
+    saveIndInfo = 18;
+    drawPoint = true;
+  }
+  if((day >= startDay[19]) && (day < endDay[19]) && (bitMapSelectedIndividuals[19] == 1) && (selectedIndividuals[19] == individualID)) 
+  {
+    saveIndInfo = 19;
+    drawPoint = true;
+  }
+  if((day >= startDay[20]) && (day < endDay[20]) && (bitMapSelectedIndividuals[20] == 1) && (selectedIndividuals[20] == individualID)) 
+  {
+    saveIndInfo = 20;
+    drawPoint = true;
+  }
+
 
   //gl_FrontColor.a = globalAlpha;
 
@@ -151,7 +240,12 @@ main(void)
     }
     if( colorByBitMap[saveIndInfo] == 5 ){
       if( bitMapSelectedIndividuals[saveIndInfo] == 1 )
-        gl_FrontColor = vec4( 149.0/255.0,79.0/255.0,234.0/255.0, 1.0 );
+        if (mod(individualID, 3) == 0)
+          gl_FrontColor = vec4( mod(individualID, 255.0),79.0/255.0,234.0/255.0, 1.0 );
+        if (mod(individualID, 3) == 1)
+          gl_FrontColor = vec4( 149.0/255.0,mod(individualID, 255.0),234.0/255.0, 1.0 );
+        if (mod(individualID, 3) == 2)
+          gl_FrontColor = vec4( 149.0/255.0,79.0/255.0,mod(individualID, 255.0), 1.0 );
     }
 
 
