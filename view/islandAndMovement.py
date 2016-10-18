@@ -323,13 +323,13 @@ print movementData[1][0][0]
 txtArr = []
 for i in range(0,21):
     txtArr.append([])
-    txtArr[i].append(Text3D.create('fonts/arial.tff', 100, "Start"))
+    txtArr[i].append(Text3D.create('fonts/arial.tff', 50, "Start"))
     txtArr[i][0].setFontResolution(120)
     txtArr[i][0].setColor(Color('red'))
-    txtArr[i].append(Text3D.create('fonts/arial.tff', 100, "End"))
+    txtArr[i].append(Text3D.create('fonts/arial.tff', 50, "End"))
     txtArr[i][1].setFontResolution(120)
     txtArr[i][1].setColor(Color('red'))
-    txtArr[i].append(Text3D.create('fonts/arial.tff', 100, namesOfIndividuals[i]))
+    txtArr[i].append(Text3D.create('fonts/arial.tff', 50, namesOfIndividuals[i]))
     txtArr[i][2].setFontResolution(120)
     txtArr[i][2].setColor(Color('red'))
     if i == 1:
