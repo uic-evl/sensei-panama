@@ -18,7 +18,8 @@ def createCustomGeom(f, scene, geomName):        #Function parses file and creat
     prevV7 = Vector3(0,0,0)
     prevV8 = Vector3(0,0,0)
 
-    arrayIter = 0
+    individualIter = 0
+    dayIter = 0
 
     prevDayDelta = ""
     prevID = ""
@@ -32,27 +33,36 @@ def createCustomGeom(f, scene, geomName):        #Function parses file and creat
     for line in f:
         if line == '-999':
             break
-    
+        #numberOfDaysByIndividual = [85, 70, 78, 80, 54, 18, 83, 80, 79, 67, 65, 72, 73, 71, 72, 67, 82, 86, 35, 39, 2]
         if firstRun:
             tokens = line.split(" ")
             prevDayDelta = tokens[3]
             prevLine = line
             firstRun = False
             movementData.append([])
-            movementData[arrayIter].append([])
-            movementData[arrayIter].append((tokens[4], tokens[5]))
+            movementData[individualIter].append([])
+            #Inputs x, y, z, hr, minute of gps point
+            movementData[individualIter][dayIter].append((tokens[0], tokens[1], tokens[2], tokens[4], tokens[5]))
             prevID = tokens[6]
+            prevDayDelta = tokens[3]
         else:
             tokens = prevLine.split(" ")
             tokens2 = line.split(" ")
 
-            if prevID != tokens[6]:
+            if prevID != tokens2[6]:
                 movementData.append([])
-                arrayIter += 1
-                movementData[arrayIter].append([])
-                movementData[arrayIter].append((tokens[4],tokens[5]))
+                individualIter += 1
+                print dayIter
+                dayIter = 0
+                movementData[individualIter].append([])
+                #Inputs x, y, z, hr, minute of gps point
+                movementData[individualIter][dayIter].append((tokens2[0], tokens2[1], tokens2[2], tokens2[4],tokens2[5]))
             else:
-                movementData[arrayIter].append((tokens[4], tokens[5]))
+                #Inputs x, y, z, hr, minute of gps point
+                if (prevDayDelta != tokens2[3]):
+                    movementData[individualIter].append([])
+                    dayIter += 1
+                movementData[individualIter][dayIter].append((tokens2[0], tokens2[1], tokens2[2], tokens2[4], tokens2[5]))
 
 
             pos1 = Vector3(float(tokens[0]), float(tokens[1]), float(tokens[2]))
@@ -213,7 +223,8 @@ def createCustomGeom(f, scene, geomName):        #Function parses file and creat
 
             prevVec = vec
             prevLine = line
-            prevID = tokens[6]
+            prevID = tokens2[6]
+            prevDayDelta = tokens2[3]
         
     f.close()
     geom.addPrimitive(PrimitiveType.Triangles, 0, numVertices)
@@ -225,14 +236,12 @@ def createCustomGeom(f, scene, geomName):        #Function parses file and creat
 
     # obj.getMaterial().setProgram('colored byvertex-emissive')
     obj.getMaterial().setTransparent(True)
-    print 'Array: ', arrayIter
     print 'finished Parsing'
+    print individualIter
 
     return obj 
 
 #----------------------------------------------------------------------------
-
-
 
 #----------------------------------------------------------------------------
 #UI Module code
@@ -253,43 +262,12 @@ imgResRatioY = 0.18/(float(9850)/30780)
 # plane.setPosition(Vector3(imgResRatioX*10260/2, imgResRatioY*9850/2, 0))
 # plane.setEffect("textured -v emissive -d 50Island.png")
 
-#-----------------------------------------------------------------------------
-#PointCloud code
 scene = getSceneManager()
 getDefaultCamera().setBackgroundColor(Color('black'))
 scene.addLoader(BinaryPointsLoader())
 
 setNearFarZ(0.1, 1000000)
 
-pointProgram = ProgramAsset()
-pointProgram.name = "points"
-pointProgram.vertexShaderName = "islandShaders/Sphere.vert"
-pointProgram.fragmentShaderName = "islandShaders/Sphere.frag"
-pointProgram.geometryShaderName = "islandShaders/Sphere.geom"
-pointProgram.geometryOutVertices = 4
-pointProgram.geometryInput = PrimitiveType.Points
-pointProgram.geometryOutput = PrimitiveType.TriangleStrip
-scene.addProgram(pointProgram)
-
-pointScale = Uniform.create('pointScale', UniformType.Float, 1)
-pointScale.setFloat(1)
-globalAlpha = Uniform.create('globalAlpha', UniformType.Float, 1)
-globalAlpha.setFloat(1)
-
-pointCloudModel = ModelInfo()
-pointCloudModel.name = 'pointCloud'
-pointCloudModel.path = '/iridium_SSD/panama/hmColorHigh.xyzb'
-pointCloudModel.options = "10000 100:1000000:40 20:100:20 6:20:15 0:5:20"
-scene.loadModel(pointCloudModel)
-
-pointCloud = StaticObject.create(pointCloudModel.name)
-# attach shader uniforms
-mat = pointCloud.getMaterial()
-mat.setTransparent(True)
-mat.setProgram(pointProgram.name)
-mat.attachUniform(pointScale)
-mat.attachUniform(globalAlpha)
-getDefaultCamera().setPosition(imgResRatioX*10260/2, imgResRatioY*9850/2, 2500)
 
 #---------------------------------------------------------------------------
 #Cylinder and Sphere Version
@@ -302,7 +280,8 @@ for i in range(0, 21):
 
 dayIncrement = 1
 #numberOfDays = 85
-numberOfDaysByIndividual = [85, 70, 78, 80, 54, 18, 83, 80, 79, 67, 65, 72, 73, 71, 72, 67, 82, 86, 35, 39, 2]
+numberOfDaysByIndividual = [85, 70, 78, 80, 52, 18, 83, 80, 79, 67, 65, 72, 73, 71, 72, 66, 82, 86, 35, 39, 2]
+namesOfIndividuals = ["Veruca", "Chibi", "Abby", "Ben Bob", "Bonnie", "Chloe", "Clementina", "Ellie", "Gillian", "Ornette", "Pliny", "Ripley", "Sofie", "Greg", "Ibeth", "Olga", "Mimi", "Kyle", "Atlas", "Judy", "Merk"]
 currentPitch = 0
 currentYaw = 0
 currentRoll = 0
@@ -338,6 +317,38 @@ allMat.attachUniform(startDay)
 allMat.attachUniform(endDay)
 allMat.attachUniform(colorByBitMap)
 allMat.attachUniform(bitMapSelectedIndividuals)
+
+print movementData[1][0][0]
+
+txtArr = []
+for i in range(0,21):
+    txtArr.append([])
+    txtArr[i].append(Text3D.create('fonts/arial.tff', 100, "Start"))
+    txtArr[i][0].setFontResolution(120)
+    txtArr[i][0].setColor(Color('red'))
+    txtArr[i].append(Text3D.create('fonts/arial.tff', 100, "End"))
+    txtArr[i][1].setFontResolution(120)
+    txtArr[i][1].setColor(Color('red'))
+    txtArr[i].append(Text3D.create('fonts/arial.tff', 100, namesOfIndividuals[i]))
+    txtArr[i][2].setFontResolution(120)
+    txtArr[i][2].setColor(Color('red'))
+    if i == 1:
+        txtArr[i][0].setPosition(Vector3(float(movementData[i][myStartDay[i]][0][0]), float(movementData[i][myStartDay[i]][0][1]), float(movementData[i][myStartDay[i]][0][2])+25))
+        txtArr[i][1].setPosition(Vector3(float(movementData[i][myEndDay[i]][0][0]), float(movementData[i][myEndDay[i]][0][1]), float(movementData[i][myEndDay[i]][0][2])+25))
+        txtArr[i][2].setPosition(Vector3(float(movementData[i][myStartDay[i]][0][0]), float(movementData[i][myStartDay[i]][0][1]), float(movementData[i][myStartDay[i]][0][2])+50))
+
+#Scene Node List for all Text
+textNodeList = []
+for i in range(0,21):
+    textNodeList.append(SceneNode.create('textNode'+str(i)))
+    getScene().addChild(textNodeList[i])
+    textNodeList[i].addChild(txtArr[i][0])
+    textNodeList[i].addChild(txtArr[i][1])
+    textNodeList[i].addChild(txtArr[i][2])
+    if i == 1:
+        textNodeList[i].setChildrenVisible(True)
+    else:
+        textNodeList[i].setChildrenVisible(False)
 
 #--------------------------------------------------------------------------------------------
 # Movement point cloud code GPU Version
@@ -416,6 +427,38 @@ headlight.setEnabled(True)
 
 getDefaultCamera().addChild(headlight)
 
+#-----------------------------------------------------------------------------
+#PointCloud code
+
+pointProgram = ProgramAsset()
+pointProgram.name = "points"
+pointProgram.vertexShaderName = "islandShaders/Sphere.vert"
+pointProgram.fragmentShaderName = "islandShaders/Sphere.frag"
+pointProgram.geometryShaderName = "islandShaders/Sphere.geom"
+pointProgram.geometryOutVertices = 4
+pointProgram.geometryInput = PrimitiveType.Points
+pointProgram.geometryOutput = PrimitiveType.TriangleStrip
+scene.addProgram(pointProgram)
+
+pointScale = Uniform.create('pointScale', UniformType.Float, 1)
+pointScale.setFloat(1)
+globalAlpha = Uniform.create('globalAlpha', UniformType.Float, 1)
+globalAlpha.setFloat(1)
+
+pointCloudModel = ModelInfo()
+pointCloudModel.name = 'pointCloud'
+pointCloudModel.path = '/iridium_SSD/panama/hmColorHigh.xyzb'
+pointCloudModel.options = "10000 100:1000000:40 20:100:20 6:20:15 0:5:20"
+scene.loadModel(pointCloudModel)
+
+pointCloud = StaticObject.create(pointCloudModel.name)
+# attach shader uniforms
+mat = pointCloud.getMaterial()
+mat.setTransparent(True)
+mat.setProgram(pointProgram.name)
+mat.attachUniform(pointScale)
+mat.attachUniform(globalAlpha)
+getDefaultCamera().setPosition(imgResRatioX*10260/2, imgResRatioY*9850/2, 2500)
 
 #---------------------------------------------------------------------------
 #Menu items
@@ -926,8 +969,10 @@ def onUpdate(frame, time, dt):
     global lineList
     global hasCameraMoved
     global drawnCamPos
-    #hasCameraMoved = False
+    global movementData
 
+    #hasCameraMoved = False
+    #Draw Lines To Trees Code#########################################################################
     currCamPos = getDefaultCamera().getPosition()
     xPos = currCamPos[0]
     yPos = currCamPos[1]
@@ -962,7 +1007,7 @@ def onUpdate(frame, time, dt):
                 c2.setEffect('colored -e red')
                 lineList.append(l2)
                 drawnCamPos = getDefaultCamera().getPosition()
-
+    ################################################################################################
         #showOtherTrees.addChild(c2)
 setUpdateFunction(onUpdate)
         
@@ -1115,9 +1160,11 @@ def setColorBy(individual, value):
 
 def setSelInd(value):
     global bitMapSelectedIndividuals
+    global textNodeList
 
     val = bitMapSelectedIndividuals.getIntElement(value)
     bitMapSelectedIndividuals.setIntElement((not val), value)
+    textNodeList[value].setChildrenVisible((not val))
 
 def onPointSizeSliderValueChanged(value):
     if (value != 0):
