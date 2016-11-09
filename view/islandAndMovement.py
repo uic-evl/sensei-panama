@@ -2,6 +2,7 @@ from omega import *
 from cyclops import *
 from pointCloud import *
 from math import *
+from datetime import *
 
 
 def createCustomGeom(f, scene, geomName):        #Function parses file and creates lines
@@ -236,159 +237,86 @@ def createCustomGeom(f, scene, geomName):        #Function parses file and creat
     # obj.getMaterial().setProgram('colored byvertex-emissive')
     obj.getMaterial().setTransparent(True)
     print 'finished Parsing'
-    print individualIter
 
     return obj 
 
-#----------------------------------------------------------------------------
+def setUpLines(lineList, i):            #function sets up lines for text. Text includes START, END, and INDIVIDUALNAME. i corresponds to individual
+    global XYOFFSET
+    global STARTOFFSET
+    global ENDOFFSET
+    global INDNAMEOFFSET
+    global movementData
+    global myStartDay
+    global myEndDay
+
+    lineList[i].append(lineList[i][0].addLine())
+    lineList[i].append(lineList[i][0].addLine())
+    lineList[i].append(lineList[i][0].addLine())
+    lineList[i][1].setStart(Vector3(movementData[i][myStartDay[i]][0][0]+XYOFFSET, movementData[i][myStartDay[i]][0][1]+XYOFFSET, movementData[i][myStartDay[i]][0][2]+STARTOFFSET))
+    lineList[i][2].setStart(Vector3(movementData[i][myEndDay[i]][0][0]-XYOFFSET, movementData[i][myEndDay[i]][0][1]-XYOFFSET, movementData[i][myEndDay[i]][0][2]+ENDOFFSET))
+    lineList[i][3].setStart(Vector3(movementData[i][myStartDay[i]][0][0]+XYOFFSET, movementData[i][myStartDay[i]][0][1]-XYOFFSET, movementData[i][myStartDay[i]][0][2]+INDNAMEOFFSET))
+    lineList[i][1].setEnd(Vector3(movementData[i][myStartDay[i]][0][0], movementData[i][myStartDay[i]][0][1], movementData[i][myStartDay[i]][0][2]))
+    lineList[i][2].setEnd(Vector3(movementData[i][myEndDay[i]][0][0], movementData[i][myEndDay[i]][0][1], movementData[i][myEndDay[i]][0][2]))
+    lineList[i][3].setEnd(Vector3(movementData[i][myStartDay[i]][0][0], movementData[i][myStartDay[i]][0][1], movementData[i][myStartDay[i]][0][2]))
+    lineList[i][1].setThickness(5)
+    lineList[i][2].setThickness(5)
+    lineList[i][3].setThickness(5)
+    lineList[i][0].setEffect('colored -e red')
+    lineList[i].append(SphereShape.create(5/2,2))
+    lineList[i].append(SphereShape.create(5/2,2))
+    lineList[i].append(SphereShape.create(5/2,2))
+    lineList[i][4].setPosition(Vector3(movementData[i][myStartDay[i]][0][0]+XYOFFSET, movementData[i][myStartDay[i]][0][1]+XYOFFSET, movementData[i][myStartDay[i]][0][2]+STARTOFFSET))
+    lineList[i][5].setPosition(Vector3(movementData[i][myEndDay[i]][0][0]-XYOFFSET, movementData[i][myEndDay[i]][0][1]-XYOFFSET, movementData[i][myEndDay[i]][0][2]+ENDOFFSET))
+    lineList[i][6].setPosition(Vector3(movementData[i][myStartDay[i]][0][0]+XYOFFSET, movementData[i][myStartDay[i]][0][1]-XYOFFSET, movementData[i][myStartDay[i]][0][2]+INDNAMEOFFSET))
+    lineList[i][4].setEffect('colored -e red')
+    lineList[i][5].setEffect('colored -e red')
+    lineList[i][6].setEffect('colored -e red')
+
+def setLinePos(lineList, i):            #function updates line positions based on what days we are looking at. Modifies arraylist, lineList, that holds
+                                        #LineSet information. i corresponds to individuals.
+    global XYOFFSET
+    global STARTOFFSET
+    global ENDOFFSET
+    global INDNAMEOFFSET
+    global movementData
+    global myStartDay
+    global myEndDay
+
+    lineList[i][1].setStart(Vector3(movementData[i][myStartDay[i]][0][0]+XYOFFSET, movementData[i][myStartDay[i]][0][1]+XYOFFSET, movementData[i][myStartDay[i]][0][2]+STARTOFFSET))
+    lineList[i][2].setStart(Vector3(movementData[i][myEndDay[i]][0][0]-XYOFFSET, movementData[i][myEndDay[i]][0][1]-XYOFFSET, movementData[i][myEndDay[i]][0][2]+ENDOFFSET))
+    lineList[i][3].setStart(Vector3(movementData[i][myStartDay[i]][0][0]+XYOFFSET, movementData[i][myStartDay[i]][0][1]-XYOFFSET, movementData[i][myStartDay[i]][0][2]+INDNAMEOFFSET))
+    lineList[i][1].setEnd(Vector3(movementData[i][myStartDay[i]][0][0], movementData[i][myStartDay[i]][0][1], movementData[i][myStartDay[i]][0][2]))
+    lineList[i][2].setEnd(Vector3(movementData[i][myEndDay[i]][0][0], movementData[i][myEndDay[i]][0][1], movementData[i][myEndDay[i]][0][2]))
+    lineList[i][3].setEnd(Vector3(movementData[i][myStartDay[i]][0][0], movementData[i][myStartDay[i]][0][1], movementData[i][myStartDay[i]][0][2]))
+
+    lineList[i][4].setPosition(Vector3(movementData[i][myStartDay[i]][0][0]+XYOFFSET, movementData[i][myStartDay[i]][0][1]+XYOFFSET, movementData[i][myStartDay[i]][0][2]+STARTOFFSET))
+    lineList[i][5].setPosition(Vector3(movementData[i][myEndDay[i]][0][0]-XYOFFSET, movementData[i][myEndDay[i]][0][1]-XYOFFSET, movementData[i][myEndDay[i]][0][2]+ENDOFFSET))
+    lineList[i][6].setPosition(Vector3(movementData[i][myStartDay[i]][0][0]+XYOFFSET, movementData[i][myStartDay[i]][0][1]-XYOFFSET, movementData[i][myStartDay[i]][0][2]+INDNAMEOFFSET))
 
 #----------------------------------------------------------------------------
-#UI Module code
+#Constants
 
-# uim = UiModule.createAndInitialize()
-
-# mainLayout = Container.create( ContainerLayout.LayoutFree, uim.getUi())
-# mainLayout.setStyle( 'fill: #00000080' ) #'fill: #655E8280' ) #c0beff80 ' ) # #80808080' )##00000080' )
-# mainLayout.setSize( Vector2( float(2000), float(2000) ) ) #Vector2( xPixelsPerScreen, yPixelsPerScreen) )#xPixelsPerScreen*2.0, yPixelsPerScreen/2.0 ))
-# mainLayout.setAutosize(False)
-# mainLayout.setPosition( Vector2(19224, 100) )
-
-#----------------------------------------------------------------------------
-#Planeview code
-imgResRatioX = 0.18/(float(10260)/32064)
-imgResRatioY = 0.18/(float(9850)/30780)
-# plane = PlaneShape.create(imgResRatioX*10260, imgResRatioY*9850)
-# plane.setPosition(Vector3(imgResRatioX*10260/2, imgResRatioY*9850/2, 0))
-# plane.setEffect("textured -v emissive -d 50Island.png")
-
-scene = getSceneManager()
-getDefaultCamera().setBackgroundColor(Color('black'))
-scene.addLoader(BinaryPointsLoader())
-
-setNearFarZ(0.1, 1000000)
-
-
-#---------------------------------------------------------------------------
-#Cylinder and Sphere Version
-movementData = []
-myStartDay = []
-myEndDay = []
-for i in range(0, 21):
-    myStartDay.append(0)
-    myEndDay.append(1)
-
-dayIncrement = 1
-#numberOfDays = 85
 numberOfDaysByIndividual = [85, 70, 78, 80, 52, 18, 83, 80, 79, 67, 65, 72, 73, 71, 72, 66, 82, 86, 35, 39, 2]
 namesOfIndividuals = ["Veruca", "Chibi", "Abby", "Ben Bob", "Bonnie", "Chloe", "Clementina", "Ellie", "Gillian", "Ornette", "Pliny", "Ripley", "Sofie", "Greg", "Ibeth", "Olga", "Mimi", "Kyle", "Atlas", "Judy", "Merk"]
-currentPitch = 0
-currentYaw = 0
-currentRoll = 0
-
-moveLineProgram = ProgramAsset()
-moveLineProgram.name = "moveLine"
-moveLineProgram.vertexShaderName = "lineShaders/Line.vert"
-moveLineProgram.fragmentShaderName = "lineShaders/Line.frag"
-scene.addProgram(moveLineProgram)
-
-startDay = Uniform.create('startDay', UniformType.Int, 21)
-endDay = Uniform.create('endDay', UniformType.Int, 21)
-
-bitMapSelectedIndividuals = Uniform.create('bitMapSelectedIndividuals', UniformType.Int, 21)
-colorByBitMap = Uniform.create('colorByBitMap', UniformType.Int, 21)
-
-for i in range(0,21):
-    if i == 1:
-        bitMapSelectedIndividuals.setIntElement(1, i)
-    else:
-        bitMapSelectedIndividuals.setIntElement(0, i)
-    startDay.setIntElement(myStartDay[i], i)
-    endDay.setIntElement(myEndDay[i], i)
-
-f = open("gpsMovement/all.txt", "r")
-
-allAnimals = createCustomGeom(f, scene, 'allAnimals')             #Ateles geoffroyi
-
-allMat = allAnimals.getMaterial()
-allMat.setTransparent(True)
-allMat.setProgram(moveLineProgram.name)
-allMat.attachUniform(startDay)
-allMat.attachUniform(endDay)
-allMat.attachUniform(colorByBitMap)
-allMat.attachUniform(bitMapSelectedIndividuals)
-
-print movementData[1][0][0]
-
-txtArr = []
-for i in range(0,21):
-    txtArr.append([])
-    txtArr[i].append(Text3D.create('fonts/arial.tff', 50, "Start"))
-    txtArr[i][0].setFontResolution(500)
-    txtArr[i][0].setColor(Color('red'))
-    txtArr[i].append(Text3D.create('fonts/arial.tff', 50, "End"))
-    txtArr[i][1].setFontResolution(500)
-    txtArr[i][1].setColor(Color('red'))
-    txtArr[i].append(Text3D.create('fonts/arial.tff', 50, namesOfIndividuals[i]))
-    txtArr[i][2].setFontResolution(500)
-    txtArr[i][2].setColor(Color('red'))
-
-    txtArr[i][0].setPosition(Vector3(movementData[i][myStartDay[i]][0][0], movementData[i][myStartDay[i]][0][1], movementData[i][myStartDay[i]][0][2]+25))
-    txtArr[i][1].setPosition(Vector3(movementData[i][myEndDay[i]][0][0], movementData[i][myEndDay[i]][0][1], movementData[i][myEndDay[i]][0][2]+75))
-    txtArr[i][2].setPosition(Vector3(movementData[i][myStartDay[i]][0][0], movementData[i][myStartDay[i]][0][1], movementData[i][myStartDay[i]][0][2]+125))
-
-#Scene Node List for all Text
-textNodeList = []
-for i in range(0,21):
-    textNodeList.append(SceneNode.create('textNode'+str(i)))
-    getScene().addChild(textNodeList[i])
-    textNodeList[i].addChild(txtArr[i][0])
-    textNodeList[i].addChild(txtArr[i][1])
-    textNodeList[i].addChild(txtArr[i][2])
-    if i == 1:
-        textNodeList[i].setChildrenVisible(True)
-    else:
-        textNodeList[i].setChildrenVisible(False)
-
-    textNodeList[i].setFacingCamera(getDefaultCamera())     #Face the Default Camera
-
-#--------------------------------------------------------------------------------------------
-# Movement point cloud code GPU Version
-
-#filters
-movePointScale = Uniform.create('movePointScale', UniformType.Float, 1)
-movePointScale.setFloat(8.0)
-
-movePointProgram = ProgramAsset()
-movePointProgram.name = "movePoints"
-movePointProgram.vertexShaderName = "movementShaders/Sphere.vert" #here are our shaders
-movePointProgram.fragmentShaderName = "movementShaders/Sphere.frag"
-movePointProgram.geometryShaderName = "movementShaders/mySphere.geom"
-movePointProgram.geometryOutVertices = 4
-movePointProgram.geometryInput = PrimitiveType.Points
-movePointProgram.geometryOutput = PrimitiveType.TriangleStrip
-scene.addProgram(movePointProgram)
-
-movePointCloudModel = ModelInfo()
-movePointCloudModel.name = 'movePointCloud'
-movePointCloudModel.path = 'gpsMovement/all.xyzb'
-movePointCloudModel.options = "10000 100:1000000:1 20:100:1 6:20:1 0:5:1"
-scene.loadModel(movePointCloudModel)
-
-movePointCloud = StaticObject.create(movePointCloudModel.name)
-# attach shader uniforms
-moveMat = movePointCloud.getMaterial()
-moveMat.setTransparent(True)
-moveMat.setProgram(movePointProgram.name)
-moveMat.attachUniform(startDay)
-moveMat.attachUniform(endDay)
-moveMat.attachUniform(bitMapSelectedIndividuals)
-moveMat.attachUniform(colorByBitMap)
-moveMat.attachUniform(movePointScale)
-
-#----------------------------------------------------------------------------
+startDateByIndividual = [date(2015,12,11), date(2015,12,11), date(2015,12,15), date(2015,12,15), date(2015,12,15), date(2015,12,15), date(2015,12,14), date(2015,12,14), date(2015,12,14), date(2015,12,14), date(2015,12,14), date(2015,12,15), date(2015,12,14), date(2015,12,11), date(2015,12,25), date(2015,12,15), date(2015,12,15), date(2015,12,11), date(2016,1,12), date(2016,1,27), date(2016,3,2)]
+XYOFFSET = 100                    # X and Y offset for all text
+STARTOFFSET = 100                 # Z offset for start line
+ENDOFFSET = 200                   # Z offset for end line
+INDNAMEOFFSET = 300               # Z offset for individual name line
+STARTTXTOFFSET = 110              # Z offset for start text
+ENDTXTOFFSET = 210                # Z offset for end text
+INDNAMETXTOFFSET = 310            # Z offset for individual name text
+movementData = []                 # All GPS Data movementData[individualID][day][numPoints][tuple(x, y, z, hour, minute)]
+myStartDay = []                   # Start Days of Individuals myStartDay[individualID]
+myEndDay = []                     # End Days of Individuals myEndday[individualID]
+txtArr = []                       # textArray of Individuals txtArr[individualID]
+textNodeList = []                 # text SceneNode of Individuals textNodeList[individualID]
+lineToTxt = []                    # Lines to text
 
 #-----------------------------------------------------------------------------
 #Terrain code
+
+scene = getSceneManager()
 
 def loadModelAsync(name, path):
     model = ModelInfo()
@@ -428,6 +356,167 @@ headlight.setEnabled(True)
 
 getDefaultCamera().addChild(headlight)
 
+#----------------------------------------------------------------------------
+#Planeview code
+imgResRatioX = 0.18/(float(10260)/32064)
+imgResRatioY = 0.18/(float(9850)/30780)
+# plane = PlaneShape.create(imgResRatioX*10260, imgResRatioY*9850)
+# plane.setPosition(Vector3(imgResRatioX*10260/2, imgResRatioY*9850/2, 0))
+# plane.setEffect("textured -v emissive -d 50Island.png")
+
+getDefaultCamera().setPosition(imgResRatioX*10260/2, imgResRatioY*9850/2, 2500)
+getDefaultCamera().setBackgroundColor(Color('black'))
+scene.addLoader(BinaryPointsLoader())
+
+setNearFarZ(0.1, 1000000)
+
+
+#---------------------------------------------------------------------------
+#Cylinder and Sphere Version
+
+for i in range(0, 21):
+    myStartDay.append(0)
+    myEndDay.append(1)
+
+currentPitch = 0
+currentYaw = 0
+currentRoll = 0
+
+moveLineProgram = ProgramAsset()
+moveLineProgram.name = "moveLine"
+moveLineProgram.vertexShaderName = "lineShaders/Line.vert"
+moveLineProgram.fragmentShaderName = "lineShaders/Line.frag"
+scene.addProgram(moveLineProgram)
+
+startDay = Uniform.create('startDay', UniformType.Int, 21)
+endDay = Uniform.create('endDay', UniformType.Int, 21)
+
+bitMapSelectedIndividuals = Uniform.create('bitMapSelectedIndividuals', UniformType.Int, 21)
+colorByBitMap = Uniform.create('colorByBitMap', UniformType.Int, 21)
+
+for i in range(0,21):
+    if i == 1:
+        bitMapSelectedIndividuals.setIntElement(1, i)
+    else:
+        bitMapSelectedIndividuals.setIntElement(0, i)
+    startDay.setIntElement(myStartDay[i], i)
+    endDay.setIntElement(myEndDay[i], i)
+
+f = open("gpsMovement/all.txt", "r")
+
+allAnimals = createCustomGeom(f, scene, 'allAnimals')             #Read data into movementData
+
+allMat = allAnimals.getMaterial()
+allMat.setTransparent(True)
+allMat.setProgram(moveLineProgram.name)
+allMat.attachUniform(startDay)
+allMat.attachUniform(endDay)
+allMat.attachUniform(colorByBitMap)
+allMat.attachUniform(bitMapSelectedIndividuals)
+
+for i in range(0,21):
+    lineToTxt.append([])
+    lineToTxt[i].append(LineSet.create())
+    setUpLines(lineToTxt, i)
+
+for i in range(0,21):
+    txtArr.append([])
+    txtArr[i].append(Text3D.create('fonts/arial.tff', 25, "Start"))
+    txtArr[i][0].setFontResolution(500)
+    txtArr[i][0].setColor(Color('red'))
+    txtArr[i].append(Text3D.create('fonts/arial.tff', 25, "End"))
+    txtArr[i][1].setFontResolution(500)
+    txtArr[i][1].setColor(Color('red'))
+    txtArr[i].append(Text3D.create('fonts/arial.tff', 25, namesOfIndividuals[i]))
+    txtArr[i][2].setFontResolution(500)
+    txtArr[i][2].setColor(Color('red'))
+
+    txtArr[i][0].setPosition(Vector3(movementData[i][myStartDay[i]][0][0]+XYOFFSET, movementData[i][myStartDay[i]][0][1]+XYOFFSET, movementData[i][myStartDay[i]][0][2]+STARTTXTOFFSET))
+    txtArr[i][1].setPosition(Vector3(movementData[i][myEndDay[i]][0][0]-XYOFFSET, movementData[i][myEndDay[i]][0][1]-XYOFFSET, movementData[i][myEndDay[i]][0][2]+ENDTXTOFFSET))
+    txtArr[i][2].setPosition(Vector3(movementData[i][myStartDay[i]][0][0]+XYOFFSET, movementData[i][myStartDay[i]][0][1]-XYOFFSET, movementData[i][myStartDay[i]][0][2]+INDNAMETXTOFFSET))
+
+#Scene Node List for all Text
+for i in range(0,21):
+    textNodeList.append(SceneNode.create('textNode'+str(i)))
+    getScene().addChild(textNodeList[i])
+    textNodeList[i].addChild(txtArr[i][0])
+    textNodeList[i].addChild(txtArr[i][1])
+    textNodeList[i].addChild(txtArr[i][2])
+    textNodeList[i].addChild(lineToTxt[i][0])
+    textNodeList[i].addChild(lineToTxt[i][4])
+    textNodeList[i].addChild(lineToTxt[i][5])
+    textNodeList[i].addChild(lineToTxt[i][6])
+    if i == 1:
+        textNodeList[i].setChildrenVisible(True)
+    else:
+        textNodeList[i].setChildrenVisible(False)
+
+    
+
+
+#----------------------------------------------------------------------------
+#UI Module code
+
+uim = UiModule.createAndInitialize()
+
+mainLayout = Container.create( ContainerLayout.LayoutVertical, uim.getUi())
+mainLayout.setStyle( 'fill: #00000080' ) #'fill: #655E8280' ) #c0beff80 ' ) # #80808080' )##00000080' )
+mainLayout.setSize( Vector2( float(2000), float(2000) ) ) #Vector2( xPixelsPerScreen, yPixelsPerScreen) )#xPixelsPerScreen*2.0, yPixelsPerScreen/2.0 ))
+mainLayout.setAutosize(False)
+mainLayout.setPosition( Vector2(1366*15, 0) )
+caption1Txt = Label.create(mainLayout)
+lastIndividualTxt = Label.create(mainLayout)
+caption2Txt = Label.create(mainLayout)
+dayRangeTxt = Label.create(mainLayout)
+
+caption1Txt.setFont('fonts/arial.ttf 40')
+caption1Txt.setText('Last selected animal:')
+
+lastIndividualTxt.setFont('fonts/arial.ttf 40')
+lastIndividualTxt.setText('Chibi')
+
+caption2Txt.setFont('fonts/arial.ttf 40')
+caption2Txt.setText('Visible date range:')
+
+dayRangeTxt.setFont('fonts/arial.ttf 40')
+dayRangeTxt.setText(str(startDateByIndividual[1]+timedelta(days=myStartDay[1]))+" - "+str(startDateByIndividual[1]+timedelta(days=myEndDay[1])))
+
+#--------------------------------------------------------------------------------------------
+# Movement point cloud code GPU Version
+
+#filters
+movePointScale = Uniform.create('movePointScale', UniformType.Float, 1)
+movePointScale.setFloat(8.0)
+
+movePointProgram = ProgramAsset()
+movePointProgram.name = "movePoints"
+movePointProgram.vertexShaderName = "movementShaders/Sphere.vert" #here are our shaders
+movePointProgram.fragmentShaderName = "movementShaders/Sphere.frag"
+movePointProgram.geometryShaderName = "movementShaders/mySphere.geom"
+movePointProgram.geometryOutVertices = 4
+movePointProgram.geometryInput = PrimitiveType.Points
+movePointProgram.geometryOutput = PrimitiveType.TriangleStrip
+scene.addProgram(movePointProgram)
+
+movePointCloudModel = ModelInfo()
+movePointCloudModel.name = 'movePointCloud'
+movePointCloudModel.path = 'gpsMovement/all.xyzb'
+movePointCloudModel.options = "10000 100:1000000:1 20:100:1 6:20:1 0:5:1"
+scene.loadModel(movePointCloudModel)
+
+movePointCloud = StaticObject.create(movePointCloudModel.name)
+# attach shader uniforms
+moveMat = movePointCloud.getMaterial()
+moveMat.setTransparent(True)
+moveMat.setProgram(movePointProgram.name)
+moveMat.attachUniform(startDay)
+moveMat.attachUniform(endDay)
+moveMat.attachUniform(bitMapSelectedIndividuals)
+moveMat.attachUniform(colorByBitMap)
+moveMat.attachUniform(movePointScale)
+
+#----------------------------------------------------------------------------
+
 #-----------------------------------------------------------------------------
 #PointCloud code
 
@@ -459,7 +548,6 @@ mat.setTransparent(True)
 mat.setProgram(pointProgram.name)
 mat.attachUniform(pointScale)
 mat.attachUniform(globalAlpha)
-getDefaultCamera().setPosition(imgResRatioX*10260/2, imgResRatioY*9850/2, 2500)
 
 #---------------------------------------------------------------------------
 #Menu items
@@ -973,7 +1061,6 @@ def onUpdate(frame, time, dt):
     global movementData
     global textNodeList
 
-    #hasCameraMoved = False
     #Draw Lines To Trees Code#########################################################################
     currCamPos = getDefaultCamera().getPosition()
     xPos = currCamPos[0]
@@ -1007,7 +1094,7 @@ def onUpdate(frame, time, dt):
                 s2.setEffect('colored -e red')
                 s2.setPosition(camVec - 10*normal)
                 c2.setEffect('colored -e red')
-                lineList.append(l2)
+                lineList.append(lastIndividualTxt)
                 drawnCamPos = getDefaultCamera().getPosition()
     ################################################################################################
     
@@ -1018,7 +1105,7 @@ setUpdateFunction(onUpdate)
 
 #--------------------------------------------------------------------------------------
 #Functions
-def oneDayStepUp(value):
+def oneDayStepUp(value):        #value is the individualID
     global myStartDay
     global myEndDay
     global startDay
@@ -1026,6 +1113,9 @@ def oneDayStepUp(value):
     global numberOfDaysByIndividual
     global movementData
     global txtArr
+    global namesOfIndividuals
+    global lastIndividualTxt, dayRangeTxt
+    global lineToTxt
 
     myStartDay[value] = myStartDay[value] + 1
     if myStartDay[value] > numberOfDaysByIndividual[value]:
@@ -1033,9 +1123,14 @@ def oneDayStepUp(value):
     myEndDay[value] = myStartDay[value] + 1
     endDay.setIntElement(myEndDay[value], value)
     startDay.setIntElement(myStartDay[value], value)
-    txtArr[value][0].setPosition(Vector3(movementData[value][myStartDay[value]][0][0], movementData[value][myStartDay[value]][0][1], movementData[value][myStartDay[value]][0][2]+25))
-    txtArr[value][1].setPosition(Vector3(movementData[value][myEndDay[value]][0][0], movementData[value][myEndDay[value]][0][1], movementData[value][myEndDay[value]][0][2]+75))
-    txtArr[value][2].setPosition(Vector3(movementData[value][myStartDay[value]][0][0], movementData[value][myStartDay[value]][0][1], movementData[value][myStartDay[value]][0][2]+125))
+    txtArr[value][0].setPosition(Vector3(movementData[value][myStartDay[value]][0][0]+XYOFFSET, movementData[value][myStartDay[value]][0][1]+XYOFFSET, movementData[value][myStartDay[value]][0][2]+STARTTXTOFFSET))
+    txtArr[value][1].setPosition(Vector3(movementData[value][myEndDay[value]][0][0]-XYOFFSET, movementData[value][myEndDay[value]][0][1]-XYOFFSET, movementData[value][myEndDay[value]][0][2]+ENDTXTOFFSET))
+    txtArr[value][2].setPosition(Vector3(movementData[value][myStartDay[value]][0][0]+XYOFFSET, movementData[value][myStartDay[value]][0][1]-XYOFFSET, movementData[value][myStartDay[value]][0][2]+INDNAMETXTOFFSET))
+
+    setLinePos(lineToTxt, value)
+    
+    lastIndividualTxt.setText(namesOfIndividuals[value])
+    dayRangeTxt.setText(str(startDateByIndividual[value]+timedelta(days=myStartDay[value]))+" - "+str(startDateByIndividual[value]+timedelta(days=myEndDay[value])))
 
 def globalOneDayStepUp(value):
     global myStartDay
@@ -1045,6 +1140,8 @@ def globalOneDayStepUp(value):
     global numberOfDaysByIndividual
     global movementData
     global txtArr
+    global lineToTxt
+
 
     for i in range(0, 21):
         myStartDay[i] = myStartDay[i] + 1
@@ -1053,10 +1150,14 @@ def globalOneDayStepUp(value):
         myEndDay[i] = myStartDay[i] + 1
         endDay.setIntElement(myEndDay[i], i)
         startDay.setIntElement(myStartDay[i], i)
-        txtArr[i].setPosition(Vector3(movementData[i][myStartDay[i]][0][0], movementData[i][myStartDay[i]][0][1], movementData[i][myStartDay[i]][0][2]+25))
-        txtArr[i][1].setPosition(Vector3(movementData[i][myEndDay[i]][0][0], movementData[i][myEndDay[i]][0][1], movementData[i][myEndDay[i]][0][2]+75))
-        txtArr[i][2].setPosition(Vector3(movementData[i][myStartDay[i]][0][0], movementData[i][myStartDay[i]][0][1], movementData[i][myStartDay[i]][0][2]+125))
 
+        #Update text positions to location of animals
+        txtArr[i][0].setPosition(Vector3(movementData[i][myStartDay[i]][0][0]+XYOFFSET, movementData[i][myStartDay[i]][0][1]+XYOFFSET, movementData[i][myStartDay[i]][0][2]+STARTTXTOFFSET))
+        txtArr[i][1].setPosition(Vector3(movementData[i][myEndDay[i]][0][0]-XYOFFSET, movementData[i][myEndDay[i]][0][1]-XYOFFSET, movementData[i][myEndDay[i]][0][2]+ENDTXTOFFSET))
+        txtArr[i][2].setPosition(Vector3(movementData[i][myStartDay[i]][0][0]+XYOFFSET, movementData[i][myStartDay[i]][0][1]-XYOFFSET, movementData[i][myStartDay[i]][0][2]+INDNAMETXTOFFSET))
+
+        setLinePos(lineToTxt, i)
+        
     # print( "one day step up" + myStartDay)
 
 def oneDayStepDown(value):
@@ -1067,6 +1168,10 @@ def oneDayStepDown(value):
     global numberOfDaysByIndividual
     global movementData
     global txtArr
+    global namesOfIndividuals
+    global lastIndividualTxt
+    global dayRangeTxt
+    global lineToTxt
 
     myStartDay[value] = myStartDay[value] - 1
     if myStartDay[value] < 0:
@@ -1074,9 +1179,14 @@ def oneDayStepDown(value):
     myEndDay[value] = myStartDay[value] + 1
     endDay.setIntElement(myEndDay[value], value)
     startDay.setIntElement(myStartDay[value], value)
-    txtArr[value][0].setPosition(Vector3(movementData[value][myStartDay[value]][0][0], movementData[value][myStartDay[value]][0][1], movementData[value][myStartDay[value]][0][2]+25))
-    txtArr[value][1].setPosition(Vector3(movementData[value][myEndDay[value]][0][0], movementData[value][myEndDay[value]][0][1], movementData[value][myEndDay[value]][0][2]+75))
-    txtArr[value][2].setPosition(Vector3(movementData[value][myStartDay[value]][0][0], movementData[value][myStartDay[value]][0][1], movementData[value][myStartDay[value]][0][2]+125))
+    txtArr[value][0].setPosition(Vector3(movementData[value][myStartDay[value]][0][0]+XYOFFSET, movementData[value][myStartDay[value]][0][1]+XYOFFSET, movementData[value][myStartDay[value]][0][2]+STARTTXTOFFSET))
+    txtArr[value][1].setPosition(Vector3(movementData[value][myEndDay[value]][0][0]-XYOFFSET, movementData[value][myEndDay[value]][0][1]-XYOFFSET, movementData[value][myEndDay[value]][0][2]+ENDTXTOFFSET))
+    txtArr[value][2].setPosition(Vector3(movementData[value][myStartDay[value]][0][0]+XYOFFSET, movementData[value][myStartDay[value]][0][1]-XYOFFSET, movementData[value][myStartDay[value]][0][2]+INDNAMETXTOFFSET))
+
+    setLinePos(lineToTxt, value)
+
+    lastIndividualTxt.setText(namesOfIndividuals[value])
+    dayRangeTxt.setText(str(startDateByIndividual[value]+timedelta(days=myStartDay[value]))+" - "+str(startDateByIndividual[value]+timedelta(days=myEndDay[value])))
 
 def globalOneDayStepDown(value):
     global myStartDay
@@ -1094,9 +1204,11 @@ def globalOneDayStepDown(value):
         myEndDay[i] = myStartDay[i] + 1
         endDay.setIntElement(myEndDay[i], i)
         startDay.setIntElement(myStartDay[i], i)
-        txtArr[i].setPosition(Vector3(movementData[i][myStartDay[i]][0][0], movementData[i][myStartDay[i]][0][1], movementData[i][myStartDay[i]][0][2]+25))
-        txtArr[i][1].setPosition(Vector3(movementData[i][myEndDay[i]][0][0], movementData[i][myEndDay[i]][0][1], movementData[i][myEndDay[i]][0][2]+75))
-        txtArr[i][2].setPosition(Vector3(movementData[i][myStartDay[i]][0][0], movementData[i][myStartDay[i]][0][1], movementData[i][myStartDay[i]][0][2]+125))
+        txtArr[i][0].setPosition(Vector3(movementData[i][myStartDay[i]][0][0]+XYOFFSET, movementData[i][myStartDay[i]][0][1]+XYOFFSET, movementData[i][myStartDay[i]][0][2]+STARTTXTOFFSET))
+        txtArr[i][1].setPosition(Vector3(movementData[i][myEndDay[i]][0][0]-XYOFFSET, movementData[i][myEndDay[i]][0][1]-XYOFFSET, movementData[i][myEndDay[i]][0][2]+ENDTXTOFFSET))
+        txtArr[i][2].setPosition(Vector3(movementData[i][myStartDay[i]][0][0]+XYOFFSET, movementData[i][myStartDay[i]][0][1]-XYOFFSET, movementData[i][myStartDay[i]][0][2]+INDNAMETXTOFFSET))
+
+        setLinePos(lineToTxt, i)
 
     # print( "one day step down " + myStartDay)
 
@@ -1108,6 +1220,10 @@ def sevenDayStepUp(value):
     global numberOfDaysByIndividual
     global movementData
     global txtArr
+    global namesOfIndividuals
+    global lastIndividualTxt
+    global dayRangeTxt
+    global lineToTxt
 
     myStartDay[value] = myStartDay[value] + 7
     if myStartDay[value] > numberOfDaysByIndividual[value]:
@@ -1115,10 +1231,14 @@ def sevenDayStepUp(value):
     myEndDay[value] = myStartDay[value] + 7
     endDay.setIntElement(myEndDay[value], value)
     startDay.setIntElement(myStartDay[value], value)
-    txtArr[value][0].setPosition(Vector3(movementData[value][myStartDay[value]][0][0], movementData[value][myStartDay[value]][0][1], movementData[value][myStartDay[value]][0][2]+25))
-    txtArr[value][1].setPosition(Vector3(movementData[value][myEndDay[value]][0][0], movementData[value][myEndDay[value]][0][1], movementData[value][myEndDay[value]][0][2]+75))
-    txtArr[value][2].setPosition(Vector3(movementData[value][myStartDay[value]][0][0], movementData[value][myStartDay[value]][0][1], movementData[value][myStartDay[value]][0][2]+125))
+    txtArr[value][0].setPosition(Vector3(movementData[value][myStartDay[value]][0][0]+XYOFFSET, movementData[value][myStartDay[value]][0][1]+XYOFFSET, movementData[value][myStartDay[value]][0][2]+STARTTXTOFFSET))
+    txtArr[value][1].setPosition(Vector3(movementData[value][myEndDay[value]][0][0]-XYOFFSET, movementData[value][myEndDay[value]][0][1]-XYOFFSET, movementData[value][myEndDay[value]][0][2]+ENDTXTOFFSET))
+    txtArr[value][2].setPosition(Vector3(movementData[value][myStartDay[value]][0][0]+XYOFFSET, movementData[value][myStartDay[value]][0][1]-XYOFFSET, movementData[value][myStartDay[value]][0][2]+INDNAMETXTOFFSET))
 
+    setLinePos(lineToTxt, value)
+
+    lastIndividualTxt.setText(namesOfIndividuals[value])
+    dayRangeTxt.setText(str(startDateByIndividual[value]+timedelta(days=myStartDay[value]))+" - "+str(startDateByIndividual[value]+timedelta(days=myEndDay[value])))
 
 def globalSevenDayStepUp(value):
     global myStartDay
@@ -1136,9 +1256,11 @@ def globalSevenDayStepUp(value):
         myEndDay[i] = myStartDay[i] + 7
         endDay.setIntElement(myEndDay[i], i)
         startDay.setIntElement(myStartDay[i], i)
-        txtArr[i].setPosition(Vector3(movementData[i][myStartDay[i]][0][0], movementData[i][myStartDay[i]][0][1], movementData[i][myStartDay[i]][0][2]+25))
-        txtArr[i][1].setPosition(Vector3(movementData[i][myEndDay[i]][0][0], movementData[i][myEndDay[i]][0][1], movementData[i][myEndDay[i]][0][2]+75))
-        txtArr[i][2].setPosition(Vector3(movementData[i][myStartDay[i]][0][0], movementData[i][myStartDay[i]][0][1], movementData[i][myStartDay[i]][0][2]+125))
+        txtArr[i][0].setPosition(Vector3(movementData[i][myStartDay[i]][0][0]+XYOFFSET, movementData[i][myStartDay[i]][0][1]+XYOFFSET, movementData[i][myStartDay[i]][0][2]+STARTTXTOFFSET))
+        txtArr[i][1].setPosition(Vector3(movementData[i][myEndDay[i]][0][0]-XYOFFSET, movementData[i][myEndDay[i]][0][1]-XYOFFSET, movementData[i][myEndDay[i]][0][2]+ENDTXTOFFSET))
+        txtArr[i][2].setPosition(Vector3(movementData[i][myStartDay[i]][0][0]+XYOFFSET, movementData[i][myStartDay[i]][0][1]-XYOFFSET, movementData[i][myStartDay[i]][0][2]+INDNAMETXTOFFSET))
+
+        setLinePos(linetoTxt, i)
 
     # print( "seven day step up" + myStartDay)
 
@@ -1150,6 +1272,10 @@ def sevenDayStepDown(value):
     global numberOfDaysByIndividual
     global movementData
     global txtArr
+    global namesOfIndividuals
+    global lastIndividualTxt
+    global dayRangeTxt
+    global lineToTxt
 
     myStartDay[value] = myStartDay[value] - 7
     if myStartDay[value] < 0:
@@ -1157,9 +1283,14 @@ def sevenDayStepDown(value):
     myEndDay[value] = myStartDay[value] + 7
     endDay.setIntElement(myEndDay[value], value)
     startDay.setIntElement(myStartDay[value], value)
-    txtArr[value][0].setPosition(Vector3(movementData[value][myStartDay[value]][0][0], movementData[value][myStartDay[value]][0][1], movementData[value][myStartDay[value]][0][2]+25))
-    txtArr[value][1].setPosition(Vector3(movementData[value][myEndDay[value]][0][0], movementData[value][myEndDay[value]][0][1], movementData[value][myEndDay[value]][0][2]+75))
-    txtArr[value][2].setPosition(Vector3(movementData[value][myStartDay[value]][0][0], movementData[value][myStartDay[value]][0][1], movementData[value][myStartDay[value]][0][2]+125))
+    txtArr[value][0].setPosition(Vector3(movementData[value][myStartDay[value]][0][0]+XYOFFSET, movementData[value][myStartDay[value]][0][1]+XYOFFSET, movementData[value][myStartDay[value]][0][2]+STARTTXTOFFSET))
+    txtArr[value][1].setPosition(Vector3(movementData[value][myEndDay[value]][0][0]-XYOFFSET, movementData[value][myEndDay[value]][0][1]-XYOFFSET, movementData[value][myEndDay[value]][0][2]+ENDTXTOFFSET))
+    txtArr[value][2].setPosition(Vector3(movementData[value][myStartDay[value]][0][0]+XYOFFSET, movementData[value][myStartDay[value]][0][1]+XYOFFSET, movementData[value][myStartDay[value]][0][2]+INDNAMETXTOFFSET))
+
+    setLinePos(lineToTxt, value)
+
+    lastIndividualTxt.setText(namesOfIndividuals[value])
+    dayRangeTxt.setText(str(startDateByIndividual[value]+timedelta(days=myStartDay[value]))+" - "+str(startDateByIndividual[value]+timedelta(days=myEndDay[value])))
 
 def globalSevenDayStepDown(value):
     global myStartDay
@@ -1177,10 +1308,11 @@ def globalSevenDayStepDown(value):
         myEndDay[i] = myStartDay[i] + 7
         endDay.setIntElement(myEndDay[i], i)
         startDay.setIntElement(myStartDay[i], i)
-        txtArr[i].setPosition(Vector3(movementData[i][myStartDay[i]][0][0], movementData[i][myStartDay[i]][0][1], movementData[i][myStartDay[i]][0][2]+25))
-        txtArr[i][1].setPosition(Vector3(movementData[i][myEndDay[i]][0][0], movementData[i][myEndDay[i]][0][1], movementData[i][myEndDay[i]][0][2]+75))
-        txtArr[i][2].setPosition(Vector3(movementData[i][myStartDay[i]][0][0], movementData[i][myStartDay[i]][0][1], movementData[i][myStartDay[i]][0][2]+125))
+        txtArr[i][0].setPosition(Vector3(movementData[i][myStartDay[i]][0][0]+XYOFFSET, movementData[i][myStartDay[i]][0][1]+XYOFFSET, movementData[i][myStartDay[i]][0][2]+STARTTXTOFFSET))
+        txtArr[i][1].setPosition(Vector3(movementData[i][myEndDay[i]][0][0]-XYOFFSET, movementData[i][myEndDay[i]][0][1]-XYOFFSET, movementData[i][myEndDay[i]][0][2]+ENDTXTOFFSET))
+        txtArr[i][2].setPosition(Vector3(movementData[i][myStartDay[i]][0][0]+XYOFFSET, movementData[i][myStartDay[i]][0][1]-XYOFFSET, movementData[i][myStartDay[i]][0][2]+INDNAMETXTOFFSET))
 
+        setLinePos(lineToTxt, i)
 
     # print( "seven day step down " + myStartDay)
 
@@ -1188,14 +1320,27 @@ def allDay(value):
     global numberOfDaysByIndividual
     global startDay
     global endDay
+    global myStartDay
+    global myEndDay
     global movementData
     global txtArr
+    global namesOfIndividuals
+    global lastIndividualTxt
+    global dayRangeTxt
+    global lineToTxt
 
+    myStartDay[value] = 0
+    myEndDay[value] = numberOfDaysByIndividual[value]
     endDay.setIntElement(numberOfDaysByIndividual[value], value)
     startDay.setIntElement(0, value)
-    txtArr[value][0].setPosition(Vector3(movementData[value][myStartDay[value]][0][0], movementData[value][myStartDay[value]][0][1], movementData[value][myStartDay[value]][0][2]+25))
-    txtArr[value][1].setPosition(Vector3(movementData[value][myEndDay[value]][0][0], movementData[value][myEndDay[value]][0][1], movementData[value][myEndDay[value]][0][2]+75))
-    txtArr[value][2].setPosition(Vector3(movementData[value][myStartDay[value]][0][0], movementData[value][myStartDay[value]][0][1], movementData[value][myStartDay[value]][0][2]+125))
+    txtArr[value][0].setPosition(Vector3(movementData[value][myStartDay[value]][0][0]+XYOFFSET, movementData[value][myStartDay[value]][0][1]+XYOFFSET, movementData[value][myStartDay[value]][0][2]+STARTTXTOFFSET))
+    txtArr[value][1].setPosition(Vector3(movementData[value][myEndDay[value]][0][0]-XYOFFSET, movementData[value][myEndDay[value]][0][1]-XYOFFSET, movementData[value][myEndDay[value]][0][2]+ENDTXTOFFSET))
+    txtArr[value][2].setPosition(Vector3(movementData[value][myStartDay[value]][0][0]+XYOFFSET, movementData[value][myStartDay[value]][0][1]-XYOFFSET, movementData[value][myStartDay[value]][0][2]+INDNAMETXTOFFSET))
+
+    setLinePos(lineToTxt, value)
+
+    lastIndividualTxt.setText(namesOfIndividuals[value])
+    dayRangeTxt.setText(str(startDateByIndividual[value]+timedelta(days=myStartDay[value]))+" - "+str(startDateByIndividual[value]+timedelta(days=myEndDay[value])))
 
 def globalAllDay(value):
     global numberOfDaysByIndividual
@@ -1203,13 +1348,17 @@ def globalAllDay(value):
     global endDay
     global movementData
     global txtArr
+    global lineToTxt
 
     for i in range(0, 21):
         endDay.setIntElement(numberOfDaysByIndividual[i], i)
         startDay.setIntElement(0, i)
-        txtArr[i].setPosition(Vector3(movementData[i][myStartDay[i]][0][0], movementData[i][myStartDay[i]][0][1], movementData[i][myStartDay[i]][0][2]+25))
-        txtArr[i][1].setPosition(Vector3(movementData[i][myEndDay[i]][0][0], movementData[i][myEndDay[i]][0][1], movementData[i][myEndDay[i]][0][2]+75))
-        txtArr[i][2].setPosition(Vector3(movementData[i][myStartDay[i]][0][0], movementData[i][myStartDay[i]][0][1], movementData[i][myStartDay[i]][0][2]+125))
+        txtArr[i][0].setPosition(Vector3(movementData[i][myStartDay[i]][0][0]+XYOFFSET, movementData[i][myStartDay[i]][0][1]+XYOFFSET, movementData[i][myStartDay[i]][0][2]+STARTTXTOFFSET))
+        txtArr[i][1].setPosition(Vector3(movementData[i][myEndDay[i]][0][0]-XYOFFSET, movementData[i][myEndDay[i]][0][1]-XYOFFSET, movementData[i][myEndDay[i]][0][2]+ENDTXTOFFSET))
+        txtArr[i][2].setPosition(Vector3(movementData[i][myStartDay[i]][0][0]+XYOFFSET, movementData[i][myStartDay[i]][0][1]-XYOFFSET, movementData[i][myStartDay[i]][0][2]+INDNAMETXTOFFSET))
+
+        setLinePos(lineToTxt, i)
+
     # print( "one day step " + myStartDay)
 
 def setColorBy(individual, value):
@@ -1222,6 +1371,9 @@ def setColorBy(individual, value):
 def setSelInd(value):
     global bitMapSelectedIndividuals
     global textNodeList
+    global namesOfIndividuals
+    global lastIndividualTxt
+    global dayRangeTxt
 
     val = bitMapSelectedIndividuals.getIntElement(value)
     bitMapSelectedIndividuals.setIntElement((not val), value)
@@ -1229,6 +1381,9 @@ def setSelInd(value):
         textNodeList[value].setChildrenVisible(False)
     else:
         textNodeList[value].setChildrenVisible(True)
+
+    lastIndividualTxt.setText(namesOfIndividuals[value])
+    dayRangeTxt.setText(str(startDateByIndividual[value]+timedelta(days=myStartDay[value]))+" - "+str(startDateByIndividual[value]+timedelta(days=myEndDay[value])))
 
 def onPointSizeSliderValueChanged(value):
     if (value != 0):
