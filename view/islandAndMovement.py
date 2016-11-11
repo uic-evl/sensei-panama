@@ -461,16 +461,16 @@ lastIndividualTxt = Label.create(mainLayout)
 caption2Txt = Label.create(mainLayout)
 dayRangeTxt = Label.create(mainLayout)
 
-caption1Txt.setFont('fonts/arial.ttf 40')
+caption1Txt.setFont('fonts/RobotoCondensed-Light.ttf 40')
 caption1Txt.setText('Last selected animal:')
 
-lastIndividualTxt.setFont('fonts/arial.ttf 40')
+lastIndividualTxt.setFont('fonts/RobotoCondensed-Light.ttf 40')
 lastIndividualTxt.setText('Chibi')
 
-caption2Txt.setFont('fonts/arial.ttf 40')
+caption2Txt.setFont('fonts/RobotoCondensed-Light.ttf 40')
 caption2Txt.setText('Visible date range:')
 
-dayRangeTxt.setFont('fonts/arial.ttf 40')
+dayRangeTxt.setFont('fonts/RobotoCondensed-Light.ttf 40')
 dayRangeTxt.setText(str(startDateByIndividual[1]+timedelta(days=myStartDay[1]))+" - "+str(startDateByIndividual[1]+timedelta(days=myEndDay[1])))
 
 #--------------------------------------------------------------------------------------------
