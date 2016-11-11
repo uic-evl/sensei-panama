@@ -11,6 +11,7 @@ void main (void)
     float x = gl_TexCoord[0].x;
     float y = gl_TexCoord[0].y;
 
+<<<<<<< HEAD
     if (y <= -0.7 || y >= 0.7)
         discard;
 
@@ -18,6 +19,16 @@ void main (void)
 
     if (zz <= 0.51 )
         discard;
+=======
+    //Now we are shading the entire rectangle given by .geom
+    //if (y <= -0.7 || y >= 0.7)
+    //    discard;
+
+    float zz = 1.0 - y*y;
+
+    //if (zz <= 0.51 )
+    //    discard;
+>>>>>>> master
 
     float z = sqrt(zz);
 
@@ -30,7 +41,13 @@ void main (void)
     pos.z += z*sphere_radius;
     pos = gl_ProjectionMatrix * pos;
                 
+<<<<<<< HEAD
     gl_FragDepth = (pos.z / pos.w + 1.0) / 2.0;
     gl_FragColor.rgb = gl_Color.rgb * diffuse_value;
+=======
+    //gl_FragDepth = (pos.z / pos.w + 1.0) / 2.0;
+    gl_FragColor.rgb = gl_Color.rgb * diffuse_value;
+    //gl_FragColor.rgb = vec3(1.0, 0.0, 0.0);
+>>>>>>> master
     gl_FragColor.a = gl_Color.a;
 }

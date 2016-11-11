@@ -42,8 +42,16 @@ main(void)
   //    drawPoint = true; 
   if( drawPoint && (day >= startDay && day < endDay) )
         drawPoint = true;
+<<<<<<< HEAD
   else
       drawPoint = false;
+=======
+  //else
+  //    drawPoint = false;
+
+  //************************************************************************************************
+  //Don't worry about this. It's computing a color by time
+>>>>>>> master
         
     if( drawPoint ) {
 
@@ -142,6 +150,7 @@ main(void)
         gl_FrontColor = vec4( 85.0/255.0,136.0/255.0,244.0/255.0, 1.0 );
     }
 
+<<<<<<< HEAD
 
 
     eye_position = gl_PositionIn[0];
@@ -181,6 +190,45 @@ main(void)
     p2.xy += vec2(0, halfsize);
 
     gl_Position = gl_ProjectionMatrix * p2;
+=======
+    //************************************************************************************************
+    //Our changes start here
+
+    eye_position.xyz = (gl_PositionIn[0].xyz + gl_PositionIn[1].xyz)/2;         //Computing the midpoint
+    vertex_light_position = normalize(gl_LightSource[0].position.xyz - eye_position.xyz);
+
+    //Drawing a rectangle between two points p1 and p2
+    gl_TexCoord[0].st = vec2(1.0,-1.0);
+    vec4 p1 = gl_PositionIn[0];
+    vec4 p2 = gl_PositionIn[1];
+    p2.xy += vec2(0, -halfsize);
+
+    gl_Position = gl_ProjectionMatrix * p2;
+    EmitVertex();
+      
+    gl_TexCoord[0].st = vec2(1.0,1.0);
+    p1 = gl_PositionIn[0];
+    p2 = gl_PositionIn[1];
+    p2.xy += vec2(0, halfsize);
+
+    gl_Position = gl_ProjectionMatrix * p2;
+    EmitVertex();
+
+    gl_TexCoord[0].st = vec2(-1.0,-1.0);
+    p1 = gl_PositionIn[0];
+    p2 = gl_PositionIn[1];
+    p1.xy += vec2(0, -halfsize);
+
+    gl_Position = gl_ProjectionMatrix * p1;
+    EmitVertex();
+
+    gl_TexCoord[0].st = vec2(-1.0,1.0);
+    p1 = gl_PositionIn[0];
+    p2 = gl_PositionIn[1];
+    p1.xy += vec2(0, halfsize);
+
+    gl_Position = gl_ProjectionMatrix * p1;
+>>>>>>> master
     EmitVertex();
       
     EndPrimitive();

@@ -13,45 +13,40 @@ uniform float globalAlpha;
 void
 main(void)
 {
-    	sphere_radius =  pointScale * 2.0;
-    	float halfsize = sphere_radius * 0.5;
+	sphere_radius =  pointScale * 2.0;
+	float halfsize = sphere_radius * 0.5;
 
-    	gl_FrontColor = gl_FrontColorIn[0];
-    	gl_FrontColor.a = globalAlpha;
+	gl_FrontColor = gl_FrontColorIn[0];
+	gl_FrontColor.a = globalAlpha;
 
 	//Example using the gl_FrontColor values for filtering!!
 	//now these hold colors.  in our case they will store r=day, g=hr, b=min, a=individualId
+    eye_position = gl_PositionIn[0];
+    vertex_light_position = normalize(gl_LightSource[0].position.xyz - eye_position.xyz);
 
-	bool drawPoint = true;
-	
-	if( drawPoint ) {
-    	    eye_position = gl_PositionIn[0];
-    	    vertex_light_position = normalize(gl_LightSource[0].position.xyz - eye_position.xyz);
+    gl_TexCoord[0].st = vec2(1.0,-1.0);
+    gl_Position = gl_PositionIn[0];
+    gl_Position.xy += vec2(halfsize, -halfsize);
+    gl_Position = gl_ProjectionMatrix * gl_Position;
+    EmitVertex();
 
-    	    gl_TexCoord[0].st = vec2(1.0,-1.0);
-    	    gl_Position = gl_PositionIn[0];
-    	    gl_Position.xy += vec2(halfsize, -halfsize);
-    	    gl_Position = gl_ProjectionMatrix * gl_Position;
-    	    EmitVertex();
-    
-	    gl_TexCoord[0].st = vec2(1.0,1.0);
-    	    gl_Position = gl_PositionIn[0];
-    	    gl_Position.xy += vec2(halfsize, halfsize);
-    	    gl_Position = gl_ProjectionMatrix * gl_Position;
-    	    EmitVertex();
+    gl_TexCoord[0].st = vec2(1.0,1.0);
+    gl_Position = gl_PositionIn[0];
+    gl_Position.xy += vec2(halfsize, halfsize);
+    gl_Position = gl_ProjectionMatrix * gl_Position;
+    EmitVertex();
 
-    	    gl_TexCoord[0].st = vec2(-1.0,-1.0);
-    	    gl_Position = gl_PositionIn[0];
-    	    gl_Position.xy += vec2(-halfsize, -halfsize);
-    	    gl_Position = gl_ProjectionMatrix * gl_Position;
-    	    EmitVertex();
+    gl_TexCoord[0].st = vec2(-1.0,-1.0);
+    gl_Position = gl_PositionIn[0];
+    gl_Position.xy += vec2(-halfsize, -halfsize);
+    gl_Position = gl_ProjectionMatrix * gl_Position;
+    EmitVertex();
 
-    	    gl_TexCoord[0].st = vec2(-1.0,1.0);
-    	    gl_Position = gl_PositionIn[0];
-    	    gl_Position.xy += vec2(-halfsize, halfsize);
-    	    gl_Position = gl_ProjectionMatrix * gl_Position;
-    	    EmitVertex();
-    
-	    EndPrimitive();
-	}
+    gl_TexCoord[0].st = vec2(-1.0,1.0);
+    gl_Position = gl_PositionIn[0];
+    gl_Position.xy += vec2(-halfsize, halfsize);
+    gl_Position = gl_ProjectionMatrix * gl_Position;
+    EmitVertex();
+
+    EndPrimitive();
 }
