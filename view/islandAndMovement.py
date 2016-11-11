@@ -256,13 +256,13 @@ def setUpLines(lineList, i):            #function sets up lines for text. Text i
     lineList[i][2].setEnd(Vector3(movementData[i][myEndDay[i]][0][0], movementData[i][myEndDay[i]][0][1], movementData[i][myEndDay[i]][0][2]))
     lineList[i][1].setThickness(5)
     lineList[i][2].setThickness(5)
-    lineList[i][0].setEffect('colored -e #4d0013')
+    lineList[i][0].setEffect('colored -e #800020')
     lineList[i].append(SphereShape.create(5/2,2))
     lineList[i].append(SphereShape.create(5/2,2))
     lineList[i][3].setPosition(Vector3(movementData[i][myStartDay[i]][0][0]+XYOFFSET+TEXTOFFSET, movementData[i][myStartDay[i]][0][1], movementData[i][myStartDay[i]][0][2]+STARTOFFSET))
     lineList[i][4].setPosition(Vector3(movementData[i][myEndDay[i]][0][0]-XYOFFSET+TEXTOFFSET, movementData[i][myEndDay[i]][0][1], movementData[i][myEndDay[i]][0][2]+ENDOFFSET))
-    lineList[i][3].setEffect('colored -e #4d0013')
-    lineList[i][4].setEffect('colored -e #4d0013')
+    lineList[i][3].setEffect('colored -e #800020')
+    lineList[i][4].setEffect('colored -e #800020')
 
 def setLinePos(lineList, i):            #function updates line positions based on what days we are looking at. Modifies arraylist, lineList, that holds
                                         #LineSet information. i corresponds to individuals.
@@ -289,8 +289,8 @@ def setTextPos(textList, i):
     global myStartDay
     global myEndDay
 
-    txtList[i][0].setPosition(Vector3(movementData[i][myStartDay[i]][0][0]+XYOFFSET, movementData[i][myStartDay[i]][0][1], movementData[i][myStartDay[i]][0][2]+STARTTXTOFFSET))
-    txtList[i][1].setPosition(Vector3(movementData[i][myEndDay[i]][0][0]-XYOFFSET, movementData[i][myEndDay[i]][0][1], movementData[i][myEndDay[i]][0][2]+ENDTXTOFFSET))
+    textList[i][0].setPosition(Vector3(movementData[i][myStartDay[i]][0][0]+XYOFFSET, movementData[i][myStartDay[i]][0][1], movementData[i][myStartDay[i]][0][2]+STARTTXTOFFSET))
+    textList[i][1].setPosition(Vector3(movementData[i][myEndDay[i]][0][0]-XYOFFSET, movementData[i][myEndDay[i]][0][1], movementData[i][myEndDay[i]][0][2]+ENDTXTOFFSET))
 
 #----------------------------------------------------------------------------
 #Constants
@@ -298,12 +298,12 @@ def setTextPos(textList, i):
 numberOfDaysByIndividual = [85, 70, 78, 80, 52, 18, 83, 80, 79, 67, 65, 72, 73, 71, 72, 66, 82, 86, 35, 39, 2]
 namesOfIndividuals = ["Veruca", "Chibi", "Abby", "Ben Bob", "Bonnie", "Chloe", "Clementina", "Ellie", "Gillian", "Ornette", "Pliny", "Ripley", "Sofie", "Greg", "Ibeth", "Olga", "Mimi", "Kyle", "Atlas", "Judy", "Merk"]
 startDateByIndividual = [date(2015,12,11), date(2015,12,11), date(2015,12,15), date(2015,12,15), date(2015,12,15), date(2015,12,15), date(2015,12,14), date(2015,12,14), date(2015,12,14), date(2015,12,14), date(2015,12,14), date(2015,12,15), date(2015,12,14), date(2015,12,11), date(2015,12,25), date(2015,12,15), date(2015,12,15), date(2015,12,11), date(2016,1,12), date(2016,1,27), date(2016,3,2)]
-XYOFFSET = 100                    # X and Y offset for all text
+XYOFFSET = 80                    # X and Y offset for all text
 TEXTOFFSET = 50                   # Moves line to center of text
 STARTOFFSET = 300                 # Z offset for start line
 ENDOFFSET = 400                   # Z offset for end line
 STARTTXTOFFSET = 310              # Z offset for start text
-ENDTXTOFFSET = 310                # Z offset for end text
+ENDTXTOFFSET = 410                # Z offset for end text
 movementData = []                 # All GPS Data movementData[individualID][day][numPoints][tuple(x, y, z, hour, minute)]
 myStartDay = []                   # Start Days of Individuals myStartDay[individualID]
 myEndDay = []                     # End Days of Individuals myEndday[individualID]
@@ -417,12 +417,12 @@ for i in range(0,21):           #Set up Lines to Text
 
 for i in range(0,21):           #Set up START and END text
     txtArr.append([])
-    txtArr[i].append(Text3D.create('fonts/RobotoCondensed-Light.ttf', 25, str(namesOfIndividuals[i])+" Start"))
+    txtArr[i].append(Text3D.create('fonts/RobotoCondensed-Regular.ttf', 25, str(namesOfIndividuals[i])+" Start"))
     txtArr[i][0].setFontResolution(500)
-    txtArr[i][0].setColor(Color('#4d0013'))
-    txtArr[i].append(Text3D.create('fonts/RobotoCondensed-Light.ttf', 25, str(namesOfIndividuals[i])+" End"))
+    txtArr[i][0].setColor(Color('#800020'))
+    txtArr[i].append(Text3D.create('fonts/RobotoCondensed-Regular.ttf', 25, str(namesOfIndividuals[i])+" End"))
     txtArr[i][1].setFontResolution(500)
-    txtArr[i][1].setColor(Color('#4d0013'))
+    txtArr[i][1].setColor(Color('#800020'))
     txtArr[i][0].setFacingCamera(getDefaultCamera())
     txtArr[i][1].setFacingCamera(getDefaultCamera())
 
