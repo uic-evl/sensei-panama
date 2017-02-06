@@ -440,3 +440,5 @@ merkBtnGrad6 = merkCO.addButton("Color by individual", "setColorBy(20, 5)")
 
 ss6 = mm.getMainMenu().addButton("Show Fruit Trees", "markTrees(1)")
 ss7 = mm.getMainMenu().addButton("Draw Lines to Trees", "drawLinesToTrees(1)")
+
+ss8 = mm.getMainMenu().addButton("Highlight Fruit Trees", "highlightTrees(1)")

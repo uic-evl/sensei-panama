@@ -22,7 +22,6 @@ main(void)
   float halfsize = sphere_radius * 0.5;
 
   gl_FrontColor = gl_FrontColorIn[0];
-  //gl_FrontColor.a = globalAlpha;
 
 	highp int day = int(gl_FrontColor.r);
 	highp int hr = int(gl_FrontColor.g);
