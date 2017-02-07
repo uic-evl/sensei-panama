@@ -189,17 +189,29 @@ def setUpLines(lineList, i):
 
     lineList[i].append(lineList[i][0].addLine())
     lineList[i].append(lineList[i][0].addLine())
-    lineList[i][1].setStart(Vector3(movementData[i][myStartDay[i]][0][0]+XYOFFSET+TEXTOFFSET, movementData[i][myStartDay[i]][0][1], movementData[i][myStartDay[i]][0][2]+STARTOFFSET))
-    lineList[i][2].setStart(Vector3(movementData[i][myEndDay[i]][0][0]-XYOFFSET+TEXTOFFSET, movementData[i][myEndDay[i]][0][1], movementData[i][myEndDay[i]][0][2]+ENDOFFSET))
-    lineList[i][1].setEnd(Vector3(movementData[i][myStartDay[i]][0][0], movementData[i][myStartDay[i]][0][1], movementData[i][myStartDay[i]][0][2]))
-    lineList[i][2].setEnd(Vector3(movementData[i][myEndDay[i]][0][0], movementData[i][myEndDay[i]][0][1], movementData[i][myEndDay[i]][0][2]))
+    lineList[i][1].setStart(Vector3(movementData[i][myStartDay[i]][0][0]+XYOFFSET+TEXTOFFSET,
+                                    movementData[i][myStartDay[i]][0][1],
+                                    movementData[i][myStartDay[i]][0][2]+STARTOFFSET))
+    lineList[i][2].setStart(Vector3(movementData[i][myEndDay[i]][0][0]-XYOFFSET+TEXTOFFSET,
+                                    movementData[i][myEndDay[i]][0][1],
+                                    movementData[i][myEndDay[i]][0][2]+ENDOFFSET))
+    lineList[i][1].setEnd(Vector3(movementData[i][myStartDay[i]][0][0],
+                                  movementData[i][myStartDay[i]][0][1],
+                                  movementData[i][myStartDay[i]][0][2]))
+    lineList[i][2].setEnd(Vector3(movementData[i][myEndDay[i]][0][0],
+                                  movementData[i][myEndDay[i]][0][1],
+                                  movementData[i][myEndDay[i]][0][2]))
     lineList[i][1].setThickness(5)
     lineList[i][2].setThickness(5)
     lineList[i][0].setEffect('colored -e #800020')
-    lineList[i].append(SphereShape.create(5/2,2))
-    lineList[i].append(SphereShape.create(5/2,2))
-    lineList[i][3].setPosition(Vector3(movementData[i][myStartDay[i]][0][0]+XYOFFSET+TEXTOFFSET, movementData[i][myStartDay[i]][0][1], movementData[i][myStartDay[i]][0][2]+STARTOFFSET))
-    lineList[i][4].setPosition(Vector3(movementData[i][myEndDay[i]][0][0]-XYOFFSET+TEXTOFFSET, movementData[i][myEndDay[i]][0][1], movementData[i][myEndDay[i]][0][2]+ENDOFFSET))
+    lineList[i].append(SphereShape.create(5/2, 2))
+    lineList[i].append(SphereShape.create(5/2, 2))
+    lineList[i][3].setPosition(Vector3(movementData[i][myStartDay[i]][0][0]+XYOFFSET+TEXTOFFSET,
+                                       movementData[i][myStartDay[i]][0][1],
+                                       movementData[i][myStartDay[i]][0][2]+STARTOFFSET))
+    lineList[i][4].setPosition(Vector3(movementData[i][myEndDay[i]][0][0]-XYOFFSET+TEXTOFFSET,
+                                       movementData[i][myEndDay[i]][0][1],
+                                       movementData[i][myEndDay[i]][0][2]+ENDOFFSET))
     lineList[i][3].setEffect('colored -e #800020')
     lineList[i][4].setEffect('colored -e #800020')
 
@@ -352,15 +364,17 @@ imgResRatioY = 0.18/(float(9850)/30780)
 # plane.setPosition(Vector3(imgResRatioX*10260/2, imgResRatioY*9850/2, 0))      #2D plane image
 # plane.setEffect("textured -v emissive -d 50Island.png")
 
-getDefaultCamera().setPosition(imgResRatioX*10260/2, imgResRatioY*9850/2, 2500) #Default position for camera
-getDefaultCamera().setBackgroundColor(Color('black'))                           #sets background to black
+getDefaultCamera().setPosition(imgResRatioX*10260/2, imgResRatioY*9850/2, 2500) #Default position
+                                                                                #or camera
+getDefaultCamera().setBackgroundColor(Color('black'))                           #sets background 
+                                                                                #to black
 
 #---------------------------------------------------------------------------
 #Cylinder and Sphere Version
 
-allAnimals = createCustomGeom()#createCustomGeom(f, scene, 'allAnimals')             #Read data into movementData
+allAnimals = createCustomGeom()                             #Read data into movementData
 
-allMat = allAnimals.getMaterial()                                 #Get material of movement data geometry
+allMat = allAnimals.getMaterial()                           #Get material of movement data geometry
 allMat.setTransparent(True)
 allMat.setProgram(moveLineProgram.name)
 allMat.attachUniform(startDay)
@@ -370,7 +384,9 @@ allMat.attachUniform(bitMapSelectedIndividuals)
 
 for i in range(0, 21):
     lastPointSphere.append(SphereShape.create(8, 4))
-    lastPointSphere[i].setPosition(Vector3(movementData[i][myEndDay[i]][0][0], movementData[i][myEndDay[i]][0][1], movementData[i][myEndDay[i]][0][2]))
+    lastPointSphere[i].setPosition(Vector3(movementData[i][myEndDay[i]][0][0],
+                                           movementData[i][myEndDay[i]][0][1],
+                                           movementData[i][myEndDay[i]][0][2]))
     setLastSphereColor(i, 0)
 
 for i in range(0, 21):           #Set up Lines to Text
@@ -380,10 +396,12 @@ for i in range(0, 21):           #Set up Lines to Text
 
 for i in range(0, 21):           #Set up START and END text
     txtArr.append([])
-    txtArr[i].append(Text3D.create('fonts/RobotoCondensed-Regular.ttf', 25, str(namesOfIndividuals[i])+" Start"))
+    txtArr[i].append(Text3D.create('fonts/RobotoCondensed-Regular.ttf', 25,
+                                   str(namesOfIndividuals[i])+" Start"))
     txtArr[i][0].setFontResolution(500)
     txtArr[i][0].setColor(Color('#800020'))
-    txtArr[i].append(Text3D.create('fonts/RobotoCondensed-Regular.ttf', 25, str(namesOfIndividuals[i])+" End"))
+    txtArr[i].append(Text3D.create('fonts/RobotoCondensed-Regular.ttf', 25,
+                                   str(namesOfIndividuals[i])+" End"))
     txtArr[i][1].setFontResolution(500)
     txtArr[i][1].setColor(Color('#800020'))
     txtArr[i][0].setFacingCamera(getDefaultCamera())
@@ -395,7 +413,9 @@ for i in range(0, 21):
     uiModuleTxt.append([])
     uiModuleTxt[i].append(Label.create(mainLayout))
     uiModuleTxt[i][0].setFont('fonts/RobotoCondensed-Light.ttf 40')
-    uiModuleTxt[i][0].setText(namesOfIndividuals[i]+": "+str(startDateByIndividual[i]+timedelta(days=myStartDay[i]))+" - "+str(startDateByIndividual[i]+timedelta(days=myEndDay[i])))
+    uiModuleTxt[i][0].setText(namesOfIndividuals[i] + ": " + str(startDateByIndividual[i] + \
+                              timedelta(days=myStartDay[i])) + " - " + \
+                              str(startDateByIndividual[i] + timedelta(days=myEndDay[i])))
     if i == 1:
         uiModuleTxt[i][0].setColor(Color('#FFFFFF'))
     else:
@@ -438,7 +458,7 @@ scene.addProgram(movePointProgram)
 movePointCloudModel = ModelInfo()
 movePointCloudModel.name = 'movePointCloud'
 movePointCloudModel.path = 'gpsMovement/all.xyzb'
-movePointCloudModel.options = "10000 100:1000000:1 20:100:1 6:20:1 0:5:1"
+movePointCloudModel.options = '10000 100:1000000:1 20:100:1 6:20:1 0:5:1'
 scene.loadModel(movePointCloudModel)
 
 movePointCloud = StaticObject.create(movePointCloudModel.name)
@@ -459,10 +479,10 @@ moveMat.attachUniform(movePointScale)
 toggleTrees = Uniform.create('toggleTrees', UniformType.Int, 1)
 toggleTrees.setInt(toggleHighlight)
 pointProgram = ProgramAsset()
-pointProgram.name = "points"
-pointProgram.vertexShaderName = "islandShaders/Sphere.vert"
-pointProgram.fragmentShaderName = "islandShaders/Sphere.frag"
-pointProgram.geometryShaderName = "islandShaders/Sphere.geom"
+pointProgram.name = 'points'
+pointProgram.vertexShaderName = 'islandShaders/Sphere.vert'
+pointProgram.fragmentShaderName = 'islandShaders/Sphere.frag'
+pointProgram.geometryShaderName = 'islandShaders/Sphere.geom'
 pointProgram.geometryOutVertices = 4
 pointProgram.geometryInput = PrimitiveType.Points
 pointProgram.geometryOutput = PrimitiveType.TriangleStrip
@@ -476,7 +496,7 @@ globalAlpha.setFloat(1)
 pointCloudModel = ModelInfo()
 pointCloudModel.name = 'pointCloud'
 pointCloudModel.path = '/iridium_SSD/panama/hmColorHigh.xyzb'
-pointCloudModel.options = "10000 100:1000000:40 20:100:20 6:20:15 0:5:20"
+pointCloudModel.options = '10000 100:1000000:40 20:100:20 6:20:15 0:5:20'
 scene.loadModel(pointCloudModel)
 
 pointCloud = StaticObject.create(pointCloudModel.name)
@@ -527,7 +547,7 @@ def markTrees(value):
     global toggleTrees
     global treeNode
 
-    if (value == 1):
+    if value == 1:
         toggleTrees = not toggleTrees
         treeNode.setChildrenVisible(toggleTrees)
 
@@ -588,20 +608,20 @@ def onUpdate(frame, time, dt):
 
     hasCameraMoved = False
 
-    if (drawnCamPos[0]+5 < xPos or drawnCamPos[0]-5 > xPos) or (drawnCamPos[1]+5 < yPos or drawnCamPos[1]-5 > yPos) or (drawnCamPos[2]+5 < zPos or drawnCamPos[2]-5 > zPos):
+    if (drawnCamPos[0]+5 < xPos or drawnCamPos[0]-5 > xPos) or (drawnCamPos[1]+5 < yPos or \
+        drawnCamPos[1]-5 > yPos) or (drawnCamPos[2]+5 < zPos or drawnCamPos[2]-5 > zPos):
         hasCameraMoved = True
 
-    
     while lineList and hasCameraMoved:
         line = lineList.pop()
         c2.removeLine(line)
-        
-    if (toggleLineToTrees and hasCameraMoved):
+
+    if toggleLineToTrees and hasCameraMoved:
         thickness2 = 3
         for node in treeList:
             vec = Vector3(node[0], node[1], node[2]*0.18)
             camVec = getDefaultCamera().getPosition()
-            if (abs(vec - camVec) <= 100):
+            if abs(vec - camVec) <= 100:
                 lineList.append(c2.addLine())
                 lineList[numLines].setStart(vec)
                 vec2 = vec - camVec
@@ -651,8 +671,14 @@ def oneDayStepUp(value):
     
     setLinePos(lineToTxt, value)
     
-    lastPointSphere[value].setPosition(Vector3(movementData[value][myEndDay[value]][0][0], movementData[value][myEndDay[value]][0][1], movementData[value][myEndDay[value]][0][2]))
-    uiModuleTxt[value][0].setText(namesOfIndividuals[value] + ": " + str(startDateByIndividual[value]+timedelta(days=myStartDay[value]))+" - "+str(startDateByIndividual[value]+timedelta(days=myEndDay[value])))
+    lastPointSphere[value].setPosition(Vector3(movementData[value][myEndDay[value]][0][0],
+                                               movementData[value][myEndDay[value]][0][1],
+                                               movementData[value][myEndDay[value]][0][2]))
+    uiModuleTxt[value][0].setText(namesOfIndividuals[value] + ": " + \
+                                  str(startDateByIndividual[value] + \
+                                  timedelta(days=myStartDay[value])) + " - " + \
+                                  str(startDateByIndividual[value] + \
+                                  timedelta(days=myEndDay[value])))
 
 
 def globalOneDayStepUp(value):
@@ -670,7 +696,6 @@ def globalOneDayStepUp(value):
     global uiModuleTxt
     global lastPointSphere
 
-
     for i in range(0, 21):
         myStartDay[i] = myStartDay[i] + 1
         if myStartDay[i] > numberOfDaysByIndividual[i]:
@@ -682,8 +707,12 @@ def globalOneDayStepUp(value):
         #Update text positions to location of animals
         setTextPos(txtArr, i)
         setLinePos(lineToTxt, i)
-        lastPointSphere[i].setPosition(Vector3(movementData[i][myEndDay[i]][0][0], movementData[i][myEndDay[i]][0][1], movementData[i][myEndDay[i]][0][2]))
-        uiModuleTxt[i][0].setText(namesOfIndividuals[i] + ": " + str(startDateByIndividual[i]+timedelta(days=myStartDay[i]))+" - "+str(startDateByIndividual[i]+timedelta(days=myEndDay[i])))
+        lastPointSphere[i].setPosition(Vector3(movementData[i][myEndDay[i]][0][0],
+                                               movementData[i][myEndDay[i]][0][1],
+                                               movementData[i][myEndDay[i]][0][2]))
+        uiModuleTxt[i][0].setText(namesOfIndividuals[i] + ": " + str(startDateByIndividual[i] + \
+                                  timedelta(days=myStartDay[i])) + " - " + \
+                                  str(startDateByIndividual[i] + timedelta(days=myEndDay[i])))
 
 
 def oneDayStepDown(value):
@@ -714,8 +743,14 @@ def oneDayStepDown(value):
     setTextPos(txtArr, value)
     setLinePos(lineToTxt, value)
 
-    lastPointSphere[value].setPosition(Vector3(movementData[value][myEndDay[value]][0][0], movementData[value][myEndDay[value]][0][1], movementData[value][myEndDay[value]][0][2]))
-    uiModuleTxt[value][0].setText(namesOfIndividuals[value] + ": " + str(startDateByIndividual[value]+timedelta(days=myStartDay[value]))+" - "+str(startDateByIndividual[value]+timedelta(days=myEndDay[value])))
+    lastPointSphere[value].setPosition(Vector3(movementData[value][myEndDay[value]][0][0],
+                                               movementData[value][myEndDay[value]][0][1],
+                                               movementData[value][myEndDay[value]][0][2]))
+    uiModuleTxt[value][0].setText(namesOfIndividuals[value] + ": " + \
+                                  str(startDateByIndividual[value] + \
+                                  timedelta(days=myStartDay[value])) + " - " + \
+                                  str(startDateByIndividual[value] + \
+                                  timedelta(days=myEndDay[value])))
 
 
 def globalOneDayStepDown(value):
@@ -742,8 +777,12 @@ def globalOneDayStepDown(value):
         startDay.setIntElement(myStartDay[i], i)
         setTextPos(txtArr, i)
         setLinePos(lineToTxt, i)
-        lastPointSphere[i].setPosition(Vector3(movementData[i][myEndDay[i]][0][0], movementData[i][myEndDay[i]][0][1], movementData[i][myEndDay[i]][0][2]))
-        uiModuleTxt[i][0].setText(namesOfIndividuals[i] + ": " + str(startDateByIndividual[i]+timedelta(days=myStartDay[i]))+" - "+str(startDateByIndividual[i]+timedelta(days=myEndDay[i])))
+        lastPointSphere[i].setPosition(Vector3(movementData[i][myEndDay[i]][0][0],
+                                               movementData[i][myEndDay[i]][0][1],
+                                               movementData[i][myEndDay[i]][0][2]))
+        uiModuleTxt[i][0].setText(namesOfIndividuals[i] + ": " + str(startDateByIndividual[i] + \
+                                  timedelta(days=myStartDay[i])) + " - " + \
+                                  str(startDateByIndividual[i] + timedelta(days=myEndDay[i])))
 
 
 def sevenDayStepUp(value):
@@ -774,8 +813,14 @@ def sevenDayStepUp(value):
     setTextPos(txtArr, value)
     setLinePos(lineToTxt, value)
 
-    lastPointSphere[value].setPosition(Vector3(movementData[value][myEndDay[value]][0][0], movementData[value][myEndDay[value]][0][1], movementData[value][myEndDay[value]][0][2]))
-    uiModuleTxt[value][0].setText(namesOfIndividuals[value] + ": " + str(startDateByIndividual[value]+timedelta(days=myStartDay[value]))+" - "+str(startDateByIndividual[value]+timedelta(days=myEndDay[value])))
+    lastPointSphere[value].setPosition(Vector3(movementData[value][myEndDay[value]][0][0],
+                                               movementData[value][myEndDay[value]][0][1],
+                                               movementData[value][myEndDay[value]][0][2]))
+    uiModuleTxt[value][0].setText(namesOfIndividuals[value] + ": " + \
+                                  str(startDateByIndividual[value] + \
+                                  timedelta(days=myStartDay[value])) + " - " + \
+                                  str(startDateByIndividual[value] + \
+                                  timedelta(days=myEndDay[value])))
 
 
 def globalSevenDayStepUp(value):
@@ -803,8 +848,12 @@ def globalSevenDayStepUp(value):
         startDay.setIntElement(myStartDay[i], i)
         setTextPos(txtArr, i)
         setLinePos(lineToTxt, i)
-        lastPointSphere[i].setPosition(Vector3(movementData[i][myEndDay[i]][0][0], movementData[i][myEndDay[i]][0][1], movementData[i][myEndDay[i]][0][2]))
-        uiModuleTxt[i][0].setText(namesOfindividuals[i] + ": " + str(startDateByIndividual[i]+timedelta(days=myStartDay[i]))+" - "+str(startDateByIndividual[i]+timedelta(days=myEndDay[i])))
+        lastPointSphere[i].setPosition(Vector3(movementData[i][myEndDay[i]][0][0],
+                                               movementData[i][myEndDay[i]][0][1],
+                                               movementData[i][myEndDay[i]][0][2]))
+        uiModuleTxt[i][0].setText(namesOfindividuals[i] + ": " + str(startDateByIndividual[i] + \
+                                  timedelta(days=myStartDay[i])) + " - " + \
+                                  str(startDateByIndividual[i] + timedelta(days=myEndDay[i])))
 
 
 def sevenDayStepDown(value):
@@ -834,8 +883,14 @@ def sevenDayStepDown(value):
     startDay.setIntElement(myStartDay[value], value)
     setTextPos(txtArr, value)
     setLinePos(lineToTxt, value)
-    lastPointSphere[value].setPosition(Vector3(movementData[value][myEndDay[value]][0][0], movementData[value][myEndDay[value]][0][1], movementData[value][myEndDay[value]][0][2]))
-    uiModuleTxt[value][0].setText(namesOfIndividuals[value] + ": " + str(startDateByIndividual[value]+timedelta(days=myStartDay[value]))+" - "+str(startDateByIndividual[value]+timedelta(days=myEndDay[value])))
+    lastPointSphere[value].setPosition(Vector3(movementData[value][myEndDay[value]][0][0],
+                                               movementData[value][myEndDay[value]][0][1],
+                                               movementData[value][myEndDay[value]][0][2]))
+    uiModuleTxt[value][0].setText(namesOfIndividuals[value] + ": " + \
+                                  str(startDateByIndividual[value] + \
+                                  timedelta(days=myStartDay[value])) + " - " + \
+                                  str(startDateByIndividual[value] + \
+                                  timedelta(days=myEndDay[value])))
 
 
 def globalSevenDayStepDown(value):
@@ -862,8 +917,13 @@ def globalSevenDayStepDown(value):
         startDay.setIntElement(myStartDay[i], i)
         setTextPos(txtArr, i)
         setLinePos(lineToTxt, i)
-        lastPointSphere[i].setPosition(Vector3(movementData[i][myEndDay[i]][0][0], movementData[i][myEndDay[i]][0][1], movementData[i][myEndDay[i]][0][2]))
-        uiModuleTxt[i][0].setText(namesOfIndividuals[i] + ": " + str(startDateByIndividual[i]+timedelta(days=myStartDay[i]))+" - "+str(startDateByIndividual[i]+timedelta(days=myEndDay[i])))
+        lastPointSphere[i].setPosition(Vector3(movementData[i][myEndDay[i]][0][0],
+                                               movementData[i][myEndDay[i]][0][1],
+                                               movementData[i][myEndDay[i]][0][2]))
+        uiModuleTxt[i][0].setText(namesOfIndividuals[i] + ": " + \
+                                  str(startDateByIndividual[i] + timedelta(days=myStartDay[i])) + \
+                                  " - " + str(startDateByIndividual[i] + \
+                                  timedelta(days=myEndDay[i])))
 
 
 def allDay(value):
@@ -891,8 +951,14 @@ def allDay(value):
     startDay.setIntElement(0, value)
     setTextPos(txtArr, value)
     setLinePos(lineToTxt, value)
-    lastPointSphere[value].setPosition(Vector3(movementData[value][myEndDay[value]][0][0], movementData[value][myEndDay[value]][0][1], movementData[value][myEndDay[value]][0][2]))
-    uiModuleTxt[value][0].setText(namesOfIndividuals[value] + ": " + str(startDateByIndividual[value]+timedelta(days=myStartDay[value]))+" - "+str(startDateByIndividual[value]+timedelta(days=myEndDay[value])))
+    lastPointSphere[value].setPosition(Vector3(movementData[value][myEndDay[value]][0][0],
+                                               movementData[value][myEndDay[value]][0][1],
+                                               movementData[value][myEndDay[value]][0][2]))
+    uiModuleTxt[value][0].setText(namesOfIndividuals[value] + ": " + \
+                                  str(startDateByIndividual[value] + \
+                                  timedelta(days=myStartDay[value])) + \
+                                  " - " + str(startDateByIndividual[value] + \
+                                  timedelta(days=myEndDay[value])))
 
 
 def globalAllDay(value):
@@ -914,8 +980,12 @@ def globalAllDay(value):
         startDay.setIntElement(0, i)
         setTextPos(txtArr, i)
         setLinePos(lineToTxt, i)
-        lastPointSphere[i].setPosition(Vector3(movementData[i][myEndDay[i]][0][0], movementData[i][myEndDay[i]][0][1], movementData[i][myEndDay[i]][0][2]))
-        uiModuleTxt[i][0].setText(namesOfIndividuals[i] + ": " + str(startDateByIndividual[i]+timedelta(days=myStartDay[i]))+" - "+str(startDateByIndividual[i]+timedelta(days=myEndDay[i])))
+        lastPointSphere[i].setPosition(Vector3(movementData[i][myEndDay[i]][0][0],
+                                               movementData[i][myEndDay[i]][0][1], 
+                                               movementData[i][myEndDay[i]][0][2]))
+        uiModuleTxt[i][0].setText(namesOfIndividuals[i] + ": " + str(startDateByIndividual[i] + \
+                                  timedelta(days=myStartDay[i]))+ " - " + \
+                                  str(startDateByIndividual[i] + timedelta(days=myEndDay[i])))
 
 
 def setColorBy(individual, value):
@@ -949,7 +1019,11 @@ def setSelInd(value):
         textNodeList[value].setChildrenVisible(True)
         uiModuleTxt[value][0].setColor(Color('#FFFFFF'))
 
-    uiModuleTxt[value][0].setText(namesOfIndividuals[value] + ": " + str(startDateByIndividual[value]+timedelta(days=myStartDay[value]))+" - "+str(startDateByIndividual[value]+timedelta(days=myEndDay[value])))
+    uiModuleTxt[value][0].setText(namesOfIndividuals[value] + ": " + \
+                                  str(startDateByIndividual[value] + \
+                                  timedelta(days=myStartDay[value])) + " - " + \
+                                  str(startDateByIndividual[value] + \
+                                  timedelta(days=myEndDay[value])))
 
 
 def onPointSizeSliderValueChanged(value):
@@ -970,10 +1044,10 @@ def onAlphaSliderValueChanged(value):
     '''
 
     if value != 0:
-        a = value/10.0
+        alpha = value/10.0
     else:
-        a = 0.0
-    globalAlpha.setFloat(a)
+        alpha = 0.0
+    globalAlpha.setFloat(alpha)
 
 
 def viewVertical(value):
