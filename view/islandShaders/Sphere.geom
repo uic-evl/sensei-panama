@@ -9,21 +9,19 @@ flat out vec4 eye_position;
 flat out float sphere_radius;
 
 uniform float globalAlpha;
-uniform int toggleHighlight;
+uniform int toggleTrees;
 
 void
 main(void)
 {
 	sphere_radius =  pointScale * 2.0;
 	float halfsize = sphere_radius * 0.5;
-
-    if (toggleHighlight == 1) {
-	   gl_FrontColor = gl_FrontColorIn[0];
+    gl_FrontColor = gl_FrontColorIn[0];
+    if (toggleTrees == 1) {
 	   gl_FrontColor.a = globalAlpha;
     }
     else {
-        if (gl_FrontColor.r > gl_FrontColor.g && gl_FrontColor.b > gl_FrontColor.g && 
-           ((gl_FrontColor.r*255 - gl_FrontColor.g*255) > 7) && 
+        if (((gl_FrontColor.r*255 - gl_FrontColor.g*255) > 7) && 
            (gl_FrontColor.r*255 > 37) && (gl_FrontColor.r*255 < 160) &&
            ((gl_FrontColor.b*255 - gl_FrontColor.g*255) > 1) &&
            (gl_FrontColor.b*255 > 36) && (gl_FrontColor.b*255 < 140)) {
@@ -31,7 +29,7 @@ main(void)
             gl_FrontColor.a = 1.0;
         }
         else {
-            gl_FrontColor.a = 0.3;
+            gl_FrontColor.a = 0.1;
         }
     }
 

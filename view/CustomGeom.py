@@ -69,7 +69,7 @@ def createCustomGeom():       #Function parses file and creates lines
     for line in f:
         if line == '-999':
             break
-        #numberOfDaysByIndividual = [85, 70, 78, 80, 54, 18, 83, 80, 79, 67, 65, 72, 73, 71, 72, 67, 82, 86, 35, 39, 2]
+
         if firstRun:
             tokens = line.split(" ")
             prevDayDelta = tokens[3]
@@ -78,7 +78,9 @@ def createCustomGeom():       #Function parses file and creates lines
             movementData.append([])
             movementData[individualIter].append([])
             #Inputs x, y, z, hr, minute, day of gps point
-            movementData[individualIter][dayIter].append((float(tokens[0]), float(tokens[1]), float(tokens[2]), tokens[4], tokens[5], tokens[3]))
+            movementData[individualIter][dayIter].append((float(tokens[0]), float(tokens[1]),
+                                                          float(tokens[2]), int(tokens[4]),
+                                                          int(tokens[5]), int(tokens[3])))
             prevID = tokens[6]
             prevDayDelta = tokens[3]
         else:
@@ -91,13 +93,17 @@ def createCustomGeom():       #Function parses file and creates lines
                 dayIter = 0
                 movementData[individualIter].append([])
                 #Inputs x, y, z, hr, minute of gps point
-                movementData[individualIter][dayIter].append((float(tokens2[0]), float(tokens2[1]), float(tokens2[2]), tokens2[4], tokens2[5], tokens[3]))
+                movementData[individualIter][dayIter].append((float(tokens2[0]), float(tokens2[1]),
+                                                              float(tokens2[2]), int(tokens[4]),
+                                                              int(tokens[5]), int(tokens[3])))
             else:
                 #Inputs x, y, z, hr, minute of gps point
                 if (prevDayDelta != tokens2[3]):
                     movementData[individualIter].append([])
                     dayIter += 1
-                movementData[individualIter][dayIter].append((float(tokens2[0]), float(tokens2[1]), float(tokens2[2]), tokens2[4], tokens2[5], tokens[3]))
+                movementData[individualIter][dayIter].append((float(tokens2[0]), float(tokens2[1]),
+                                                              float(tokens2[2]), int(tokens[4]),
+                                                              int(tokens[5]), int(tokens[3])))
 
 
             pos1 = Vector3(float(tokens[0]), float(tokens[1]), float(tokens[2]))
