@@ -102,8 +102,8 @@ def createCustomGeom():       #Function parses file and creates lines
                     movementData[individualIter].append([])
                     dayIter += 1
                 movementData[individualIter][dayIter].append((float(tokens2[0]), float(tokens2[1]),
-                                                              float(tokens2[2]), int(tokens[4]),
-                                                              int(tokens[5]), int(tokens[3])))
+                                                              float(tokens2[2]), int(tokens2[4]),
+                                                              int(tokens2[5]), int(tokens2[3])))
 
 
             pos1 = Vector3(float(tokens[0]), float(tokens[1]), float(tokens[2]))
