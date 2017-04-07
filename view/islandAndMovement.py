@@ -6,6 +6,7 @@ from datetime import *
 
 from CustomGeom import *
 from MenuOptions import *
+from caveutilcustom import *
 
 def setLastSphereColor(individual, value):
     '''
@@ -367,8 +368,11 @@ STARTTXTOFFSET = 310              # Z offset for start text
 ENDTXTOFFSET = 410                # Z offset for end text
 currentYaw = 0
 currentPitch = 0
+currentRoll = 0
 toggleTrees = False
 toggleHighlight = 1
+hasCameraMoved = False
+drawnCamPos = getDefaultCamera().getPosition()
 
 txtArr = []                       # textArray of Individuals txtArr[individualID]
 textNodeList = []                 # text SceneNode of Individuals textNodeList[individualID]
@@ -376,6 +380,104 @@ lineToTxt = []                    # Lines to text
 uiModuleTxt = []                  # UI Module Text
 lastPointSphere = []              # List of Sphere objects for last point in current dataset
 
+#---------------------------------------------------------------------------
+#Traversal setting, constants, functions
+
+
+posArray = []                     # List of positions for traversal
+oriArray = []                     # List of orientations for traversal
+ghost = SceneNode.create('ghost') # ghost scene node for orientation array filling
+g_arrayTraversal = 0
+
+# interpolation actor 
+g_arrow = caveutil.loadObject(getSceneManager(), "arrow", "arrow2.fbx", False, False, False, True, False)
+
+# actor settings
+interp = InterpolActor(g_arrow)
+interp.setTransitionType(InterpolActor.SMOOTH)                      # Use SMOOTH ease-in/ease-out interpolation rather than LINEAR
+interp.setPositionDuration(3)                                       # position interpolation time
+interp.setOrientationDuration(1)                                    # orientation interpolation time
+interp.setOperation(InterpolActor.POSITION | InterpolActor.ORIENT)  # Interpolate both position and orientation
+
+# fill Position Array for Traversal
+def fillArray():
+  global posArray
+  global bitMapSelectedIndividuals
+
+  found = False
+  fir = False
+
+  print("in fill array")
+ 
+  for i in range(0, 21):
+    if (bitMapSelectedIndividuals.getIntElement(i) == 1 and not found):
+      found = True
+      print('The Monkey Selected is {}'.format(namesOfIndividuals[i]))
+      print('The days shown is from: {} to: {}'.format(myStartDay[i]+1,myEndDay[i]+1))
+
+      for time in range(myStartDay[i], myEndDay[i]):
+        print('Points in Day {}: {}'.format(time,len(movementData[i][time])))
+        for point in movementData[i][time]:
+          posArray.append(Vector3(point[0], point[1], point[2]))
+          '''
+          if(fir == False):
+            s = SphereShape.create(20,4)
+            s.setEffect('colored -e blue')
+            s.setPosition(posArray[-1]+Vector3(0,.5,0))
+            fir = True
+          else:
+            s = SphereShape.create(10,4)
+            s.setEffect('colored -e red')
+            s.setPosition(posArray[-1]+Vector3(0,.5,0))
+          '''
+
+  print('Position Array Len: {}'.format(len(posArray)))
+    # animate()  
+
+# create Orientation List from position array
+def createOrientationList(interpObj):
+  global posArray
+  global oriArray
+  global ghost
+
+  ghost.setPosition(posArray[0])
+  
+  index = 0
+    
+  if not oriArray:
+
+    ghost.lookAt(getDefaultCamera().getPosition(), Vector3(0, 1, 0))
+    oriArray.append(ghost.getOrientation())
+    index = index+1
+    ghost.setPosition(posArray[index])
+
+    while(index < (len(posArray))):
+
+      ghost.lookAt(posArray[index-1], Vector3(0, 1, 0))
+      oriArray.append(ghost.getOrientation())
+      index = index+1
+
+      if(index < len(posArray)):
+        ghost.setPosition(posArray[index])
+
+    oriArray.append(oriArray[-1])
+  print('Orientation Array Len: {}'.format(len(oriArray)))
+
+# This function is used to iterate over the stored navigation waypoints.
+def WaypointTraversalFunc(interpObj):
+  global g_arrayTraversal
+  global posArray
+  
+  if g_arrayTraversal < len(posArray):
+    
+    interpObj.setTargetPosition(posArray[g_arrayTraversal] + Vector3(0,.5,0))
+    interpObj.setTargetOrientation(oriArray[g_arrayTraversal])
+    interpObj.startInterpolation()
+    g_arrayTraversal = g_arrayTraversal + 1  
+
+# Tell the camera's InterpolActor to call the WaypointTraversalFunc at the end of each interpolated waypoint so that it can cue up
+# the next waypoint.
+interp.setEndOfInterpolationFunction(WaypointTraversalFunc)
 #----------------------------------------------------------------------------
 #UI Module code
 
@@ -582,7 +684,7 @@ pointMat.setTransparent(True)
 pointMat.setProgram(pointProgram.name)
 pointMat.attachUniform(pointScale)
 pointMat.attachUniform(globalAlpha)
-pointMat.attachUniform(toggleTrees)
+pointMat.attachUniform(toggleHighlight)
 
 #btnAll.setRadio(True)
 
@@ -619,6 +721,7 @@ trees.close()
 treeNode.addChild(c1)
 treeNode.setChildrenVisible(False)
 
+
 def markTrees(value):
     global toggleTrees
     global treeNode
@@ -635,6 +738,7 @@ toggleLineToTrees = False
 lineList = []
 numLines = 0
 
+
 def drawLinesToTrees(value):
     '''
     Turns line mode to trees on or off
@@ -646,9 +750,6 @@ def drawLinesToTrees(value):
         toggleLineToTrees = not toggleLineToTrees
 
 
-hasCameraMoved = False
-drawnCamPos = getDefaultCamera().getPosition()
-
 def highlightTrees(value):
     '''
     Reduces alpha for all non fruit trees
@@ -657,10 +758,10 @@ def highlightTrees(value):
     global toggleTrees
 
     if toggleHighlight == 1:
-        toggleHighlight = 2
+        toggleHighlight.setInt(2)
     else:
-        toggleHighlight = 1
-    toggleTrees.setInt(toggleHighlight)
+        toggleHighlight.setInt(1)
+
 
 def onUpdate(frame, time, dt):
     '''
@@ -675,6 +776,7 @@ def onUpdate(frame, time, dt):
     global drawnCamPos
     global movementData
     global textNodeList
+
 
     #Draw Lines To Trees Code#########################################################################
     currCamPos = getDefaultCamera().getPosition()
@@ -716,7 +818,13 @@ def onUpdate(frame, time, dt):
 
         #showOtherTrees.addChild(c2)
 setUpdateFunction(onUpdate)
-        
+
+# if isMaster():
+#     UDP_IP = '131.193.76.77'
+#     UDP_PORT = 8081
+#     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+#     singlePoint = ['a', movementData[1][myStartDay[1]][0][0], movementData[1][myStartDay[1]][0][1], movementData[1][myStartDay[1]][0][2]]
+#     sock.sendto(bytes(singlePoint), (UDP_IP, UDP_PORT))
 
 #--------------------------------------------------------------------------------------
 #Functions
@@ -1149,7 +1257,7 @@ def viewHorizontal(value):
     global currentPitch
     if value == 1:
         currentPitch = 45
-        getDefaultCamera().setPitchYawRoll(Vector3(currentPitch, currentYaw,0))
+        getDefaultCamera().setPitchYawRoll(Vector3(currentPitch, currentYaw, 0))
         getDefaultCamera().setPosition(Vector3(imgResRatioX*10260/2, 0, 500))
 
 
@@ -1157,6 +1265,9 @@ def viewHorizontal(value):
 #  EVENT HANDLERS
 def handleEvent():
     global currentPitch
+    global g_arrayTraversal
+    global posArray
+    global oriArray
 
     e = getEvent()
     analogUD = e.getAxis(1)
@@ -1184,6 +1295,18 @@ def handleEvent():
         print "Button5 Pushed"
         getDefaultCamera().setPosition(Vector3(imgResRatioX*10260/2, 0, 500))
         getDefaultCamera().lookAt(Vector3(imgResRatioX*10260/2, 0, 500), Vector3(0, .25, 0))
+
+    if (e.isKeyDown(ord('b')) or e.isButtonDown(EventFlags.ButtonLeft)):
+        print("setting up positon and orientation")
+        posArray = []
+        oriArray = []
+        fillArray()
+        createOrientationList(interp)
+
+    if (e.isKeyDown(ord('n')) or e.isButtonDown(EventFlags.ButtonRight)):
+        print("start traversal")
+        g_arrayTraversal = 0
+        WaypointTraversalFunc(interp)
 setEventFunction(handleEvent)
 
 # def handleEvent():

@@ -94,8 +94,8 @@ def createCustomGeom():       #Function parses file and creates lines
                 movementData[individualIter].append([])
                 #Inputs x, y, z, hr, minute of gps point
                 movementData[individualIter][dayIter].append((float(tokens2[0]), float(tokens2[1]),
-                                                              float(tokens2[2]), int(tokens[4]),
-                                                              int(tokens[5]), int(tokens[3])))
+                                                              float(tokens2[2]), int(tokens2[4]),
+                                                              int(tokens2[5]), int(tokens2[3])))
             else:
                 #Inputs x, y, z, hr, minute of gps point
                 if (prevDayDelta != tokens2[3]):
