@@ -21,230 +21,192 @@ def setLastSphereColor(individual, value):
         if movementData[individual][myEndDay[individual]][0][3] < 4:
             lastPointSphere[individual].getMaterial().setColor(Color(255.0/255.0, 255.0/255.0,
                                                                      204.0/255.0, 1.0),
-                                                               Color(255.0/255.0, 255.0/255.0,
-                                                                     204.0/255.0, 1.0))
+                                                               Color(0, 0, 0, 1.0))
         if movementData[individual][myEndDay[individual]][0][3] >= 4 and \
            movementData[individual][myEndDay[individual]][0][3] < 8:
             lastPointSphere[individual].getMaterial().setColor(Color(199.0/255.0, 233.0/255.0,
                                                                      180.0/255.0, 1.0),
-                                                               Color(199.0/255.0, 233.0/255.0,
-                                                                     180.0/255.0, 1.0))
+                                                               Color(0, 0, 0, 1.0))
         if movementData[individual][myEndDay[individual]][0][3] >= 8 and \
            movementData[individual][myEndDay[individual]][0][3] < 12:
             lastPointSphere[individual].getMaterial().setColor(Color(127.0/255.0, 205.0/255.0,
                                                                      187.0/255.0, 1.0),
-                                                               Color(127.0/255.0, 205.0/255.0,
-                                                                     187.0/255.0, 1.0))
+                                                               Color(0, 0, 0, 1.0))
         if movementData[individual][myEndDay[individual]][0][3] >= 12 and \
            movementData[individual][myEndDay[individual]][0][3] < 16:
             lastPointSphere[individual].getMaterial().setColor(Color(65.0/255.0, 182.0/255.0,
                                                                      196.0/255.0, 1.0),
-                                                               Color(65.0/255.0, 182.0/255.0,
-                                                                     196.0/255.0, 1.0))
+                                                               Color(0, 0, 0, 1.0))
         if movementData[individual][myEndDay[individual]][0][3] >= 16 and \
            movementData[individual][myEndDay[individual]][0][3] < 20:
             lastPointSphere[individual].getMaterial().setColor(Color(44.0/255.0, 127.0/255.0,
                                                                      184.0/255.0, 1.0),
-                                                               Color(44.0/255.0, 127.0/255.0,
-                                                                     184.0/255.0, 1.0))
+                                                               Color(0, 0, 0, 1.0))
         if movementData[individual][myEndDay[individual]][0][3] >= 20 and \
            movementData[individual][myEndDay[individual]][0][3] < 24:
             lastPointSphere[individual].getMaterial().setColor(Color(37.0/255.0, 52.0/255.0,
                                                                      148.0/255.0, 1.0),
-                                                               Color(37.0/255.0, 52.0/255.0,
-                                                                     148.0/255.0, 1.0))
+                                                               Color(0, 0, 0, 1.0))
     if value == 1:
         if movementData[individual][myEndDay[individual]][0][3] < 3:
             lastPointSphere[individual].getMaterial().setColor(Color(69.0/255.0, 117.0/255.0,
                                                                      180.0/255.0, 1.0),
-                                                               Color(69.0/255.0, 117.0/255.0,
-                                                                     180.0/255.0, 1.0))
+                                                               Color(0, 0, 0, 1.0))
         if movementData[individual][myEndDay[individual]][0][3] >= 3 and \
            movementData[individual][myEndDay[individual]][0][3] < 6:
             lastPointSphere[individual].getMaterial().setColor(Color(116.0/255.0, 173.0/255.0,
                                                                      209.0/255.0, 1.0),
-                                                               Color(116.0/255.0, 173.0/255.0,
-                                                                     209.0/255.0, 1.0))
+                                                               Color(0, 0, 0, 1.0))
         if movementData[individual][myEndDay[individual]][0][3] >= 6 and \
            movementData[individual][myEndDay[individual]][0][3] < 9:
             lastPointSphere[individual].getMaterial().setColor(Color(171.0/255.0, 217.0/255.0,
                                                                      233.0/255.0, 1.0),
-                                                               Color(171.0/255.0, 217.0/255.0,
-                                                                     233.0/255.0, 1.0))
+                                                               Color(0, 0, 0, 1.0))
         if movementData[individual][myEndDay[individual]][0][3] >= 9 and \
            movementData[individual][myEndDay[individual]][0][3] < 12:
             lastPointSphere[individual].getMaterial().setColor(Color(224.0/255.0, 243.0/255.0,
                                                                      248.0/255.0, 1.0),
-                                                               Color(224.0/255.0, 243.0/255.0,
-                                                                     248.0/255.0, 1.0))
+                                                               Color(0, 0, 0, 1.0))
         if movementData[individual][myEndDay[individual]][0][3] >= 12 and \
            movementData[individual][myEndDay[individual]][0][3] < 15:
             lastPointSphere[individual].getMaterial().setColor(Color(254.0/255.0, 224.0/255.0,
                                                                      144.0/255.0, 1.0),
-                                                               Color(254.0/255.0, 224.0/255.0,
-                                                                     144.0/255.0, 1.0))
+                                                               Color(0, 0, 0, 1.0))
         if movementData[individual][myEndDay[individual]][0][3] >= 15 and \
            movementData[individual][myEndDay[individual]][0][3] < 18:
             lastPointSphere[individual].getMaterial().setColor(Color(253.0/255.0, 174.0/255.0,
                                                                      97.0/255.0, 1.0),
-                                                               Color(253.0/255.0, 174.0/255.0,
-                                                                     97.0/255.0, 1.0))
+                                                               Color(0, 0, 0, 1.0))
         if movementData[individual][myEndDay[individual]][0][3] >= 18 and \
            movementData[individual][myEndDay[individual]][0][3] < 21:
             lastPointSphere[individual].getMaterial().setColor(Color(244.0/255.0, 109.0/255.0,
                                                                      67.0/255.0, 1.0),
-                                                               Color(244.0/255.0, 109.0/255.0,
-                                                                     67.0/255.0, 1.0))
+                                                               Color(0, 0, 0, 1.0))
         if movementData[individual][myEndDay[individual]][0][3] >= 21 and \
            movementData[individual][myEndDay[individual]][0][3] < 24:
             lastPointSphere[individual].getMaterial().setColor(Color(215.0/255.0, 48.0/255.0,
                                                                      39.0/255.0, 1.0),
-                                                               Color(215.0/255.0, 48.0/255.0,
-                                                                     39.0/255.0, 1.0))
+                                                               Color(0, 0, 0, 1.0))
     if value == 2:
         if movementData[individual][myEndDay[individual]][0][3] < 3:
             lastPointSphere[individual].getMaterial().setColor(Color(104.0/255.0, 79.0/255.0,
                                                                      227.0/255.0, 1.0),
-                                                               Color(104.0/255.0, 79.0/255.0,
-                                                                     227.0/255.0, 1.0))
+                                                               Color(0, 0, 0, 1.0))
         if movementData[individual][myEndDay[individual]][0][3] >= 3 and \
            movementData[individual][myEndDay[individual]][0][3] < 6:
             lastPointSphere[individual].getMaterial().setColor(Color(78.0/255.0, 181.0/255.0,
                                                                      226.0/255.0, 1.0),
-                                                               Color(78.0/255.0, 181.0/255.0,
-                                                                     226.0/255.0, 1.0))
+                                                               Color(0, 0, 0, 1.0))
         if movementData[individual][myEndDay[individual]][0][3] >= 6 and \
            movementData[individual][myEndDay[individual]][0][3] < 9:
             lastPointSphere[individual].getMaterial().setColor(Color(138.0/255.0, 227.0/255.0,
                                                                      244.0/255.0, 1.0),
-                                                               Color(138.0/255.0, 227.0/255.0,
-                                                                     244.0/255.0, 1.0))
+                                                               Color(0, 0, 0, 1.0))
         if movementData[individual][myEndDay[individual]][0][3] >= 9 and \
            movementData[individual][myEndDay[individual]][0][3] < 12:
             lastPointSphere[individual].getMaterial().setColor(Color(253.0/255.0, 247.0/255.0,
                                                                      155.0/255.0, 1.0),
-                                                               Color(253.0/255.0, 247.0/255.0,
-                                                                     155.0/255.0, 1.0))
+                                                               Color(0, 0, 0, 1.0))
         if movementData[individual][myEndDay[individual]][0][3] >= 12 and \
            movementData[individual][myEndDay[individual]][0][3] < 15:
             lastPointSphere[individual].getMaterial().setColor(Color(253.0/255.0, 222.0/255.0,
                                                                      115.0/255.0, 1.0),
-                                                               Color(253.0/255.0, 222.0/255.0,
-                                                                     115.0/255.0, 1.0))
+                                                               Color(0, 0, 0, 1.0))
         if movementData[individual][myEndDay[individual]][0][3] >= 15 and \
            movementData[individual][myEndDay[individual]][0][3] < 18:
             lastPointSphere[individual].getMaterial().setColor(Color(253.0/255.0, 247.0/255.0,
                                                                      155.0/255.0, 1.0),
-                                                               Color(253.0/255.0, 247.0/255.0,
-                                                                     155.0/255.0, 1.0))
+                                                               Color(0, 0, 0, 1.0))
         if movementData[individual][myEndDay[individual]][0][3] >= 18 and \
            movementData[individual][myEndDay[individual]][0][3] < 21:
             lastPointSphere[individual].getMaterial().setColor(Color(138.0/255.0, 227.0/255.0,
                                                                      244.0/255.0, 1.0),
-                                                               Color(138.0/255.0, 227.0/255.0,
-                                                                     244.0/255.0, 1.0))
+                                                               Color(0, 0, 0, 1.0))
         if movementData[individual][myEndDay[individual]][0][3] >= 21 and \
            movementData[individual][myEndDay[individual]][0][3] < 24:
             lastPointSphere[individual].getMaterial().setColor(Color(78.0/255.0, 181.0/255.0,
                                                                      226.0/255.0, 1.0),
-                                                               Color(78.0/255.0, 181.0/255.0,
-                                                                     226.0/255.0, 1.0))
+                                                               Color(0, 0, 0, 1.0))
     if value == 3:
         if movementData[individual][myEndDay[individual]][0][5] < 10:
             lastPointSphere[individual].getMaterial().setColor(Color(247.0/255.0, 251.0/255.0,
                                                                      255.0/255.0, 1.0),
-                                                               Color(247.0/255.0, 251.0/255.0,
-                                                                     255.0/255.0, 1.0))
+                                                               Color(0, 0, 0, 1.0))
         if movementData[individual][myEndDay[individual]][0][5] >= 10 and \
            movementData[individual][myEndDay[individual]][0][5] < 20:
             lastPointSphere[individual].getMaterial().setColor(Color(222.0/255.0, 235.0/255.0,
                                                                      247.0/255.0, 1.0),
-                                                               Color(222.0/255.0, 235.0/255.0,
-                                                                     247.0/255.0, 1.0))
+                                                               Color(0, 0, 0, 1.0))
         if movementData[individual][myEndDay[individual]][0][5] >= 20 and \
            movementData[individual][myEndDay[individual]][0][5] < 30:
             lastPointSphere[individual].getMaterial().setColor(Color(198.0/255.0, 219.0/255.0,
                                                                      239.0/255.0, 1.0),
-                                                               Color(198.0/255.0, 219.0/255.0,
-                                                                     239.0/255.0, 1.0))
+                                                               Color(0, 0, 0, 1.0))
         if movementData[individual][myEndDay[individual]][0][5] >= 30 and \
            movementData[individual][myEndDay[individual]][0][5] < 40:
             lastPointSphere[individual].getMaterial().setColor(Color(158.0/255.0, 202.0/255.0,
                                                                      225.0/255.0, 1.0),
-                                                               Color(158.0/255.0, 202.0/255.0,
-                                                                     225.0/255.0, 1.0))
+                                                               Color(0, 0, 0, 1.0))
         if movementData[individual][myEndDay[individual]][0][5] >= 40 and \
            movementData[individual][myEndDay[individual]][0][5] < 50:
             lastPointSphere[individual].getMaterial().setColor(Color(107.0/255.0, 174.0/255.0,
                                                                      214.0/255.0, 1.0),
-                                                               Color(107.0/255.0, 174.0/255.0,
-                                                                     214.0/255.0, 1.0))
+                                                               Color(0, 0, 0, 1.0))
         if movementData[individual][myEndDay[individual]][0][5] >= 50 and \
            movementData[individual][myEndDay[individual]][0][5] < 60:
             lastPointSphere[individual].getMaterial().setColor(Color(66.0/255.0, 146.0/255.0,
                                                                      198.0/255.0, 1.0),
-                                                               Color(66.0/255.0, 146.0/255.0,
-                                                                     198.0/255.0, 1.0))
+                                                               Color(0, 0, 0, 1.0))
         if movementData[individual][myEndDay[individual]][0][5] >= 60 and \
            movementData[individual][myEndDay[individual]][0][5] < 70:
             lastPointSphere[individual].getMaterial().setColor(Color(33.0/255.0, 113.0/255.0,
                                                                      181.0/255.0, 1.0),
-                                                               Color(33.0/255.0, 113.0/255.0,
-                                                                     181.0/255.0, 1.0))
+                                                               Color(0, 0, 0, 1.0))
         if movementData[individual][myEndDay[individual]][0][5] >= 70 and \
            movementData[individual][myEndDay[individual]][0][5] < 84:
             lastPointSphere[individual].getMaterial().setColor(Color(8.0/255.0, 81.0/255.0,
                                                                      156.0/255.0, 1.0),
-                                                               Color(8.0/255.0, 81.0/255.0,
-                                                                     156.0/255.0, 1.0))
+                                                               Color(0, 0, 0, 1.0))
     if value == 4:
         if movementData[individual][myEndDay[individual]][0][5] < 10:
             lastPointSphere[individual].getMaterial().setColor(Color(255.0/255.0, 247.0/255.0,
                                                                      243.0/255.0, 1.0),
-                                                               Color(255.0/255.0, 247.0/255.0,
-                                                                     243.0/255.0, 1.0))
+                                                               Color(0, 0, 0, 1.0))
         if movementData[individual][myEndDay[individual]][0][5] >= 10 and \
            movementData[individual][myEndDay[individual]][0][5] < 20:
             lastPointSphere[individual].getMaterial().setColor(Color(253.0/255.0, 224.0/255.0,
                                                                      221.0/255.0, 1.0),
-                                                               Color(253.0/255.0, 224.0/255.0,
-                                                                     221.0/255.0, 1.0))
+                                                               Color(0, 0, 0, 1.0))
         if movementData[individual][myEndDay[individual]][0][5] >= 20 and \
            movementData[individual][myEndDay[individual]][0][5] < 30:
             lastPointSphere[individual].getMaterial().setColor(Color(252.0/255.0, 197.0/255.0,
                                                                      192.0/255.0, 1.0),
-                                                               Color(252.0/255.0, 197.0/255.0,
-                                                                     192.0/255.0, 1.0))
+                                                               Color(0, 0, 0, 1.0))
         if movementData[individual][myEndDay[individual]][0][5] >= 30 and \
            movementData[individual][myEndDay[individual]][0][5] < 40:
             lastPointSphere[individual].getMaterial().setColor(Color(250.0/255.0, 159.0/255.0,
                                                                      181.0/255.0, 1.0),
-                                                               Color(250.0/255.0, 159.0/255.0,
-                                                                     181.0/255.0, 1.0))
+                                                               Color(0, 0, 0, 1.0))
         if movementData[individual][myEndDay[individual]][0][5] >= 40 and \
            movementData[individual][myEndDay[individual]][0][5] < 50:
             lastPointSphere[individual].getMaterial().setColor(Color(247.0/255.0, 104.0/255.0,
                                                                      161.0/255.0, 1.0),
-                                                               Color(247.0/255.0, 104.0/255.0,
-                                                                     161.0/255.0, 1.0))
+                                                               Color(0, 0, 0, 1.0))
         if movementData[individual][myEndDay[individual]][0][5] >= 50 and \
            movementData[individual][myEndDay[individual]][0][5] < 60:
             lastPointSphere[individual].getMaterial().setColor(Color(221.0/255.0, 52.0/255.0,
                                                                      151.0/255.0, 1.0),
-                                                               Color(221.0/255.0, 52.0/255.0,
-                                                                     151.0/255.0, 1.0))
+                                                               Color(0, 0, 0, 1.0))
         if movementData[individual][myEndDay[individual]][0][5] >= 60 and \
            movementData[individual][myEndDay[individual]][0][5] < 70:
             lastPointSphere[individual].getMaterial().setColor(Color(174.0/255.0, 1.0/255.0,
                                                                      126.0/255.0, 1.0),
-                                                               Color(174.0/255.0, 1.0/255.0,
-                                                                     126.0/255.0, 1.0))
+                                                               Color(0, 0, 0, 1.0))
         if movementData[individual][myEndDay[individual]][0][5] >= 70 and \
            movementData[individual][myEndDay[individual]][0][5] < 84:
             lastPointSphere[individual].getMaterial().setColor(Color(122.0/255.0, 1.0/255.0,
                                                                      119.0/255.0, 1.0),
-                                                               Color(122.0/255.0, 1.0/255.0,
-                                                                     119.0/255.0, 1.0))
+                                                               Color(0, 0, 0, 1.0))
     # if( value == 5 ){
     #   if( individualID == selectedIndividual1 )
     #     lastPointSphere[individual].setColor(Color( 149.0/255.0,79.0/255.0,234.0/255.0, 1.0 ))
@@ -295,7 +257,7 @@ def setUpLines(lineList, i):
 
 def setLinePos(lineList, i):
     '''
-    function updates line positions based on what days we are looking at. Modifies list, lineList, 
+    function updates line positions based on what days we are looking at. Modifies list, lineList,
     that holds LineSet information. i corresponds to individuals.
     '''
     global XYOFFSET
@@ -305,24 +267,24 @@ def setLinePos(lineList, i):
     global myStartDay
     global myEndDay
 
-    lineList[i][1].setStart(Vector3(movementData[i][myStartDay[i]][0][0]+XYOFFSET+TEXTOFFSET, 
-                                    movementData[i][myStartDay[i]][0][1], 
+    lineList[i][1].setStart(Vector3(movementData[i][myStartDay[i]][0][0]+XYOFFSET+TEXTOFFSET,
+                                    movementData[i][myStartDay[i]][0][1],
                                     movementData[i][myStartDay[i]][0][2]+STARTOFFSET))
-    lineList[i][2].setStart(Vector3(movementData[i][myEndDay[i]][0][0]-XYOFFSET+TEXTOFFSET, 
-                                    movementData[i][myEndDay[i]][0][1], 
+    lineList[i][2].setStart(Vector3(movementData[i][myEndDay[i]][0][0]-XYOFFSET+TEXTOFFSET,
+                                    movementData[i][myEndDay[i]][0][1],
                                     movementData[i][myEndDay[i]][0][2]+ENDOFFSET))
-    lineList[i][1].setEnd(Vector3(movementData[i][myStartDay[i]][0][0], 
-                                  movementData[i][myStartDay[i]][0][1], 
+    lineList[i][1].setEnd(Vector3(movementData[i][myStartDay[i]][0][0],
+                                  movementData[i][myStartDay[i]][0][1],
                                   movementData[i][myStartDay[i]][0][2]))
-    lineList[i][2].setEnd(Vector3(movementData[i][myEndDay[i]][0][0], 
-                                  movementData[i][myEndDay[i]][0][1], 
+    lineList[i][2].setEnd(Vector3(movementData[i][myEndDay[i]][0][0],
+                                  movementData[i][myEndDay[i]][0][1],
                                   movementData[i][myEndDay[i]][0][2]))
 
-    lineList[i][3].setPosition(Vector3(movementData[i][myStartDay[i]][0][0]+XYOFFSET+TEXTOFFSET, 
-                                       movementData[i][myStartDay[i]][0][1], 
+    lineList[i][3].setPosition(Vector3(movementData[i][myStartDay[i]][0][0]+XYOFFSET+TEXTOFFSET,
+                                       movementData[i][myStartDay[i]][0][1],
                                        movementData[i][myStartDay[i]][0][2]+STARTOFFSET))
-    lineList[i][4].setPosition(Vector3(movementData[i][myEndDay[i]][0][0]-XYOFFSET+TEXTOFFSET, 
-                                       movementData[i][myEndDay[i]][0][1], 
+    lineList[i][4].setPosition(Vector3(movementData[i][myEndDay[i]][0][0]-XYOFFSET+TEXTOFFSET,
+                                       movementData[i][myEndDay[i]][0][1],
                                        movementData[i][myEndDay[i]][0][2]+ENDOFFSET))
 
 
@@ -337,17 +299,17 @@ def setTextPos(textList, i):
     global myStartDay
     global myEndDay
 
-    textList[i][0].setPosition(Vector3(movementData[i][myStartDay[i]][0][0]+XYOFFSET, 
-                                       movementData[i][myStartDay[i]][0][1], 
+    textList[i][0].setPosition(Vector3(movementData[i][myStartDay[i]][0][0]+XYOFFSET,
+                                       movementData[i][myStartDay[i]][0][1],
                                        movementData[i][myStartDay[i]][0][2]+STARTTXTOFFSET))
-    textList[i][1].setPosition(Vector3(movementData[i][myEndDay[i]][0][0]-XYOFFSET, 
-                                       movementData[i][myEndDay[i]][0][1], 
+    textList[i][1].setPosition(Vector3(movementData[i][myEndDay[i]][0][0]-XYOFFSET,
+                                       movementData[i][myEndDay[i]][0][1],
                                        movementData[i][myEndDay[i]][0][2]+ENDTXTOFFSET))
 
 #----------------------------------------------------------------------------
 #Constants
 
-numberOfDaysByIndividual = [85, 70, 78, 80, 52, 18, 83, 80, 79, 67, 65, 72, 73, 71, 72, 66, 82, 86, 
+numberOfDaysByIndividual = [85, 70, 78, 80, 52, 18, 83, 80, 79, 67, 65, 72, 73, 71, 72, 66, 82, 86,
                             35, 39, 2]
 namesOfIndividuals = ["Veruca", "Chibi", "Abby", "Ben Bob", "Bonnie", "Chloe", "Clementina",
                       "Ellie", "Gillian", "Ornette", "Pliny", "Ripley", "Sofie", "Greg", "Ibeth",
@@ -401,78 +363,77 @@ interp.setOperation(InterpolActor.POSITION | InterpolActor.ORIENT)  # Interpolat
 
 # fill Position Array for Traversal
 def fillArray():
-  global posArray
-  global bitMapSelectedIndividuals
+    global posArray
+    global bitMapSelectedIndividuals
 
-  found = False
-  fir = False
+    found = False
+    fir = False
 
-  print("in fill array")
+    print("in fill array")
  
-  for i in range(0, 21):
-    if (bitMapSelectedIndividuals.getIntElement(i) == 1 and not found):
-      found = True
-      print('The Monkey Selected is {}'.format(namesOfIndividuals[i]))
-      print('The days shown is from: {} to: {}'.format(myStartDay[i]+1,myEndDay[i]+1))
+    for i in range(0, 21):
+        if bitMapSelectedIndividuals.getIntElement(i) == 1 and not found:
+            found = True
+            print('The Monkey Selected is {}'.format(namesOfIndividuals[i]))
+            print('The days shown is from: {} to: {}'.format(myStartDay[i]+1, myEndDay[i]+1))
 
-      for time in range(myStartDay[i], myEndDay[i]):
-        print('Points in Day {}: {}'.format(time,len(movementData[i][time])))
-        for point in movementData[i][time]:
-          posArray.append(Vector3(point[0], point[1], point[2]))
-          '''
-          if(fir == False):
-            s = SphereShape.create(20,4)
-            s.setEffect('colored -e blue')
-            s.setPosition(posArray[-1]+Vector3(0,.5,0))
-            fir = True
-          else:
-            s = SphereShape.create(10,4)
-            s.setEffect('colored -e red')
-            s.setPosition(posArray[-1]+Vector3(0,.5,0))
-          '''
+        for time in range(myStartDay[i], myEndDay[i]):
+            print('Points in Day {}: {}'.format(time, len(movementData[i][time])))
+            for point in movementData[i][time]:
+                posArray.append(Vector3(point[0], point[1], point[2]))
+            '''
+            if(fir == False):
+                s = SphereShape.create(20,4)
+                s.setEffect('colored -e blue')
+                s.setPosition(posArray[-1]+Vector3(0,.5,0))
+                fir = True
+            else:
+                s = SphereShape.create(10,4)
+                s.setEffect('colored -e red')
+                s.setPosition(posArray[-1]+Vector3(0,.5,0))
+            '''
 
-  print('Position Array Len: {}'.format(len(posArray)))
-    # animate()  
+    print('Position Array Len: {}'.format(len(posArray)))
+    # animate()
 
 # create Orientation List from position array
 def createOrientationList(interpObj):
-  global posArray
-  global oriArray
-  global ghost
+    global posArray
+    global oriArray
+    global ghost
 
-  ghost.setPosition(posArray[0])
-  
-  index = 0
-    
-  if not oriArray:
+    ghost.setPosition(posArray[0])
+    index = 0
 
-    ghost.lookAt(getDefaultCamera().getPosition(), Vector3(0, 1, 0))
-    oriArray.append(ghost.getOrientation())
-    index = index+1
-    ghost.setPosition(posArray[index])
+    if not oriArray:
 
-    while(index < (len(posArray))):
-
-      ghost.lookAt(posArray[index-1], Vector3(0, 1, 0))
-      oriArray.append(ghost.getOrientation())
-      index = index+1
-
-      if(index < len(posArray)):
+        ghost.lookAt(getDefaultCamera().getPosition(), Vector3(0, 1, 0))
+        oriArray.append(ghost.getOrientation())
+        index = index+1
         ghost.setPosition(posArray[index])
 
-    oriArray.append(oriArray[-1])
-  print('Orientation Array Len: {}'.format(len(oriArray)))
+        while index < (len(posArray)):
+
+            ghost.lookAt(posArray[index-1], Vector3(0, 1, 0))
+            oriArray.append(ghost.getOrientation())
+            index = index+1
+
+            if index < len(posArray):
+                ghost.setPosition(posArray[index])
+
+        oriArray.append(oriArray[-1])
+    print('Orientation Array Len: {}'.format(len(oriArray)))
 
 # This function is used to iterate over the stored navigation waypoints.
 def WaypointTraversalFunc(interpObj):
-  global g_arrayTraversal
-  global posArray
-  
-  if g_arrayTraversal < len(posArray):
-    interpObj.setTargetPosition(posArray[g_arrayTraversal] + Vector3(0,.5,0))
-    interpObj.setTargetOrientation(oriArray[g_arrayTraversal])
-    interpObj.startInterpolation()
-    g_arrayTraversal = g_arrayTraversal + 1  
+    global g_arrayTraversal
+    global posArray
+
+    if g_arrayTraversal < len(posArray):
+        interpObj.setTargetPosition(posArray[g_arrayTraversal] + Vector3(0, .5, 0))
+        interpObj.setTargetOrientation(oriArray[g_arrayTraversal])
+        interpObj.startInterpolation()
+        g_arrayTraversal = g_arrayTraversal + 1
 
 # Tell the camera's InterpolActor to call the WaypointTraversalFunc at the end of each interpolated waypoint so that it can cue up
 # the next waypoint.
@@ -482,7 +443,7 @@ interp.setEndOfInterpolationFunction(WaypointTraversalFunc)
 
 uim = UiModule.createAndInitialize()
 
-mainLayout = Container.create( ContainerLayout.LayoutVertical, uim.getUi())
+mainLayout = Container.create(ContainerLayout.LayoutVertical, uim.getUi())
 mainLayout.setStyle('fill: #00000080')
 mainLayout.setSize(Vector2(float(2000), float(2000)))
 mainLayout.setAutosize(False)
@@ -543,7 +504,7 @@ imgResRatioY = 0.18/(float(9850)/30780)
 
 getDefaultCamera().setPosition(imgResRatioX*10260/2, imgResRatioY*9850/2, 2500) #Default position
                                                                                 #or camera
-getDefaultCamera().setBackgroundColor(Color('black'))                           #sets background 
+getDefaultCamera().setBackgroundColor(Color('black'))                           #sets background
                                                                                 #to black
 
 #---------------------------------------------------------------------------
@@ -795,8 +756,8 @@ def onUpdate(frame, time, dt):
 
     hasCameraMoved = False
 
-    if (drawnCamPos[0]+5 < xPos or drawnCamPos[0]-5 > xPos) or (drawnCamPos[1]+5 < yPos or \
-        drawnCamPos[1]-5 > yPos) or (drawnCamPos[2]+5 < zPos or drawnCamPos[2]-5 > zPos):
+    if (drawnCamPos[0]+10 < xPos or drawnCamPos[0]-10 > xPos) or (drawnCamPos[1]+10 < yPos or \
+        drawnCamPos[1]-10 > yPos) or (drawnCamPos[2]+10 < zPos or drawnCamPos[2]-10 > zPos):
         hasCameraMoved = True
 
     while lineList and hasCameraMoved:
@@ -1317,29 +1278,3 @@ def handleEvent():
         g_arrayTraversal = 0
         WaypointTraversalFunc(interp)
 setEventFunction(handleEvent)
-
-# def handleEvent():
-#     e = getEvent()
-    # if(e.isButtonDown(EventFlags.ButtonLeft)): 
-    #     print("Left button pressed ")
-    #     myStartDay = myStartDay + dayIncrement
-    #     myEndDay = myEndDay + dayIncrement
-    #     if( myStartDay > numberOfDays ):
-    #         myStartDay = 0
-    #         myEndDay = dayIncrement
-    #     endDay.setInt(myEndDay)
-    #     startDay.setInt(myStartDay)
-    # if(e.isButtonDown(EventFlags.ButtonRight)):
-    #     myStartDay = myStartDay - dayIncrement
-    #     myEndDay = myEndDay - dayIncrement
-    #     if( myStartDay < 0 ):
-    #         myStartDay = numberOfDays - dayIncrement
-    #         myEndDay = numberOfDays
-    #     endDay.setInt(myEndDay)
-    #     startDay.setInt(myStartDay)
-    # if(e.isButtonDown(EventFlags.ButtonUp)): 
-    #     print("Up button pressed turning off white")
-    # if(e.isButtonDown(EventFlags.ButtonDown)):
-    #     print("Up button pressed turning on white")
-
-# setEventFunction(handleEvent)
