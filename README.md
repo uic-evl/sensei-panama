@@ -35,15 +35,19 @@ MenuOptions.py
 treesFloat.txt  
 
 ---------------------------------------------------------------------------
+Image File Creating Scripts
+---------------------------------------------------------------------------
+
+---------------------------------------------------------------------------
 Mesh with Terrain Mapping
 ---------------------------------------------------------------------------
 An ASCII fbx file contains the mesh with image mapping.
 Labelled under  
-# Terrain Code  
+Terrain Code  
   
 In order to see the textures on the terrain, we need lights that have been  
 set up labelled under  
-# Lights  
+Lights  
   
 ---------------------------------------------------------------------------
 GPS Coordinate Encoding/Custom Geometry
@@ -54,7 +58,7 @@ movementShaders folder in order to maximize filtering performance. If you would 
 decrease the height and width of rectangles than change the thickness variable.
 
 GPS coordinates are encoded also with spheres using a point cloud in Omegalib. This code is labelled under  
-# Movement point cloud code GPU Version  
+Movement point cloud code GPU Version  
   
 ---------------------------------------------------------------------------
 Accessing Movement Data List
