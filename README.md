@@ -1,14 +1,14 @@
 # SENSEI-Panama
 The goal of SENSEI-Panama is to use virtual reality in order to aid ecologists at UC Davis and
-UIC to track the movements of animals that live on an island without having to be in the field.
-
-Table of Contents
-Necessary Files (6)
-Image File Creating Scripts (39)
-Mesh with Terrain Mapping
-GPS Coordinate Encoding/Custom Geometry
-Accessing Movement Data List
-
+UIC to track the movements of animals that live on an island without having to be in the field.  
+  
+Table of Contents  
+Necessary Files (6)  
+Image File Creating Scripts (39)  
+Mesh with Terrain Mapping  
+GPS Coordinate Encoding/Custom Geometry  
+Accessing Movement Data List  
+  
 ---------------------------------------------------------------------------
 Necessary Files
 ---------------------------------------------------------------------------
