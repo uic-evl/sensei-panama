@@ -4,6 +4,7 @@ UIC to track the movements of animals that live on an island without having to b
 
 Table of Contents
 Necessary Files (6)
+Image File Creating Scripts (39)
 Mesh with Terrain Mapping
 GPS Coordinate Encoding/Custom Geometry
 Accessing Movement Data List
