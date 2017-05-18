@@ -26,7 +26,7 @@ endDay = Uniform.create('endDay', UniformType.Int, 21)
 bitMapSelectedIndividuals = Uniform.create('bitMapSelectedIndividuals', UniformType.Int, 21)
 colorByBitMap = Uniform.create('colorByBitMap', UniformType.Int, 21)
 
-for i in range(0,21):                                            #Bit map used by GLSL to toggle individuals on and off
+for i in range(0,21):    #Bit map used by GLSL to toggle individuals on and off
     if i == 1:
         bitMapSelectedIndividuals.setIntElement(1, i)
     else:
@@ -34,11 +34,12 @@ for i in range(0,21):                                            #Bit map used b
     startDay.setIntElement(myStartDay[i], i)
     endDay.setIntElement(myEndDay[i], i)
 
-f = open("gpsMovement/all.txt", "r")
 
 def createCustomGeom():       #Function parses file and creates lines
                                                 #that represent movement into a single
                                                 #custom shape.
+    global myStartDay
+    global myEndDay
     global moveLineProgram
     global movementData
     global scene
@@ -61,7 +62,6 @@ def createCustomGeom():       #Function parses file and creates lines
 
     unitY = Vector3(0, 1, 0)
     unitZ = Vector3(0, 0, 1)
-    
 
     f = open("gpsMovement/all.txt", "r")
 
@@ -98,7 +98,7 @@ def createCustomGeom():       #Function parses file and creates lines
                                                               int(tokens[5]), int(tokens[3])))
             else:
                 #Inputs x, y, z, hr, minute of gps point
-                if (prevDayDelta != tokens2[3]):
+                if prevDayDelta != tokens2[3]:
                     movementData[individualIter].append([])
                     dayIter += 1
                 movementData[individualIter][dayIter].append((float(tokens2[0]), float(tokens2[1]),
@@ -107,7 +107,6 @@ def createCustomGeom():       #Function parses file and creates lines
 
 
             pos1 = Vector3(float(tokens[0]), float(tokens[1]), float(tokens[2]))
-            
             pos2 = Vector3(float(tokens2[0]), float(tokens2[1]), float(tokens2[2]))
 
             vec = pos2 - pos1
@@ -116,7 +115,7 @@ def createCustomGeom():       #Function parses file and creates lines
             unitYV1 = d.cross(unitY)
 
             v1 = pos1+thickness*unitZV1+thickness*unitYV1       #list of vertices
-            v2 = pos1+thickness*unitZV1-thickness*unitYV1       
+            v2 = pos1+thickness*unitZV1-thickness*unitYV1
             v3 = pos2+thickness*unitZV1+thickness*unitYV1
             v4 = pos2+thickness*unitZV1-thickness*unitYV1
             v5 = pos1-thickness*unitZV1+thickness*unitYV1
@@ -131,130 +130,130 @@ def createCustomGeom():       #Function parses file and creates lines
 
         #####################Front Panel##################################################
             if pos1.x <= pos2.x:
-                geom.addVertex( v1 )
+                geom.addVertex(v1)
                 geom.addColor(Color(dayDelta, hr, minute, individualID))
-                geom.addVertex( v2 )
+                geom.addVertex(v2)
                 geom.addColor(Color(dayDelta, hr, minute, individualID))
-                geom.addVertex( v3 )
+                geom.addVertex(v3)
                 geom.addColor(Color(dayDelta, hr, minute, individualID))
 
-                geom.addVertex( v3 )
+                geom.addVertex(v3)
                 geom.addColor(Color(dayDelta, hr, minute, individualID))
-                geom.addVertex( v2 )
+                geom.addVertex(v2)
                 geom.addColor(Color(dayDelta, hr, minute, individualID))
-                geom.addVertex( v4 )
+                geom.addVertex(v4)
                 geom.addColor(Color(dayDelta, hr, minute, individualID))
 
             if pos1.x > pos2.x:
-                geom.addVertex( v3 )
+                geom.addVertex(v3)
                 geom.addColor(Color(dayDelta, hr, minute, individualID))
-                geom.addVertex( v2 )
+                geom.addVertex(v2)
                 geom.addColor(Color(dayDelta, hr, minute, individualID))
-                geom.addVertex( v1 )
+                geom.addVertex(v1)
                 geom.addColor(Color(dayDelta, hr, minute, individualID))
 
-                geom.addVertex( v4 )
+                geom.addVertex(v4)
                 geom.addColor(Color(dayDelta, hr, minute, individualID))
-                geom.addVertex( v2 )
+                geom.addVertex(v2)
                 geom.addColor(Color(dayDelta, hr, minute, individualID))
-                geom.addVertex( v3 )
+                geom.addVertex(v3)
                 geom.addColor(Color(dayDelta, hr, minute, individualID))
         ##################################################################################
         #####################Back Panel##################################################
             if pos1.x <= pos2.x:
-                geom.addVertex( v7 )
+                geom.addVertex(v7)
                 geom.addColor(Color(dayDelta, hr, minute, individualID))
-                geom.addVertex( v6 )
+                geom.addVertex(v6)
                 geom.addColor(Color(dayDelta, hr, minute, individualID))
-                geom.addVertex( v5 )
+                geom.addVertex(v5)
                 geom.addColor(Color(dayDelta, hr, minute, individualID))
 
-                geom.addVertex( v8 )
+                geom.addVertex(v8)
                 geom.addColor(Color(dayDelta, hr, minute, individualID))
-                geom.addVertex( v6 )
+                geom.addVertex(v6)
                 geom.addColor(Color(dayDelta, hr, minute, individualID))
-                geom.addVertex( v7 )
+                geom.addVertex(v7)
                 geom.addColor(Color(dayDelta, hr, minute, individualID))
 
             if pos1.x > pos2.x:
-                geom.addVertex( v5 )
+                geom.addVertex(v5)
+                geom.addColor(Colr(dayDelta, hr, minute, individualID))
+                geom.addVertex(v6)
                 geom.addColor(Color(dayDelta, hr, minute, individualID))
-                geom.addVertex( v6 )
-                geom.addColor(Color(dayDelta, hr, minute, individualID))
-                geom.addVertex( v7 )
+                geom.addVertex(v7)
                 geom.addColor(Color(dayDelta, hr, minute, individualID))
 
-                geom.addVertex( v7 )
+                geom.addVertex(v7)
                 geom.addColor(Color(dayDelta, hr, minute, individualID))
-                geom.addVertex( v6 )
+                geom.addVertex(v6)
                 geom.addColor(Color(dayDelta, hr, minute, individualID))
-                geom.addVertex( v8 )
+                geom.addVertex(v8)
                 geom.addColor(Color(dayDelta, hr, minute, individualID))
         ##################################################################################
         #####################Top Panel##################################################
             if pos1.x <= pos2.x:
-                geom.addVertex( v1 )
+                geom.addVertex(v1)
                 geom.addColor(Color(dayDelta, hr, minute, individualID))
-                geom.addVertex( v7 )
+                geom.addVertex(v7)
                 geom.addColor(Color(dayDelta, hr, minute, individualID))
-                geom.addVertex( v5 )
+                geom.addVertex(v5)
                 geom.addColor(Color(dayDelta, hr, minute, individualID))
-                
-                geom.addVertex( v7 )
+
+                geom.addVertex(v7)
                 geom.addColor(Color(dayDelta, hr, minute, individualID))
-                geom.addVertex( v1 )
+                geom.addVertex(v1)
                 geom.addColor(Color(dayDelta, hr, minute, individualID))
-                geom.addVertex( v3 )
+                geom.addVertex(v3)
                 geom.addColor(Color(dayDelta, hr, minute, individualID))
 
             if pos1.x > pos2.x:
-                geom.addVertex( v5 )
+                geom.addVertex(v5)
                 geom.addColor(Color(dayDelta, hr, minute, individualID))
-                geom.addVertex( v7 )
+                geom.addVertex(v7)
                 geom.addColor(Color(dayDelta, hr, minute, individualID))
-                geom.addVertex( v1 )
+                geom.addVertex(v1)
                 geom.addColor(Color(dayDelta, hr, minute, individualID))
 
-                geom.addVertex( v3 )
+                geom.addVertex(v3)
                 geom.addColor(Color(dayDelta, hr, minute, individualID))
-                geom.addVertex( v1 )
+                geom.addVertex(v1)
                 geom.addColor(Color(dayDelta, hr, minute, individualID))
-                geom.addVertex( v7 )
+                geom.addVertex(v7)
                 geom.addColor(Color(dayDelta, hr, minute, individualID))
         ##################################################################################
         #####################Bottom Panel##################################################
             if pos1.x <= pos2.x:
-                geom.addVertex( v8 )
+                geom.addVertex(v8)
                 geom.addColor(Color(dayDelta, hr, minute, individualID))
-                geom.addVertex( v4 )
+                geom.addVertex(v4)
                 geom.addColor(Color(dayDelta, hr, minute, individualID))
-                geom.addVertex( v2 )
-                geom.addColor(Color(dayDelta, hr, minute, individualID)) 
+                geom.addVertex(v2)
+                geom.addColor(Color(dayDelta, hr, minute, individualID))
 
-                geom.addVertex( v6 )
+                geom.addVertex(v6)
                 geom.addColor(Color(dayDelta, hr, minute, individualID))
-                geom.addVertex( v8 )
-                geom.addColor(Color(dayDelta, hr, minute, individualID))    
-                geom.addVertex( v2 )
+                geom.addVertex(v8)
+                geom.addColor(Color(dayDelta, hr, minute, individualID))
+                geom.addVertex(v2)
                 geom.addColor(Color(dayDelta, hr, minute, individualID))
 
             if pos1.x > pos2.x:
-                geom.addVertex( v2 )
+                geom.addVertex(v2)
                 geom.addColor(Color(dayDelta, hr, minute, individualID))
-                geom.addVertex( v4 )
+                geom.addVertex(v4)
                 geom.addColor(Color(dayDelta, hr, minute, individualID))
-                geom.addVertex( v8 )
+                geom.addVertex(v8)
                 geom.addColor(Color(dayDelta, hr, minute, individualID))
 
-                geom.addVertex( v2 )
+                geom.addVertex(v2)
                 geom.addColor(Color(dayDelta, hr, minute, individualID))
-                geom.addVertex( v8 )
+                geom.addVertex(v8)
                 geom.addColor(Color(dayDelta, hr, minute, individualID))
-                geom.addVertex( v6 )
+                geom.addVertex(v6)
                 geom.addColor(Color(dayDelta, hr, minute, individualID))
-            
+
         ##################################################################################
-            
+
             numVertices = numVertices + 24
 
             prevV3 = v3                 #Store beginning points of next line
@@ -266,17 +265,13 @@ def createCustomGeom():       #Function parses file and creates lines
             prevLine = line
             prevID = tokens2[6]
             prevDayDelta = tokens2[3]
-        
+
     f.close()
     geom.addPrimitive(PrimitiveType.Triangles, 0, numVertices)
 
     scene.addModel(geom)
     obj = StaticObject.create(geomName)
     obj.setPosition(0, 0, 0)
-    # obj.setEffect('-C')
-
-    # obj.getMaterial().setProgram('colored byvertex-emissive')
     obj.getMaterial().setTransparent(True)
-    print 'finished Parsing'
 
-    return obj 
+    return obj

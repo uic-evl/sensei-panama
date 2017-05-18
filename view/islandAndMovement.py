@@ -450,7 +450,7 @@ mainLayout.setAutosize(False)
 mainLayout.setPosition(Vector2(1366*15, -200))
 
 #-----------------------------------------------------------------------------
-#Terrain code
+# Terrain Code
 
 scene = getSceneManager()
 scene.addLoader(BinaryPointsLoader())                         #adds a binary loader for GLSL code
@@ -472,7 +472,7 @@ def onModelLoaded(name):           # Loads model
 loadModelAsync("Terrain", "/iridium_SSD/panama/10mesh.fbx")
 
 #---------------------------------------------------------------------------
-#Set up Lights
+# Lights
 
 light1 = Light.create()
 light1.setColor(Color(0.4, 0.4, 0.4, 1))
