@@ -1,0 +1,45 @@
+Veruca      4690    Ateles geoffroyi        85        2015-12-11
+Chibi       4693    Ateles geoffroyi        70        2015-12-11
+Abby        4652    Potos flavus            78        2015-12-15
+Ben Bob     4653    Potos flavus            80        2015-12-15
+Bonnie      4658    Potos flavus            52        2015-12-15
+Chloe       4052    Potos flavus            18        2015-12-15
+Clementina  4672    Nasua narica            83        2015-12-14
+Ellie       4668    Nasua narica            80        2015-12-14
+Gillian     4671    Nasua narica            79        2015-12-14
+Ornette     4669    Nasua narica            67        2015-12-14
+Pliny       4675    Nasua narica            65        2015-12-14
+Ripley      4650    Potos flavus            72        2015-12-15
+Serge       4670    Nasua narica
+Sofie       4674    Nasua narica            73        2015-12-14
+Greg        4689    Ateles geoffroyi        71        2015-12-11
+Ibeth       4654    Cebus capucinus         72        2015-12-25
+Olga        4657    Cebus capucinus         66        2015-12-15
+Mimi        4660    Cebus capucinus         82        2015-12-15
+Kyle        4692    Ateles geoffroyi        86        2015-12-11
+Atlas       4673    Nasua narica            35        2016-01-12
+Vielle      4670    Nasua narica
+Judy        4656    Potos flavus            39        2016-01-27
+Merk        4665    Pecari tajacu           2         2016-03-02
+
+Chloe 4052 
+Ripley 4650
+Abby 4652
+Ben Bob 4653
+Ibeth 4654
+Judy 4656
+Olga 4657
+Bonnie 4658
+Mimi 4660
+Merk 4665
+Ellie 4668
+Ornette 4669
+Gillian 4671
+Clementina 4672
+Atlas 4673
+Sofie 4674
+Pliny 4675
+Greg 4689
+Veruca 4690
+Kyle 4692 
+Chibi 4693

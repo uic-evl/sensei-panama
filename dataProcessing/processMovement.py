@@ -14,6 +14,8 @@ from datetime import date
 import sys
 import struct
 
+targetId = str('\"'+sys.argv[2]+'\"')
+
 def calculateXY (utmE, utmN):
     utmE1 = 624030.0137255481  #0.18/(float(10260)/32064) * 10260
     utmN1 = 1015207.0834458455 #.18/(float(9850)/30780) * 9850
@@ -67,7 +69,7 @@ for line in f:
 
             #assign prevMin to currMin because this is the first iteration
             prevMin = currMin
-        elif (prevMin != currMin and tokens[27] == "\"4665\""):
+        elif (prevMin != currMin and tokens[27] == targetId):
             prevUtmE = tokens[eastingColumn]
             prevUtmN = tokens[northingColumn]
             prevHeight = tokens[heightColumn]

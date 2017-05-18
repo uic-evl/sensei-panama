@@ -1,9 +1,11 @@
-import Image;
-import png;
-import struct;
+import Image
+import png
+import struct
 
 #computed using img
-def computeIMGUTMtoHMXY (imgx, imgy):
+def computeIMGUTMtoHMXY (imgx, imgy):               #function converts pixel in original image 
+                                                    #to utm coordinate
+                                                    #then converts the utm to pixel in height map
     #Images UTM Coordinates
     startIMGUTMX = 624030.0137255481
     startIMGUTMY = 1015207.0834458455
@@ -14,8 +16,8 @@ def computeIMGUTMtoHMXY (imgx, imgy):
     startHMUTMY = 1015157.5668793379
     lastHMUTMY = 1009715.5668793379
 
-    imgResRatioX = 0.18/(float(10260)/32064)
-    imgResRatioY = 0.18/(float(9850)/30780)
+    imgResRatioX = 0.18#/(float(10260)/32064)
+    imgResRatioY = 0.18#/(float(9850)/30780)
 
     utmX = startIMGUTMX + (imgx*imgResRatioX)
     utmY = startIMGUTMY - (imgy*imgResRatioY)
@@ -25,13 +27,13 @@ def computeIMGUTMtoHMXY (imgx, imgy):
     return (hmx, hmy)
     
     
-imgResRatioX = 0.18/(float(10260)/32064)            #calculation for how far pixels are apart in
+imgResRatioX = 0.18#/(float(10260)/32064)            #calculation for how far pixels are apart in
                                                     #meters
-imgResRatioY = 0.18/(float(9850)/30780)             #calculation for how far pixels are apart in
+imgResRatioY = 0.18#/(float(9850)/30780)             #calculation for how far pixels are apart in
                                                     #meters
 filename = "hmColorHigh.xyzb"                       #output filename
 hm = "heightMap.png"                                #height map filename
-pic = "32Island.png"                                #picture filename
+pic = "Island.png"                                #picture filename
 hmImage = Image.open(hm)                            #open the height map
 hmImage = hmImage.transpose(Image.FLIP_TOP_BOTTOM)
 picImage = Image.open(pic)                          #open the picture
@@ -51,7 +53,7 @@ for x in range(i):                                  #iterate through all pixels 
         hmY = utmXY[1]
         if (hmX >= 0 and hmX < 5673 and hmY >= 0 and hmY < 5442):
             if hmPixInfo[hmX, hmY] != 0:
-                z = 0.6*float(hmPixInfo[hmX, hmY])  #z will remain 0 for now
+                z = float(hmPixInfo[hmX, hmY])  #z will remain 0 for now
                                                     #later we will get it from
                                                     #terrain map
                 r = float(picPixInfo[x, y][0])      #r value from tuple

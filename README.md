@@ -37,7 +37,19 @@ treesFloat.txt
 ---------------------------------------------------------------------------
 Image File Creating Scripts
 ---------------------------------------------------------------------------
+These scripts will be located in the dataProcessing folder.  
+binProcessMovement and processMovement.py will parse the gps point cvs file for a specific individual ID  
+that the user specifies as a command line argument 2 and output it to a file name that the user chooses
+as command line argument 1. 
+EX: python processMovement Chibi.txt 4693  
+Please use the UniqueIDs.txt for a comprehensive breakdown of all animals ID #'s and species.  
 
+hmPlanePointCloudGenerator.py creates a xyzb file out of a png. It was used to create the canopy of the  
+island.  
+
+objTriGen.py creates an obj file for the terrain which was later used to convert to an FBX and add a  
+texture mapping to it.  
+  
 ---------------------------------------------------------------------------
 Mesh with Terrain Mapping
 ---------------------------------------------------------------------------
