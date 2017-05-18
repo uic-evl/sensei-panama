@@ -12,39 +12,39 @@ Accessing Movement Data List
 Necessary Files
 ---------------------------------------------------------------------------
 Currently, the necessary files that are required to make this application work are the
-following:
-/gpsMovement/all.txt
-/gpsMovement/all.xyzb
-/iridium_SSD/panama/10mesh.fbx
-/islandShaders/Sphere.frag
-/islandShaders/Sphere.geom
-/islandShaders/Sphere.vert
-/lineShaders/Line.frag
-/lineShaders/Line.geom
-/lineShaders/Line.vert
-/movementShaders/Sphere.vert
-/movementShader/mySphere.geom
-/movementShaders/Sphere.frag
-/fonts/RobotoCondensed-Light.ttf
-/fonts/RobotoCondensed-Regular.ttf
-arrow.fbx
-caveutilcustom.py
-CustomGeom.py
-islandAndMovement.py (Main Program)
-MenuOptions.py
-treesFloat.txt
+following:  
+/gpsMovement/all.txt  
+/gpsMovement/all.xyzb  
+/iridium_SSD/panama/10mesh.fbx  
+/islandShaders/Sphere.frag  
+/islandShaders/Sphere.geom  
+/islandShaders/Sphere.vert  
+/lineShaders/Line.frag  
+/lineShaders/Line.geom  
+/lineShaders/Line.vert  
+/movementShaders/Sphere.vert  
+/movementShader/mySphere.geom  
+/movementShaders/Sphere.frag  
+/fonts/RobotoCondensed-Light.ttf  
+/fonts/RobotoCondensed-Regular.ttf  
+arrow.fbx  
+caveutilcustom.py  
+CustomGeom.py  
+islandAndMovement.py (Main Program)  
+MenuOptions.py  
+treesFloat.txt  
 
 ---------------------------------------------------------------------------
 Mesh with Terrain Mapping
 ---------------------------------------------------------------------------
 An ASCII fbx file contains the mesh with image mapping.
-Labelled under
-# Terrain Code
-
-In order to see the textures on the terrain, we need lights that have been
-set up labelled under
-# Lights
-
+Labelled under  
+# Terrain Code  
+  
+In order to see the textures on the terrain, we need lights that have been  
+set up labelled under  
+# Lights  
+  
 ---------------------------------------------------------------------------
 GPS Coordinate Encoding/Custom Geometry
 ---------------------------------------------------------------------------
@@ -53,40 +53,40 @@ points of every single gps coordinate currently available. It uses GLSL shaders 
 movementShaders folder in order to maximize filtering performance. If you would like to increase or
 decrease the height and width of rectangles than change the thickness variable.
 
-GPS coordinates are encoded also with spheres using a point cloud in Omegalib. This code is labelled under
-# Movement point cloud code GPU Version
-
+GPS coordinates are encoded also with spheres using a point cloud in Omegalib. This code is labelled under  
+# Movement point cloud code GPU Version  
+  
 ---------------------------------------------------------------------------
 Accessing Movement Data List
 ---------------------------------------------------------------------------
-There are several different structures that are used in order to find the position of a specific day.
-
-The first is every tracked animal has a list in order to find their position of the day.
-The indexes go from 0-20, and each index corresponds to an animal's ID.
-Positions are as follow:
-namesOfIndividuals = ["Veruca", "Chibi", "Abby", "Ben Bob", "Bonnie", "Chloe", "Clementina",
-                      "Ellie", "Gillian", "Ornette", "Pliny", "Ripley", "Sofie", "Greg", "Ibeth",
-                      "Olga", "Mimi", "Kyle", "Atlas", "Judy", "Merk"]
-
-The next two lists keep track of the start of the tracked day range and the end of the tracked day
-range. They are labelled as myStartDay and myEndDay and can be indexed with the animal's ID.
-myStartDay[individualId]
-myEndDay[individualId]
-
-Finally, we can find the position of any vector by indexing the list, movementData.
-In order to grab the positions of all active days we can create a loop using movementData:
-for time in range(myStartDay[individualId], myEndDay[individualId]:
-    for tuple in movementData[individualId][time]
-        # Your code goes here
-
-Each day in this loop will correspond to a tuple. The tuple values correspond to the following:
-0 = x position
-1 = y position
-2 = z position
-3 = hour
-4 = minute
-5 = Days passed since first tracking point was captured.
-
+There are several different structures that are used in order to find the position of a specific day.  
+  
+The first is every tracked animal has a list in order to find their position of the day.  
+The indexes go from 0-20, and each index corresponds to an animal's ID.  
+Positions are as follow:  
+namesOfIndividuals = ["Veruca", "Chibi", "Abby", "Ben Bob", "Bonnie", "Chloe", "Clementina",  
+                      "Ellie", "Gillian", "Ornette", "Pliny", "Ripley", "Sofie", "Greg", "Ibeth",  
+                      "Olga", "Mimi", "Kyle", "Atlas", "Judy", "Merk"]  
+  
+The next two lists keep track of the start of the tracked day range and the end of the tracked day  
+range. They are labelled as myStartDay and myEndDay and can be indexed with the animal's ID.  
+myStartDay[individualId]  
+myEndDay[individualId]  
+  
+Finally, we can find the position of any vector by indexing the list, movementData.  
+In order to grab the positions of all active days we can create a loop using movementData:  
+for time in range(myStartDay[individualId], myEndDay[individualId]:  
+    for tuple in movementData[individualId][time]  
+        # Your code goes here  
+  
+Each day in this loop will correspond to a tuple. The tuple values correspond to the following:  
+0 = x position  
+1 = y position  
+2 = z position  
+3 = hour  
+4 = minute  
+5 = Days passed since first tracking point was captured.  
+  
 ---------------------------------------------------------------------------
 
 
