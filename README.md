@@ -5,7 +5,8 @@ UIC to track the movements of animals that live on an island without having to b
 Table of Contents  
 Necessary Files (6)  
 Image File Creating Scripts (39)  
-Mesh with Terrain Mapping  
+Mesh With Terrain Mapping  
+GPS Processing Scripts  
 GPS Coordinate Encoding/Custom Geometry  
 Accessing Movement Data List  
   
@@ -38,22 +39,19 @@ treesFloat.txt
 ---------------------------------------------------------------------------
 Image File Creating Scripts
 ---------------------------------------------------------------------------
-These scripts will be located in the dataProcessing folder.  
-binProcessMovement and processMovement.py will parse the gps point cvs file for a specific individual ID  
-that the user specifies as a command line argument 2 and output it to a file name that the user chooses
-as command line argument 1. 
-EX: python processMovement Chibi.txt 4693  
-Please use the UniqueIDs.txt for a comprehensive breakdown of all animals ID #'s and species.  
-
 hmPlanePointCloudGenerator.py creates a xyzb file out of a png. It was used to create the canopy of the  
-island.  
+island. This script uses the overview png image that was converted from the BCI_WholeIsland jpg image
+using a command line tool named imagemagick.  
 
 objTriGen.py creates an obj file for the terrain which was later used to convert to an FBX and add a  
-texture mapping to it.  
+texture mapping to it. Uses two files, the first is a low res version of the BCI_WholeIsland jpg image converted
+to a png at 3% of the resolution. The second is a height map generated from LIDAR data using ArcGis.  
   
 ---------------------------------------------------------------------------
 Mesh with Terrain Mapping
 ---------------------------------------------------------------------------
+In order to create a mesh for Omegalib, we used an obj file generated with the objTriGen.py file and
+converted it to an fbx file.
 An ASCII fbx file contains the mesh with image mapping.
 Labelled under  
 Terrain Code  
@@ -61,7 +59,17 @@ Terrain Code
 In order to see the textures on the terrain, we need lights that have been  
 set up labelled under  
 Lights  
-  
+
+---------------------------------------------------------------------------
+GPS Processing Scripts
+---------------------------------------------------------------------------
+These scripts will be located in the dataProcessing folder.  
+binProcessMovement and processMovement.py will parse the gps point cvs file for a specific individual ID  
+that the user specifies as a command line argument 2 and output it to a file name that the user chooses
+as command line argument 1. 
+EX: python processMovement Chibi.txt 4693  
+Please use the UniqueIDs.txt for a comprehensive breakdown of all animals ID #'s and species.  
+
 ---------------------------------------------------------------------------
 GPS Coordinate Encoding/Custom Geometry
 ---------------------------------------------------------------------------
